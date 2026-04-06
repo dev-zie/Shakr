@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "869702083414",
+    "project_id": "shakr-b1fad",
+    "storage_bucket": "shakr-b1fad.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:869702083414:android:8cd5d4c8dfd59baac1acf7",
+        "android_client_info": {
+          "package_name": "com.devzie.shakr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASU5vVCJBAiLvSTulRJ6C6b0mYUa4EOE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
