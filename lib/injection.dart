@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shakr/core/services/local_storage_service.dart';
 import 'package:shakr/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:shakr/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:shakr/features/auth/domain/repositories/auth_repository.dart';
@@ -13,6 +14,7 @@ final sl = GetIt.instance;
 Future<void> initDependencies() async {
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
+  sl.registerLazySingleton(() => LocalStorageService());
 
   sl.registerLazySingleton(
     () => AuthRemoteDatasource(firebaseAuth: sl(), firestore: sl()),

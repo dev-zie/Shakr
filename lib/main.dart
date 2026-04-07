@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/core/router/app_router.dart';
 import 'package:shakr/core/theme/app_theme.dart';
+import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/firebase_options.dart';
 import 'package:shakr/injection.dart';
 
@@ -16,11 +18,14 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
-      routerConfig: router,
+    return BlocProvider(
+      create: (context) => sl<AuthCubit>(),
+      child: MaterialApp.router(
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: ThemeMode.system,
+        routerConfig: router,
+      ),
     );
   }
 }

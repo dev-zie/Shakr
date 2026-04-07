@@ -1,10 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shakr/core/services/local_storage_service.dart';
+import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:shakr/features/auth/presentation/cubit/auth_state.dart';
+import 'package:shakr/injection.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    sl<AuthCubit>().getCurrentUser();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text('Splash Screen')));
+    return BlocListener<AuthCubit, AuthState>(
+      bloc: sl<AuthCubit>(),
+      listener: (context, state) async {
+        if (state is AuthSucces) {
+          final isCompleted = await sl<LocalStorageService>()
+              .isOnboardingCompleted();
+          if (isCompleted) {
+            context.go('/home'); // veya '/onboarding'
+          } else {
+            context.go('/onboarding');
+          }
+        }
+        if (state is AuthError) {
+          print('Auth Error: ${state.message}');
+          sl<AuthCubit>().signInAnonymously();
+        }
+      },
+      child: Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: .center,
+            children: [
+              Text('Shakr'),
+              SizedBox(height: 20),
+              CircularProgressIndicator(),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
