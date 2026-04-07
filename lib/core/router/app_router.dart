@@ -9,21 +9,42 @@ import 'package:shakr/features/shake/presentation/pages/shaking_screen.dart';
 import 'package:shakr/features/splash/presentation/pages/splash_screen.dart';
 
 final GoRouter router = GoRouter(
-  initialLocation: '/', // uygulama acilinca buradan basla
+  initialLocation: '/',
   routes: [
-    GoRoute(path: '/', builder: (context, state) => SplashScreen()),
-    GoRoute(path: '/home', builder: (context, state) => HomeScreen()),
-    GoRoute(path: '/chat', builder: (context, state) => ChatScreen()),
-    GoRoute(
-      path: '/chat-expired',
-      builder: (context, state) => ChatExpiredScreen(),
-    ),
-    GoRoute(path: '/match', builder: (context, state) => MatchFoundScreen()),
+    GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
+    GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
     GoRoute(
       path: '/onboarding',
-      builder: (context, state) => OnboardingScreen(),
+      builder: (context, state) => const OnboardingScreen(),
     ),
-    GoRoute(path: '/settings', builder: (context, state) => SettingsScreen()),
-    GoRoute(path: '/shake', builder: (context, state) => ShakingScreen()),
+    GoRoute(
+      path: '/shaking',
+      builder: (context, state) => const ShakingScreen(),
+    ),
+    GoRoute(
+      path: '/match/:matchId',
+      builder: (context, state) {
+        final matchId = state.pathParameters['matchId']!;
+        return MatchFoundScreen(matchId: matchId);
+      },
+    ),
+    GoRoute(
+      path: '/chat/:matchId',
+      builder: (context, state) {
+        final matchId = state.pathParameters['matchId']!;
+        return ChatScreen(matchId: matchId);
+      },
+    ),
+    GoRoute(
+      path: '/chat-expired/:matchId',
+      builder: (context, state) {
+        final matchId = state.pathParameters['matchId']!;
+        return ChatExpiredScreen(matchId: matchId);
+      },
+    ),
+    GoRoute(
+      path: '/settings',
+      builder: (context, state) => const SettingsScreen(),
+    ),
   ],
 );

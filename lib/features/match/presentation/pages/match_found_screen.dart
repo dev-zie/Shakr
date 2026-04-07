@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MatchFoundScreen extends StatelessWidget {
-  const MatchFoundScreen({super.key});
+  final String matchId;
+  const MatchFoundScreen({super.key, required this.matchId});
 
   @override
   Widget build(BuildContext context) {
