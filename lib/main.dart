@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:shakr/core/router/app_router.dart';
 import 'package:shakr/core/theme/app_theme.dart';
 import 'package:shakr/firebase_options.dart';
+import 'package:shakr/injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await initDependencies();
   runApp(const MyApp());
 }
 

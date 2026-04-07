@@ -13,7 +13,6 @@ class AuthLoading extends AuthState with EquatableMixin {
   List<Object?> get props => [];
 }
 
-
 class AuthSucces extends AuthState with EquatableMixin {
   final UserEntity user;
 
