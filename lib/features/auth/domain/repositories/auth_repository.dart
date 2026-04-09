@@ -6,4 +6,6 @@ abstract class AuthRepository {
   Future<Either<Failure, UserEntity>> getCurrentUser();
 
   Future<Either<Failure, UserEntity>> signInAnonymously();
+
+  Future<Either<Failure, void>> saveVibes(String uid, List<String> vibes);
 }

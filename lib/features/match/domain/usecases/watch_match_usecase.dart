@@ -6,7 +6,7 @@ class WatchMatchUsecase {
 
   WatchMatchUsecase({required this.repo});
 
-    Stream<MatchEntity?> call(String uid) {
-      return repo.watchMatch(uid);
-    }
+  Stream<MatchEntity?> call(String uid) {
+    return repo.watchMatch(uid);
+  }
 }

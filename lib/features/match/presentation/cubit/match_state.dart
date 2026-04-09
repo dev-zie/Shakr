@@ -26,6 +26,7 @@ class MatchNotFound extends MatchState with EquatableMixin {
   @override
   List<Object?> get props => [];
 }
+
 class MatchError extends MatchState with EquatableMixin {
   final String message;
 
@@ -34,4 +35,3 @@ class MatchError extends MatchState with EquatableMixin {
   @override
   List<Object?> get props => [message];
 }
-

@@ -18,4 +18,11 @@ class AuthRemoteDatasource {
     if (user == null) return null;
     return UserModel.fromFirebase(user);
   }
+
+  Future<void> saveVibes(String uid, List<String> vibes) async {
+    await firestore.collection('users').doc(uid).set({
+      'uid': uid,
+      'vibes': vibes,
+    });
+  }
 }

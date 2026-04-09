@@ -8,11 +8,13 @@ import 'package:shakr/features/auth/data/datasources/auth_remote_datasource.dart
 import 'package:shakr/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:shakr/features/auth/domain/repositories/auth_repository.dart';
 import 'package:shakr/features/auth/domain/usecases/get_current_user_usecase.dart';
+import 'package:shakr/features/auth/domain/usecases/save_vibes_usecase.dart';
 import 'package:shakr/features/auth/domain/usecases/sign_in_anonymously_usecase.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/match/data/datasources/match_remote_datasource.dart';
 import 'package:shakr/features/match/data/repositories/match_repository_impl.dart';
 import 'package:shakr/features/match/domain/repositories/match_repository.dart';
+import 'package:shakr/features/match/domain/usecases/get_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/watch_match_usecase.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
@@ -45,9 +47,12 @@ Future<void> initDependencies() async {
     () =>
         AuthCubit(getCurrentUserUsecase: sl(), signInAnonymouslyUsecase: sl()),
   );
+  sl.registerLazySingleton(() => SaveVibesUsecase(repo: sl()));
 
   //onboard
-  sl.registerLazySingleton(() => OnboardingCubit(lsc: sl()));
+  sl.registerLazySingleton(
+    () => OnboardingCubit(lsc: sl(), saveVibesUsecase: sl()),
+  );
 
   // Shake
   sl.registerLazySingleton(() => ShakeRemoteDatasource(db: sl()));
@@ -69,6 +74,9 @@ Future<void> initDependencies() async {
     () => MatchRepositoryImpl(remoteDatasource: sl()),
   );
   sl.registerLazySingleton(() => WatchMatchUsecase(repo: sl()));
+  sl.registerLazySingleton(() => GetMatchUsecase(repo: sl()));
 
-  sl.registerLazySingleton(() => MatchCubit(watchMatchUsecase: sl()));
+  sl.registerLazySingleton(
+    () => MatchCubit(watchMatchUsecase: sl(), getMatchUsecase: sl()),
+  );
 }

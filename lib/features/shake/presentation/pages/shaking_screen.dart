@@ -53,6 +53,15 @@ class _ShakingScreenState extends State<ShakingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            sl<ShakeService>().stopListening();
+            context.go('/home');
+          },
+        ),
+      ),
       body: BlocListener<MatchCubit, MatchState>(
         bloc: sl<MatchCubit>(),
         listener: (context, state) {
@@ -66,7 +75,32 @@ class _ShakingScreenState extends State<ShakingScreen> {
           listener: (context, state) {},
           builder: (context, state) {
             if (state is ShakeInitial) {
-              return Center(child: Text('Telefonunu salla!'));
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Telefonunu salla!'),
+                    SizedBox(height: 20),
+                    // TEST ICIN - sonra sil
+                    ElevatedButton(
+                      onPressed: () async {
+                        final uid = FirebaseAuth.instance.currentUser?.uid;
+                        if (uid == null) return;
+                        final location = await sl<LocationService>()
+                            .getCurrentLocation();
+                        final shake = ShakeEntity(
+                          uid: uid,
+                          location: location,
+                          status: 'waiting',
+                          timestamp: DateTime.now(),
+                        );
+                        sl<ShakeCubit>().recordShake(shake);
+                      },
+                      child: Text('TEST: Salla'),
+                    ),
+                  ],
+                ),
+              );
             }
             if (state is ShakeDetected || state is ShakeRecorded) {
               return Center(

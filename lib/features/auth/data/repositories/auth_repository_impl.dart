@@ -33,4 +33,19 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(UnexpectedFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, void>> saveVibes(
+    String uid,
+    List<String> vibes,
+  ) async {
+    try {
+      await authRemoteDatasource.saveVibes(uid, vibes);
+      return Right(unit);
+    } on SocketException {
+      return Left(NetworkFailure());
+    } catch (e) {
+      return Left(UnexpectedFailure());
+    }
+  }
 }

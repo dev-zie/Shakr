@@ -8,6 +8,8 @@ class MatchModel extends MatchEntity {
     required super.user2Id,
     required super.createdAt,
     required super.status,
+    required super.user1Vibes,
+    required super.user2Vibes,
   });
 
   factory MatchModel.fromMap(Map<String, dynamic> map, String id) {
@@ -17,6 +19,8 @@ class MatchModel extends MatchEntity {
       user2Id: map['user2'],
       createdAt: (map['createdAt'] as Timestamp).toDate(),
       status: map['status'],
+      user1Vibes: List<String>.from(map['user1Vibes'] ?? []),
+      user2Vibes: List<String>.from(map['user2Vibes'] ?? []),
     );
   }
 

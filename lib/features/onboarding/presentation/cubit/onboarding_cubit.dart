@@ -1,12 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shakr/core/services/local_storage_service.dart';
+import 'package:shakr/features/auth/domain/usecases/save_vibes_usecase.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.dart';
 
 class OnboardingCubit extends Cubit<OnboardingState> {
   final LocalStorageService lsc;
+  final SaveVibesUsecase saveVibesUsecase;
 
-  OnboardingCubit({required this.lsc}) : super(OnboardingInitial());
+  OnboardingCubit({required this.lsc, required this.saveVibesUsecase})
+    : super(OnboardingInitial());
 
   void selectVibe(String vibe) {
     final currentVibes = state is OnboardingVibeSelected
@@ -36,13 +40,17 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       emit(OnboardingError(message: 'Konum izni gerekli'));
       return;
     }
+
+    final vibes = state is OnboardingVibeSelected
+        ? (state as OnboardingVibeSelected).selectedVibes
+        : <String>[];
+
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      await saveVibesUsecase.call(uid, vibes);
+    }
+
     await lsc.setOnboardingCompleted();
-    emit(
-      OnboardingCompleted(
-        selectedVibes: state is OnboardingVibeSelected
-            ? (state as OnboardingVibeSelected).selectedVibes
-            : [],
-      ),
-    );
+    emit(OnboardingCompleted(selectedVibes: vibes));
   }
 }

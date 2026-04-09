@@ -5,7 +5,10 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
-exports.findMatch = onDocumentCreated("shakes/{uid}", async (event) => {
+exports.findMatch = onDocumentCreated({
+    document: "shakes/{uid}",
+    region: "europe-west3",
+}, async (event) => {
     const snap = event.data;
     const newShake = snap.data();
     const uid = event.params.uid;
@@ -28,13 +31,21 @@ exports.findMatch = onDocumentCreated("shakes/{uid}", async (event) => {
     const matchDoc = others[0];
     const matchUid = matchDoc.id;
 
+    // Her iki kullanicinin vibe'larini al
+    const user1Doc = await db.collection("users").doc(uid).get();
+    const user2Doc = await db.collection("users").doc(matchUid).get();
+
+    const user1Vibes = user1Doc.exists ? user1Doc.data().vibes ?? [] : [];
+    const user2Vibes = user2Doc.exists ? user2Doc.data().vibes ?? [] : [];
+
     const matchRef = db.collection("matches").doc();
-    const matchId = matchRef.id;
 
     await matchRef.set({
         user1: uid,
         user2: matchUid,
         users: [uid, matchUid],
+        user1Vibes: user1Vibes,
+        user2Vibes: user2Vibes,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
         status: "active",
     });

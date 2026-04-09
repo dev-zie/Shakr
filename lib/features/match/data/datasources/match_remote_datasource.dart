@@ -14,9 +14,15 @@ class MatchRemoteDatasource {
         .where('status', isEqualTo: 'active')
         .snapshots()
         .map((snapshot) {
-      if (snapshot.docs.isEmpty) return null;
-      final doc = snapshot.docs.first;
-      return MatchModel.fromMap(doc.data(), doc.id);
-    });
+          if (snapshot.docs.isEmpty) return null;
+          final doc = snapshot.docs.first;
+          return MatchModel.fromMap(doc.data(), doc.id);
+        });
+  }
+
+  Future<MatchEntity?> getMatch(String matchId) async {
+    final doc = await db.collection('matches').doc(matchId).get();
+    if (!doc.exists) return null;
+    return MatchModel.fromMap(doc.data()!, doc.id);
   }
 }
