@@ -90,10 +90,6 @@ class OnboardingScreen extends StatelessWidget {
                         },
                       ),
                     ),
-                    // 1. Baslik
-                    // 2. Subtitle
-                    // 3. Kategoriler + chip'ler (Expanded + ListView)
-                    // 4. Devam butonu
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: selectedVibes.length == 3
