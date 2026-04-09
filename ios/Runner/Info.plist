@@ -66,5 +66,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Yakinindaki insanlarla eslesebilmek icin konumuna ihtiyacimiz var</string>
+
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Yakinindaki insanlarla eslesebilmek icin konumuna ihtiyacimiz var</string>
 </dict>
 </plist>

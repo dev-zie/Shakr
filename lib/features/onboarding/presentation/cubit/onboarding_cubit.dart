@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:shakr/core/services/local_storage_service.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.dart';
 
@@ -28,6 +29,13 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   }
 
   Future<void> saveVibes() async {
+    final permission = await Geolocator.requestPermission();
+
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      emit(OnboardingError(message: 'Konum izni gerekli'));
+      return;
+    }
     await lsc.setOnboardingCompleted();
     emit(
       OnboardingCompleted(
