@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => sl<AuthCubit>(),
       child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
         darkTheme: AppTheme.dark,
         themeMode: ThemeMode.system,

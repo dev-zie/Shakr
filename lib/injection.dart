@@ -10,6 +10,11 @@ import 'package:shakr/features/auth/domain/repositories/auth_repository.dart';
 import 'package:shakr/features/auth/domain/usecases/get_current_user_usecase.dart';
 import 'package:shakr/features/auth/domain/usecases/sign_in_anonymously_usecase.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:shakr/features/match/data/datasources/match_remote_datasource.dart';
+import 'package:shakr/features/match/data/repositories/match_repository_impl.dart';
+import 'package:shakr/features/match/domain/repositories/match_repository.dart';
+import 'package:shakr/features/match/domain/usecases/watch_match_usecase.dart';
+import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:shakr/features/shake/data/datasources/shake_remote_datasource.dart';
 import 'package:shakr/features/shake/data/repositories/shake_repository_impl.dart';
@@ -57,4 +62,13 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => ShakeService());
 
   sl.registerLazySingleton(() => LocationService());
+
+  // Match
+  sl.registerLazySingleton(() => MatchRemoteDatasource(db: sl()));
+  sl.registerLazySingleton<MatchRepository>(
+    () => MatchRepositoryImpl(remoteDatasource: sl()),
+  );
+  sl.registerLazySingleton(() => WatchMatchUsecase(repo: sl()));
+
+  sl.registerLazySingleton(() => MatchCubit(watchMatchUsecase: sl()));
 }
