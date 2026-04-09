@@ -8,6 +8,7 @@ import 'package:shakr/features/auth/domain/repositories/auth_repository.dart';
 import 'package:shakr/features/auth/domain/usecases/get_current_user_usecase.dart';
 import 'package:shakr/features/auth/domain/usecases/sign_in_anonymously_usecase.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -31,4 +32,6 @@ Future<void> initDependencies() async {
     () =>
         AuthCubit(getCurrentUserUsecase: sl(), signInAnonymouslyUsecase: sl()),
   );
+
+  sl.registerLazySingleton(() => OnboardingCubit(lsc: sl()));
 }

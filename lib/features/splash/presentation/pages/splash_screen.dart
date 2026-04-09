@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shakr/core/constants/app_strings.dart';
 import 'package:shakr/core/services/local_storage_service.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_state.dart';
@@ -17,6 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    sl<LocalStorageService>().resetOnboarding(); // gecici, test icin
     sl<AuthCubit>().getCurrentUser();
   }
 
@@ -44,7 +46,10 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisAlignment: .center,
             children: [
-              Text('Shakr'),
+              Text(
+                AppStrings.appName,
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
               SizedBox(height: 20),
               CircularProgressIndicator(),
             ],
