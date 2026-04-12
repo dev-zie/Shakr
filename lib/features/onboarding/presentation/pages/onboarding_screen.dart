@@ -51,7 +51,7 @@ class OnboardingScreen extends StatelessWidget {
                             index,
                           );
                           final kategori = entry.key;
-                          final vibeler = entry.value;
+                          final vibes = entry.value;
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -63,7 +63,7 @@ class OnboardingScreen extends StatelessWidget {
                               Wrap(
                                 spacing: 8,
                                 runSpacing: 8,
-                                children: vibeler.map((vibe) {
+                                children: vibes.map((vibe) {
                                   final isSelected = selectedVibes.contains(
                                     vibe,
                                   );

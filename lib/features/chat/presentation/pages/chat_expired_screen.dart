@@ -39,8 +39,6 @@ class _ChatExpiredScreenState extends State<ChatExpiredScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUid = FirebaseAuth.instance.currentUser?.uid ?? '';
-
     return Scaffold(
       body: BlocConsumer<MatchCubit, MatchState>(
         bloc: sl<MatchCubit>(),

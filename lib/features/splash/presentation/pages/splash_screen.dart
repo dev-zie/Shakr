@@ -37,7 +37,6 @@ class _SplashScreenState extends State<SplashScreen> {
           }
         }
         if (state is AuthError) {
-          print('Auth Error: ${state.message}');
           sl<AuthCubit>().signInAnonymously();
         }
       },
