@@ -78,6 +78,10 @@ class _ShakingScreenState extends State<ShakingScreen> {
   void dispose() {
     _matchTimer?.cancel();
     sl<ShakeService>().stopListening();
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      sl<ShakeCubit>().deleteShake(uid);
+    }
     super.dispose();
   }
 
@@ -121,8 +125,8 @@ class _ShakingScreenState extends State<ShakingScreen> {
                       onPressed: () async {
                         final uid = FirebaseAuth.instance.currentUser?.uid;
                         if (uid == null) return;
-                        final location =
-                            await sl<LocationService>().getCurrentLocation();
+                        final location = await sl<LocationService>()
+                            .getCurrentLocation();
                         final shake = ShakeEntity(
                           uid: uid,
                           location: location,

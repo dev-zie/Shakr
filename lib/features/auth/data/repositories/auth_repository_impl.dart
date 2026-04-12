@@ -48,4 +48,16 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(UnexpectedFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, List<String>>> getUserVibes(String uid) async {
+    try {
+      final vibes = await authRemoteDatasource.getUserVibes(uid);
+      return Right(vibes);
+    } on SocketException {
+      return Left(NetworkFailure());
+    } catch (e) {
+      return Left(UnexpectedFailure());
+    }
+  }
 }

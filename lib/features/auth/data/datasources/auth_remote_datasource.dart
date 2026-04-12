@@ -25,4 +25,11 @@ class AuthRemoteDatasource {
       'vibes': vibes,
     });
   }
+
+  Future<List<String>> getUserVibes(String uid) async {
+  final doc = await firestore.collection('users').doc(uid).get();
+  if (!doc.exists) return [];
+  final data = doc.data()!;
+  return List<String>.from(data['vibes'] ?? []);
+}
 }

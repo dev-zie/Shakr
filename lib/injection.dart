@@ -8,6 +8,7 @@ import 'package:shakr/features/auth/data/datasources/auth_remote_datasource.dart
 import 'package:shakr/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:shakr/features/auth/domain/repositories/auth_repository.dart';
 import 'package:shakr/features/auth/domain/usecases/get_current_user_usecase.dart';
+import 'package:shakr/features/auth/domain/usecases/get_user_vibes_usecase.dart';
 import 'package:shakr/features/auth/domain/usecases/save_vibes_usecase.dart';
 import 'package:shakr/features/auth/domain/usecases/sign_in_anonymously_usecase.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
@@ -27,6 +28,7 @@ import 'package:shakr/features/match/domain/usecases/keep_connection_usecase.dar
 import 'package:shakr/features/match/domain/usecases/watch_match_usecase.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
+import 'package:shakr/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:shakr/features/shake/data/datasources/shake_remote_datasource.dart';
 import 'package:shakr/features/shake/data/repositories/shake_repository_impl.dart';
 import 'package:shakr/features/shake/domain/repositories/shake_repository.dart';
@@ -51,12 +53,12 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton(() => GetCurrentUserUsecase(repo: sl()));
   sl.registerLazySingleton(() => SignInAnonymouslyUsecase(repo: sl()));
-
   sl.registerLazySingleton(
     () =>
         AuthCubit(getCurrentUserUsecase: sl(), signInAnonymouslyUsecase: sl()),
   );
   sl.registerLazySingleton(() => SaveVibesUsecase(repo: sl()));
+  sl.registerLazySingleton(() => GetUserVibesUsecase(repo: sl()));
 
   //onboard
   sl.registerLazySingleton(
@@ -108,5 +110,10 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton(
     () => ChatCubit(sendMessageUsecase: sl(), watchMessagesUsecase: sl()),
+  );
+
+  //settings
+  sl.registerFactory(
+    () => SettingsCubit(getUserVibesUsecase: sl(), saveVibesUsecase: sl()),
   );
 }
