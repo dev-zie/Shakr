@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
           final isCompleted = await sl<LocalStorageService>()
               .isOnboardingCompleted();
           if (isCompleted) {
-            context.go('/home'); // veya '/onboarding'
+            context.go('/home'); 
           } else {
             context.go('/onboarding');
           }

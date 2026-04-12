@@ -15,6 +15,7 @@ class MatchRepositoryImpl implements MatchRepository {
     return remoteDatasource.watchMatch(uid);
   }
 
+  @override
   Future<Either<Failure, MatchEntity?>> getMatch(String matchId) async {
     try {
       final match = await remoteDatasource.getMatch(matchId);

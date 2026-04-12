@@ -11,6 +11,12 @@ import 'package:shakr/features/auth/domain/usecases/get_current_user_usecase.dar
 import 'package:shakr/features/auth/domain/usecases/save_vibes_usecase.dart';
 import 'package:shakr/features/auth/domain/usecases/sign_in_anonymously_usecase.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:shakr/features/chat/data/datasources/chat_remote_datasource.dart';
+import 'package:shakr/features/chat/data/repositories/chat_repository_impl.dart';
+import 'package:shakr/features/chat/domain/repositories/chat_repository.dart';
+import 'package:shakr/features/chat/domain/usecases/send_message_usecase.dart';
+import 'package:shakr/features/chat/domain/usecases/watch_messages_usecase.dart';
+import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:shakr/features/match/data/datasources/match_remote_datasource.dart';
 import 'package:shakr/features/match/data/repositories/match_repository_impl.dart';
 import 'package:shakr/features/match/domain/repositories/match_repository.dart';
@@ -78,5 +84,17 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton(
     () => MatchCubit(watchMatchUsecase: sl(), getMatchUsecase: sl()),
+  );
+
+  // Chat
+  sl.registerLazySingleton(() => ChatRemoteDatasource(db: sl()));
+  sl.registerLazySingleton<ChatRepository>(
+    () => ChatRepositoryImpl(remoteDatasource: sl()),
+  );
+  sl.registerLazySingleton(() => SendMessageUsecase(repo: sl()));
+  sl.registerLazySingleton(() => WatchMessagesUsecase(repo: sl()));
+
+  sl.registerLazySingleton(
+    () => ChatCubit(sendMessageUsecase: sl(), watchMessagesUsecase: sl()),
   );
 }

@@ -55,7 +55,10 @@ class _MatchFoundScreenState extends State<MatchFoundScreen> {
                   ),
                   const SizedBox(height: 40),
                   ElevatedButton(
-                    onPressed: () => context.go('/chat/${widget.matchId}'),
+                    onPressed: () => context.go(
+                      '/chat/${widget.matchId}',
+                      extra: state.match.createdAt,
+                    ),
                     child: const Text('Sohbete Basla'),
                   ),
                 ],
