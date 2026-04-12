@@ -41,4 +41,28 @@ class MatchRepositoryImpl implements MatchRepository {
       return Left(UnexpectedFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, void>> expireMatch(String matchId) async {
+    try {
+      await remoteDatasource.expireMatch(matchId);
+      return Right(unit);
+    } on SocketException {
+      return Left(NetworkFailure());
+    } catch (e) {
+      return Left(UnexpectedFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteMatch(String matchId) async {
+    try {
+      await remoteDatasource.deleteMatch(matchId);
+      return Right(unit);
+    } on SocketException {
+      return Left(NetworkFailure());
+    } catch (e) {
+      return Left(UnexpectedFailure());
+    }
+  }
 }

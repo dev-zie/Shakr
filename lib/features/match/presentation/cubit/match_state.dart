@@ -35,3 +35,15 @@ class MatchError extends MatchState with EquatableMixin {
   @override
   List<Object?> get props => [message];
 }
+
+class MatchExpired extends MatchState with EquatableMixin {
+  final MatchEntity match;
+  MatchExpired(this.match);
+  @override
+  List<Object?> get props => [match];
+}
+
+class MatchDeleted extends MatchState with EquatableMixin {
+  @override
+  List<Object?> get props => [];
+}

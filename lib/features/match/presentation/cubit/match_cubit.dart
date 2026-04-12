@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/features/match/domain/usecases/delete_match_usecase.dart';
+import 'package:shakr/features/match/domain/usecases/expire_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/get_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/keep_connection_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/watch_match_usecase.dart';
@@ -9,6 +11,8 @@ class MatchCubit extends Cubit<MatchState> {
   final WatchMatchUsecase watchMatchUsecase;
   final GetMatchUsecase getMatchUsecase;
   final KeepConnectionUsecase keepConnectionUsecase;
+  final ExpireMatchUsecase expireMatchUsecase;
+  final DeleteMatchUsecase deleteMatchUsecase;
 
   StreamSubscription? _subscription;
 
@@ -16,24 +20,22 @@ class MatchCubit extends Cubit<MatchState> {
     required this.watchMatchUsecase,
     required this.getMatchUsecase,
     required this.keepConnectionUsecase,
+    required this.expireMatchUsecase,
+    required this.deleteMatchUsecase,
   }) : super(MatchInitial());
 
   void watchMatch(String uid) {
-    emit(MatchLoading());
-    _subscription = watchMatchUsecase
-        .call(uid)
-        .listen(
-          (match) {
-            if (match == null) {
-              emit(MatchNotFound());
-            } else {
-              emit(MatchFound(match));
-            }
-          },
-          onError: (error) {
-            emit(MatchError(error.toString()));
-          },
-        );
+    _subscription = watchMatchUsecase.call(uid).listen((match) {
+      print('MatchCubit emit oncesi: ${match?.status}'); // ekle
+      if (match == null) {
+        emit(MatchDeleted());
+      } else if (match.status == 'expired') {
+        print('MatchExpired emit ediliyor'); // ekle
+        emit(MatchExpired(match));
+      } else {
+        emit(MatchFound(match));
+      }
+    });
   }
 
   Future<void> getMatch(String matchId) async {
@@ -51,9 +53,25 @@ class MatchCubit extends Cubit<MatchState> {
     result.fold((failure) => emit(MatchError(failure.message)), (r) => null);
   }
 
+  Future<void> expireMatch(String matchId) async {
+    final result = await expireMatchUsecase.call(matchId);
+    result.fold((l) => emit(MatchError(l.message)), (r) => null);
+  }
+
+  Future<void> deleteMatch(String matchId) async {
+    final result = await deleteMatchUsecase.call(matchId);
+    result.fold((l) => emit(MatchError(l.message)), (r) => null);
+  }
+
   @override
   Future<void> close() {
     _subscription?.cancel();
     return super.close();
   }
+
+  void reset() {
+  _subscription?.cancel();
+  _subscription = null;
+  emit(MatchInitial());
+}
 }

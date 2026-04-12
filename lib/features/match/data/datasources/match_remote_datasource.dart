@@ -11,7 +11,6 @@ class MatchRemoteDatasource {
     return db
         .collection('matches')
         .where('users', arrayContains: uid)
-        .where('status', isEqualTo: 'active')
         .snapshots()
         .map((snapshot) {
           if (snapshot.docs.isEmpty) return null;
@@ -35,5 +34,13 @@ class MatchRemoteDatasource {
         : 'user2KeepConnection';
 
     await db.collection('matches').doc(matchId).update({field: true});
+  }
+
+  Future<void> expireMatch(String matchId) async {
+    await db.collection('matches').doc(matchId).update({'status': 'expired'});
+  }
+
+  Future<void> deleteMatch(String matchId) async {
+    await db.collection('matches').doc(matchId).delete();
   }
 }

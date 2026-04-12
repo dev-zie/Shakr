@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -19,9 +22,13 @@ class ShakingScreen extends StatefulWidget {
 }
 
 class _ShakingScreenState extends State<ShakingScreen> {
+  Timer? _matchTimer;
+
   @override
   void initState() {
     super.initState();
+    sl<MatchCubit>().reset(); // sifirla
+    sl<ShakeCubit>().reset();
     sl<ShakeService>().startListening(() async {
       final uid = FirebaseAuth.instance.currentUser?.uid;
       if (uid == null) return;
@@ -44,8 +51,35 @@ class _ShakingScreenState extends State<ShakingScreen> {
     }
   }
 
+  void _startMatchTimer() {
+    _matchTimer?.cancel();
+    _matchTimer = Timer(const Duration(seconds: 15), () {
+      if (!mounted) return;
+      showCupertinoDialog(
+        context: context,
+        builder: (context) => CupertinoAlertDialog(
+          title: const Text('Esleme Bulunamadi'),
+          content: const Text('Yakininda kimse bulunamadi. Tekrar dene!'),
+          actions: [
+            CupertinoDialogAction(
+              child: const Text('Tamam'),
+              onPressed: () {
+                Navigator.pop(context);
+                sl<ShakeCubit>().deleteShake(
+                  FirebaseAuth.instance.currentUser?.uid ?? '',
+                );
+                context.go('/home');
+              },
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
   @override
   void dispose() {
+    _matchTimer?.cancel();
     sl<ShakeService>().stopListening();
     super.dispose();
   }
@@ -55,7 +89,7 @@ class _ShakingScreenState extends State<ShakingScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             sl<ShakeService>().stopListening();
             context.go('/home');
@@ -66,22 +100,26 @@ class _ShakingScreenState extends State<ShakingScreen> {
         bloc: sl<MatchCubit>(),
         listener: (context, state) {
           if (state is MatchFound) {
+            _matchTimer?.cancel();
             sl<ShakeService>().stopListening();
             context.go('/match/${state.match.matchId}');
           }
         },
         child: BlocConsumer<ShakeCubit, ShakeState>(
           bloc: sl<ShakeCubit>(),
-          listener: (context, state) {},
+          listener: (context, state) {
+            if (state is ShakeRecorded) {
+              _startMatchTimer();
+            }
+          },
           builder: (context, state) {
             if (state is ShakeInitial) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Telefonunu salla!'),
-                    SizedBox(height: 20),
-                    // TEST ICIN - sonra sil
+                    const Text('Telefonunu salla!'),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () async {
                         final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -96,14 +134,14 @@ class _ShakingScreenState extends State<ShakingScreen> {
                         );
                         sl<ShakeCubit>().recordShake(shake);
                       },
-                      child: Text('TEST: Salla'),
+                      child: const Text('TEST: Salla'),
                     ),
                   ],
                 ),
               );
             }
             if (state is ShakeDetected || state is ShakeRecorded) {
-              return Center(
+              return const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -117,12 +155,10 @@ class _ShakingScreenState extends State<ShakingScreen> {
             if (state is ShakeError) {
               return Center(child: Text(state.message));
             }
-
             if (state is ShakeNoMatch) {
-              return Center(child: Text('Kimse bulunamadi'));
+              return const Center(child: Text('Kimse bulunamadi'));
             }
-
-            return SizedBox();
+            return const SizedBox();
           },
         ),
       ),

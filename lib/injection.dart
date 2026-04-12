@@ -20,6 +20,8 @@ import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:shakr/features/match/data/datasources/match_remote_datasource.dart';
 import 'package:shakr/features/match/data/repositories/match_repository_impl.dart';
 import 'package:shakr/features/match/domain/repositories/match_repository.dart';
+import 'package:shakr/features/match/domain/usecases/delete_match_usecase.dart';
+import 'package:shakr/features/match/domain/usecases/expire_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/get_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/keep_connection_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/watch_match_usecase.dart';
@@ -83,12 +85,16 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => WatchMatchUsecase(repo: sl()));
   sl.registerLazySingleton(() => GetMatchUsecase(repo: sl()));
   sl.registerLazySingleton(() => KeepConnectionUsecase(repo: sl()));
+  sl.registerLazySingleton(() => ExpireMatchUsecase(repo: sl()));
+  sl.registerLazySingleton(() => DeleteMatchUsecase(repo: sl()));
 
   sl.registerLazySingleton(
     () => MatchCubit(
       watchMatchUsecase: sl(),
       getMatchUsecase: sl(),
       keepConnectionUsecase: sl(),
+      deleteMatchUsecase: sl(),
+      expireMatchUsecase: sl(),
     ),
   );
 

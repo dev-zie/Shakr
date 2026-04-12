@@ -30,4 +30,8 @@ class ShakeCubit extends Cubit<ShakeState> {
       (r) => emit(ShakeInitial()),
     );
   }
+
+  void reset() {
+  emit(ShakeInitial());
+}
 }

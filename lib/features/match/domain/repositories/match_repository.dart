@@ -6,4 +6,6 @@ abstract class MatchRepository {
   Stream<MatchEntity?> watchMatch(String uid);
   Future<Either<Failure, MatchEntity?>> getMatch(String matchId);
   Future<Either<Failure, void>> keepConnection(String matchId, String uid);
+  Future<Either<Failure, void>> expireMatch(String matchId);
+  Future<Either<Failure, void>> deleteMatch(String matchId);
 }
