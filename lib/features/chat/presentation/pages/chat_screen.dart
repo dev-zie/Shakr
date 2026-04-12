@@ -39,7 +39,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
     // Match state'i direkt dinle
     _matchCubit.stream.listen((state) {
-      print('Stream listener: $state');
       if (!mounted) return;
       if (state is MatchExpired) {
         context.go('/chat-expired/${widget.matchId}'); // bunu degistir
@@ -117,7 +116,6 @@ class _ChatScreenState extends State<ChatScreen> {
           BlocListener<MatchCubit, MatchState>(
             bloc: _matchCubit,
             listener: (context, state) {
-              print('ChatScreen listener: $state');
               if (state is MatchDeleted) {
                 context.go('/home');
               }
@@ -193,7 +191,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   top: BorderSide(
                     color: Theme.of(
                       context,
-                    ).colorScheme.outline.withOpacity(0.2),
+                    ).colorScheme.outline.withAlpha(90),
                   ),
                 ),
               ),

@@ -26,11 +26,9 @@ class MatchCubit extends Cubit<MatchState> {
 
   void watchMatch(String uid) {
     _subscription = watchMatchUsecase.call(uid).listen((match) {
-      print('MatchCubit emit oncesi: ${match?.status}'); // ekle
       if (match == null) {
         emit(MatchDeleted());
       } else if (match.status == 'expired') {
-        print('MatchExpired emit ediliyor'); // ekle
         emit(MatchExpired(match));
       } else {
         emit(MatchFound(match));

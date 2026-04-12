@@ -13,7 +13,6 @@ class MatchModel extends MatchEntity {
   });
 
   factory MatchModel.fromMap(Map<String, dynamic> map, String id) {
-    print('MatchModel status: ${map['status']}');
     return MatchModel(
       matchId: id,
       user1Id: map['user1'],

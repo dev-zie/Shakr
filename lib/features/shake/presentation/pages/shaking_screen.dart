@@ -27,21 +27,18 @@ class _ShakingScreenState extends State<ShakingScreen> {
   @override
   void initState() {
     super.initState();
-    sl<MatchCubit>().reset(); // sifirla
+    sl<MatchCubit>().reset();
     sl<ShakeCubit>().reset();
     sl<ShakeService>().startListening(() async {
       final uid = FirebaseAuth.instance.currentUser?.uid;
       if (uid == null) return;
-
       final location = await sl<LocationService>().getCurrentLocation();
-
       final shake = ShakeEntity(
         uid: uid,
         location: location,
         status: 'waiting',
         timestamp: DateTime.now(),
       );
-
       sl<ShakeCubit>().recordShake(shake);
     });
 
@@ -124,8 +121,8 @@ class _ShakingScreenState extends State<ShakingScreen> {
                       onPressed: () async {
                         final uid = FirebaseAuth.instance.currentUser?.uid;
                         if (uid == null) return;
-                        final location = await sl<LocationService>()
-                            .getCurrentLocation();
+                        final location =
+                            await sl<LocationService>().getCurrentLocation();
                         final shake = ShakeEntity(
                           uid: uid,
                           location: location,
