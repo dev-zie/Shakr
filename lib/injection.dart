@@ -21,6 +21,7 @@ import 'package:shakr/features/match/data/datasources/match_remote_datasource.da
 import 'package:shakr/features/match/data/repositories/match_repository_impl.dart';
 import 'package:shakr/features/match/domain/repositories/match_repository.dart';
 import 'package:shakr/features/match/domain/usecases/get_match_usecase.dart';
+import 'package:shakr/features/match/domain/usecases/keep_connection_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/watch_match_usecase.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
@@ -81,9 +82,14 @@ Future<void> initDependencies() async {
   );
   sl.registerLazySingleton(() => WatchMatchUsecase(repo: sl()));
   sl.registerLazySingleton(() => GetMatchUsecase(repo: sl()));
+  sl.registerLazySingleton(() => KeepConnectionUsecase(repo: sl()));
 
   sl.registerLazySingleton(
-    () => MatchCubit(watchMatchUsecase: sl(), getMatchUsecase: sl()),
+    () => MatchCubit(
+      watchMatchUsecase: sl(),
+      getMatchUsecase: sl(),
+      keepConnectionUsecase: sl(),
+    ),
   );
 
   // Chat

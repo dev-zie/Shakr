@@ -26,4 +26,19 @@ class MatchRepositoryImpl implements MatchRepository {
       return Left(UnexpectedFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, void>> keepConnection(
+    String matchId,
+    String uid,
+  ) async {
+    try {
+      await remoteDatasource.keepConnection(matchId, uid);
+      return Right(unit);
+    } on SocketException {
+      return Left(NetworkFailure());
+    } catch (e) {
+      return Left(UnexpectedFailure());
+    }
+  }
 }

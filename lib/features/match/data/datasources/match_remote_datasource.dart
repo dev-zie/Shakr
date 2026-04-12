@@ -25,4 +25,15 @@ class MatchRemoteDatasource {
     if (!doc.exists) return null;
     return MatchModel.fromMap(doc.data()!, doc.id);
   }
+
+  Future<void> keepConnection(String matchId, String uid) async {
+    final match = await db.collection('matches').doc(matchId).get();
+    final data = match.data()!;
+
+    final field = data['user1'] == uid
+        ? 'user1KeepConnection'
+        : 'user2KeepConnection';
+
+    await db.collection('matches').doc(matchId).update({field: true});
+  }
 }
