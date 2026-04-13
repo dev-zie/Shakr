@@ -37,13 +37,12 @@ class SettingsBody extends StatelessWidget {
               },
             ),
           ),
+
           SaveButton(
             text: AppStrings.save,
-            onPressed: () {
-              selectedVibes.length == 3
-                  ? context.read<SettingsCubit>().saveVibes()
-                  : null;
-            },
+            onPressed: selectedVibes.length == 3
+                ? () => context.read<SettingsCubit>().saveVibes()
+                : null, 
           ),
         ],
       ),

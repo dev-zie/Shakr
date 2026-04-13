@@ -42,10 +42,11 @@ class OnboardingBody extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
+
         SaveButton(
           onPressed: selectedVibes.length == 3
               ? () => context.read<OnboardingCubit>().saveVibes()
-              : null, // null ise buton disabled
+              : null,
           text: AppStrings.continueButton,
         ),
       ],

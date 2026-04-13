@@ -54,10 +54,10 @@ class AppTheme {
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
+        disabledBackgroundColor: AppColors.primary.withOpacity(0.4),
+        disabledForegroundColor: Colors.white.withOpacity(0.6),
         minimumSize: Size(double.infinity, 52),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     ),
   );
