@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shakr/common/constants/app_strings.dart';
 
 class MatchFoundBody extends StatelessWidget {
   const MatchFoundBody({
@@ -18,7 +19,7 @@ class MatchFoundBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Esleme Bulundu!',
+            AppStrings.matchFound,
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           const SizedBox(height: 20),
@@ -31,7 +32,7 @@ class MatchFoundBody extends StatelessWidget {
           const SizedBox(height: 40),
           ElevatedButton(
             onPressed: () => context.go('/chat/$matchId', extra: createdAt),
-            child: const Text('Sohbete Basla'),
+            child: const Text(AppStrings.startChat),
           ),
         ],
       ),

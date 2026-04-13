@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_state.dart';
 import 'package:shakr/features/shake/presentation/cubit/shake_cubit.dart';
@@ -54,11 +55,11 @@ class _ShakingScreenState extends State<ShakingScreen> {
                 showCupertinoDialog(
                   context: context,
                   builder: (context) => CupertinoAlertDialog(
-                    title: const Text('Esleme Bulunamadi'),
-                    content: const Text('Yakininda kimse bulunamadi.'),
+                    title: const Text(AppStrings.matchNotFound),
+                    content: const Text(AppStrings.noBodyFound),
                     actions: [
                       CupertinoDialogAction(
-                        child: const Text('Tamam'),
+                        child: const Text(AppStrings.okay),
                         onPressed: () {
                           Navigator.pop(context);
                           context.go('/home');
@@ -77,7 +78,7 @@ class _ShakingScreenState extends State<ShakingScreen> {
             }
             if (state is ShakeError) return Center(child: Text(state.message));
             if (state is ShakeNoMatch) {
-              return const Center(child: Text('Kimse bulunamadi'));
+              return const Center(child: Text(AppStrings.matchNotFound));
             }
             return const SizedBox();
           },

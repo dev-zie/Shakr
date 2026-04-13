@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shakr/core/router/app_router.dart';
-import 'package:shakr/core/theme/app_theme.dart';
+import 'package:shakr/common/router/app_router.dart';
+import 'package:shakr/common/theme/app_theme.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/firebase_options.dart';
 import 'package:shakr/injection.dart';

@@ -25,6 +25,7 @@ class ShakeCubit extends Cubit<ShakeState> {
     reset();
     sl<MatchCubit>().reset();
     final uid = sl<AuthCubit>().currentUid;
+    print('ShakeCubit init uid: $uid');
     sl<ShakeService>().startListening(() async {
       final uid = sl<AuthCubit>().currentUid;
       if (uid == null) return;
@@ -38,7 +39,10 @@ class ShakeCubit extends Cubit<ShakeState> {
         ),
       );
     });
-    if (uid != null) sl<MatchCubit>().watchMatch(uid);
+    if (uid != null) {
+      print('watchMatch basliyor');
+      sl<MatchCubit>().watchMatch(uid);
+    }
   }
 
   void disposeScreen() {

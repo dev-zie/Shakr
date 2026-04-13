@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/widgets/save_button.dart';
-import 'package:shakr/core/constants/app_vibes.dart';
+import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/constants/app_vibes.dart';
 import 'package:shakr/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:shakr/features/settings/presentation/widgets/vibe_items.dart';
 
@@ -16,7 +17,10 @@ class SettingsBody extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('3 vibe sec', style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            AppStrings.selectThree,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: 16),
           Expanded(
             child: ListView.builder(
@@ -34,10 +38,10 @@ class SettingsBody extends StatelessWidget {
             ),
           ),
           SaveButton(
-            text: 'Kaydet',
+            text: AppStrings.save,
             onPressed: () {
               selectedVibes.length == 3
-                  ? () => context.read<SettingsCubit>().saveVibes()
+                  ? context.read<SettingsCubit>().saveVibes()
                   : null;
             },
           ),

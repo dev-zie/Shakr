@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shakr/core/constants/app_strings.dart';
+import 'package:shakr/common/constants/app_strings.dart';
 
 class HomeBody extends StatelessWidget {
   const HomeBody({super.key});

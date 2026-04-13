@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shakr/core/constants/app_strings.dart';
+import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/core/services/local_storage_service.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_state.dart';
@@ -27,7 +27,6 @@ class SplashScreen extends StatelessWidget {
           }
         }
         if (state is AuthError) {
-          Future.delayed(Duration(seconds: 3));
           sl<AuthCubit>().signInAnonymously();
         }
       },
