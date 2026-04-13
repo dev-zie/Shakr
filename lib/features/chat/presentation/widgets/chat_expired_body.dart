@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/features/match/domain/entities/match_entity.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/injection.dart';
@@ -29,12 +30,12 @@ class ChatExpiredBody extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Sure Doldu!',
+              AppStrings.timesUp,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 8),
             Text(
-              'Karsi tarafin vibelari:',
+              AppStrings.otherUsersVibes,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
@@ -47,41 +48,35 @@ class ChatExpiredBody extends StatelessWidget {
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () async {
+                // 1. Kendi tarafını işaretle
                 await sl<MatchCubit>().keepConnection(matchId, currentUid!);
-                await sl<MatchCubit>().expireMatch(matchId);
 
+                // 2. Diğer kişinin basıp basmadığını kontrol et
                 final bothKept = await sl<MatchCubit>().checkBothKeptConnection(
                   matchId,
                 );
 
                 if (context.mounted) {
                   if (bothKept) {
+                    // İKİSİ DE KORUDU
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Baglanti kuruldu! Ileride profilinizden gorebilirsiniz.',
-                        ),
-                        duration: Duration(seconds: 2),
-                      ),
+                      const SnackBar(content: Text(AppStrings.connectSucces)),
                     );
-                    await Future.delayed(const Duration(seconds: 2));
+                    // Biraz bekle ki mesaj okunsun
+                    await Future.delayed(const Duration(seconds: 3));
+                    sl<MatchCubit>().deleteMatch(matchId); // Temizlik
                   } else {
+                    // HENÜZ DİĞERİ BASMADI VEYA VAZGEÇTİ
+                    // Burada silmiyoruz, kullanıcıya "Diğer kullanıcı bekleniyor..." diyebilirsin
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text(
-                          'Maalesef biriniz kabul etmedi',
-                        ),
-                        duration: Duration(seconds: 2),
+                        content: Text(AppStrings.waitingOtherDecide),
                       ),
                     );
-                    await Future.delayed(const Duration(seconds: 2));
                   }
-                  if (context.mounted) context.go('/home');
-
-                  
                 }
               },
-              child: const Text('Baglantiyi Koru'),
+              child: const Text(AppStrings.saveConnect),
             ),
             const SizedBox(height: 12),
             OutlinedButton(
@@ -89,7 +84,7 @@ class ChatExpiredBody extends StatelessWidget {
                 sl<MatchCubit>().deleteMatch(matchId);
                 context.go('/home');
               },
-              child: const Text('Vazgec'),
+              child: const Text(AppStrings.deleteConnect),
             ),
           ],
         ),

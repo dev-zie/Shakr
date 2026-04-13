@@ -15,4 +15,14 @@ class AppStrings {
   static const changeVibe = 'Vibe\'ini Degistir';
   static const save = 'Kaydet';
   static const okay = 'Tamam';
+  static const connectSucces =
+      'Harika! İkiniz de bağlantıyı korumak istediniz. İleride burada bir arkadaşlık başlayacak!';
+  static const connectFailed = 'Maalesef biriniz kabul etmedi';
+  static const saveConnect = 'Baglantiyi Koru';
+  static const deleteConnect = 'Vazgec';
+  static const timesUp = 'Sure Doldu';
+  static const otherUsersVibes = 'Karsi tarafin vibelari:';
+  static const matchClosed = 'Eslesme Sonlandirildi';
+  static const waitingOtherDecide =
+      'İsteğin iletildi! Diğer kullanıcının kararı bekleniyor...';
 }

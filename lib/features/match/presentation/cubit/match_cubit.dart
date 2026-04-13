@@ -67,6 +67,7 @@ class MatchCubit extends Cubit<MatchState> {
   Future<void> deleteMatch(String matchId) async {
     final result = await deleteMatchUsecase.call(matchId);
     result.fold((l) => emit(MatchError(l.message)), (r) => null);
+    emit(MatchInitial());
   }
 
   @override

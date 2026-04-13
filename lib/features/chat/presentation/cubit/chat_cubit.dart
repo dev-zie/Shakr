@@ -27,27 +27,34 @@ class ChatCubit extends Cubit<ChatState> {
   void _startTimer(String matchId, DateTime createdAt) {
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      final expireTime = createdAt.add(
-        const Duration(seconds: 300),
-      ); // 5 dk = 300 saniye
+      if (isClosed) {
+        timer.cancel();
+        return;
+      }
+
+      final expireTime = createdAt.add(const Duration(seconds: 30));
       final remaining = expireTime.difference(DateTime.now()).inSeconds;
 
       if (remaining <= 0) {
         timer.cancel();
         sl<MatchCubit>().expireMatch(matchId);
-        emit(ChatTimeExpiredState());
+        if (!isClosed) emit(ChatTimeExpiredState());
       } else {
-        // DÜZELTME BURADA: Mesajları ChatTimerTickState'ten almalıyız
         List<MessageEntity> currentMessages = [];
         if (state is ChatTimerTickState) {
           currentMessages = (state as ChatTimerTickState).messages;
-        } else if (state is ChatLoaded) {
-          currentMessages = (state as ChatLoaded).messages;
         }
 
-        emit(ChatTimerTickState(remaining, currentMessages));
+        if (!isClosed) emit(ChatTimerTickState(remaining, currentMessages));
       }
     });
+  }
+
+  @override
+  Future<void> close() {
+    _timer?.cancel();
+    _subscription?.cancel();
+    return super.close();
   }
 
   Future<void> sendMessage(String matchId, MessageEntity message) async {

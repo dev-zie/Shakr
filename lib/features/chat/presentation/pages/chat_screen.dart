@@ -16,25 +16,28 @@ class ChatScreen extends StatelessWidget {
   final String matchId;
   const ChatScreen({super.key, required this.matchId});
 
-  String _formatTime(int seconds) {
-    final m = seconds ~/ 60;
-    final s = seconds % 60;
-    return '$m:${s.toString().padLeft(2, '0')}';
-  }
-
   @override
   Widget build(BuildContext context) {
+    final matchCubit = sl<MatchCubit>();
+    final matchState = matchCubit.state;
     final currentUid = sl<AuthCubit>().currentUid;
 
-    return BlocProvider(
-      create: (context) {
-        final matchState = sl<MatchCubit>().state;
-        DateTime matchTime = DateTime.now();
-        if (matchState is MatchFound) {
-          matchTime = matchState.match.createdAt;
-        }
-        return sl<ChatCubit>()..initChat(matchId, matchTime);
-      },
+    DateTime matchTime = DateTime.now();
+
+    String _formatTime(int seconds) {
+      final m = seconds ~/ 60;
+      final s = seconds % 60;
+      return '$m:${s.toString().padLeft(2, '0')}';
+    }
+
+    if (matchState is MatchFound) {
+      matchTime = matchState.match.createdAt;
+    }
+
+    final chatCubit = sl<ChatCubit>()..initChat(matchId, matchTime);
+
+    return BlocProvider.value(
+      value: chatCubit,
       child: PopScope(
         canPop: false,
         child: Scaffold(
@@ -65,7 +68,6 @@ class ChatScreen extends StatelessWidget {
                 bloc: sl<MatchCubit>(),
                 listener: (context, state) {
                   if (state is MatchDeleted) {
-                    sl<ChatCubit>().disposeScreen();
                     context.go('/home');
                   }
                 },
@@ -73,7 +75,6 @@ class ChatScreen extends StatelessWidget {
               BlocListener<ChatCubit, ChatState>(
                 listener: (context, state) {
                   if (state is ChatTimeExpiredState) {
-                    sl<ChatCubit>().disposeScreen();
                     context.go('/chat-expired/$matchId');
                   }
                 },
