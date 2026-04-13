@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/core/services/location_service.dart';
 import 'package:shakr/core/services/shake_service.dart';
@@ -25,7 +24,6 @@ class ShakeCubit extends Cubit<ShakeState> {
     reset();
     sl<MatchCubit>().reset();
     final uid = sl<AuthCubit>().currentUid;
-    print('ShakeCubit init uid: $uid');
     sl<ShakeService>().startListening(() async {
       final uid = sl<AuthCubit>().currentUid;
       if (uid == null) return;
@@ -40,7 +38,6 @@ class ShakeCubit extends Cubit<ShakeState> {
       );
     });
     if (uid != null) {
-      print('watchMatch basliyor');
       sl<MatchCubit>().watchMatch(uid);
     }
   }
@@ -70,9 +67,16 @@ class ShakeCubit extends Cubit<ShakeState> {
 
   void reset() => emit(ShakeInitial());
 
-  void startMatchTimer(VoidCallback onTimeout) {
+  // void startMatchTimer(VoidCallback onTimeout) {
+  //   _matchTimer?.cancel();
+  //   _matchTimer = Timer(const Duration(seconds: 15), onTimeout);
+  // }
+
+  void startMatchTimer() {
     _matchTimer?.cancel();
-    _matchTimer = Timer(const Duration(seconds: 15), onTimeout);
+    _matchTimer = Timer(const Duration(seconds: 15), () {
+      emit(ShakeNoMatch());
+    });
   }
 
   void cancelMatchTimer() => _matchTimer?.cancel();

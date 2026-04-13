@@ -10,140 +10,120 @@ import 'package:shakr/features/chat/presentation/widgets/chat_message_list.dart'
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_state.dart';
 import 'package:shakr/injection.dart';
-import 'dart:async';
 import 'package:uuid/uuid.dart';
 
 class ChatScreen extends StatefulWidget {
   final String matchId;
-  final DateTime createdAt;
-  const ChatScreen({super.key, required this.matchId, required this.createdAt});
+  const ChatScreen({super.key, required this.matchId});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final TextEditingController _controller = TextEditingController();
-  Timer? _timer;
-  int _secondsLeft = 10;
-  late final MatchCubit _matchCubit;
-  late final ChatCubit _chatCubit;
-
   @override
   void initState() {
     super.initState();
-    _matchCubit = sl<MatchCubit>();
-    _chatCubit = sl<ChatCubit>();
-    _secondsLeft = _calculateSecondsLeft(widget.createdAt);
-    _chatCubit.watchMessages(widget.matchId);
+    // DÜZELTME BURADA: Sayfa açılır açılmaz Timer'ı ve dinlemeyi başlatıyoruz!
+    final matchState = sl<MatchCubit>().state;
+    DateTime matchTime = DateTime.now(); // Güvenlik amacıya varsayılan saat
 
-    _matchCubit.watchMatch(sl<AuthCubit>().currentUid ?? '');
+    if (matchState is MatchFound) {
+      matchTime = matchState.match.createdAt;
+    }
 
-    _startTimer();
+    sl<ChatCubit>().initChat(widget.matchId, matchTime);
   }
 
-  int _calculateSecondsLeft(DateTime createdAt) {
-    final expireTime = createdAt.add(const Duration(seconds: 50));
-    final remaining = expireTime.difference(DateTime.now()).inSeconds;
-    return remaining < 0 ? 0 : remaining;
-  }
-
-  void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      final newSecondsLeft = _calculateSecondsLeft(widget.createdAt);
-      if (newSecondsLeft <= 0) {
-        timer.cancel();
-        if (mounted) context.go('/chat-expired/${widget.matchId}');
-      } else {
-        setState(() => _secondsLeft = newSecondsLeft);
-      }
-    });
-  }
-
-  String get _timerText {
-    final minutes = _secondsLeft ~/ 60;
-    final seconds = _secondsLeft % 60;
-    return '$minutes:${seconds.toString().padLeft(2, '0')}';
-  }
-
-  void _sendMessage() {
-    if (_controller.text.trim().isEmpty) return;
-    final uid = sl<AuthCubit>().currentUid;
-    final message = MessageEntity(
-      id: const Uuid().v4(),
-      senderId: uid!,
-      text: _controller.text.trim(),
-      createdAt: DateTime.now(),
-    );
-    _chatCubit.sendMessage(widget.matchId, message);
-    _controller.clear();
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    _controller.dispose();
-    super.dispose();
+  String _formatTime(int seconds) {
+    final m = seconds ~/ 60;
+    final s = seconds % 60;
+    return '$m:${s.toString().padLeft(2, '0')}';
   }
 
   @override
   Widget build(BuildContext context) {
     final currentUid = sl<AuthCubit>().currentUid;
-    print('currentUid: $currentUid');
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          _timerText,
-          style: TextStyle(
-            color: _secondsLeft < 60
-                ? Colors.red
-                : Theme.of(context).colorScheme.primary,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: MultiBlocListener(
-        listeners: [
-          BlocListener<MatchCubit, MatchState>(
-            bloc: _matchCubit,
-            listener: (context, state) {
-              if (state is MatchDeleted) {
-                context.go('/home');
-              }
-              if (state is MatchExpired) {
-                context.go('/chat-expired/${widget.matchId}');
-              }
+    // PopScope: Fiziksel (Android) geri tuşunu kilitler
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading:
+              false, // DÜZELTME BURADA: Geri okunu kaldırır!
+          title: BlocBuilder<ChatCubit, ChatState>(
+            bloc: sl<ChatCubit>(),
+            builder: (context, state) {
+              int secondsLeft = 300;
+              if (state is ChatTimerTickState) secondsLeft = state.secondsLeft;
+
+              return Text(
+                _formatTime(secondsLeft),
+                style: TextStyle(
+                  color: secondsLeft < 60
+                      ? Colors.red
+                      : Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              );
             },
           ),
-        ],
-        child: Column(
-          children: [
-            Expanded(
-              child: BlocConsumer<ChatCubit, ChatState>(
-                bloc: _chatCubit,
-                listener: (context, state) {},
-                builder: (context, state) {
-                  if (state is ChatLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (state is ChatLoaded) {
-                    return ChatMessageList(
-                      messages: state.messages,
-                      currentUid: currentUid,
-                    );
-                  }
-                  if (state is ChatError) {
-                    return Center(child: Text(state.message));
-                  }
-                  return const SizedBox();
+          centerTitle: true,
+        ),
+        body: MultiBlocListener(
+          listeners: [
+            BlocListener<MatchCubit, MatchState>(
+              bloc: sl<MatchCubit>(),
+              listener: (context, state) {
+                if (state is MatchDeleted) {
+                  sl<ChatCubit>().disposeScreen();
+                  context.go('/home');
+                }
+              },
+            ),
+            BlocListener<ChatCubit, ChatState>(
+              bloc: sl<ChatCubit>(),
+              listener: (context, state) {
+                if (state is ChatTimeExpiredState) {
+                  sl<ChatCubit>().disposeScreen();
+                  context.go('/chat-expired/${widget.matchId}');
+                }
+              },
+            ),
+          ],
+          child: Column(
+            children: [
+              Expanded(
+                child: BlocBuilder<ChatCubit, ChatState>(
+                  bloc: sl<ChatCubit>(),
+                  builder: (context, state) {
+                    if (state is ChatLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (state is ChatTimerTickState) {
+                      return ChatMessageList(
+                        messages: state.messages,
+                        currentUid: currentUid,
+                      );
+                    }
+                    return const SizedBox();
+                  },
+                ),
+              ),
+              ChatInputBar(
+                onSend: (text) {
+                  final message = MessageEntity(
+                    id: const Uuid().v4(),
+                    senderId: currentUid!,
+                    text: text,
+                    createdAt: DateTime.now(),
+                  );
+                  sl<ChatCubit>().sendMessage(widget.matchId, message);
                 },
               ),
-            ),
-            ChatInputBar(controller: _controller, onSend: _sendMessage),
-          ],
+            ],
+          ),
         ),
       ),
     );

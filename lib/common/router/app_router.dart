@@ -32,8 +32,7 @@ final GoRouter router = GoRouter(
       path: '/chat/:matchId',
       builder: (context, state) {
         final matchId = state.pathParameters['matchId']!;
-        final createdAt = state.extra as DateTime;
-        return ChatScreen(matchId: matchId, createdAt: createdAt);
+        return ChatScreen(matchId: matchId);
       },
     ),
     GoRoute(

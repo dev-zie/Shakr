@@ -46,10 +46,28 @@ class ChatExpiredBody extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             ElevatedButton(
-              onPressed: () {
-                sl<MatchCubit>().keepConnection(matchId, currentUid!);
-                sl<MatchCubit>().expireMatch(matchId);
-                context.go('/home');
+              onPressed: () async {
+                await sl<MatchCubit>().keepConnection(matchId, currentUid!);
+                await sl<MatchCubit>().expireMatch(matchId);
+
+                final bothKept = await sl<MatchCubit>().checkBothKeptConnection(
+                  matchId,
+                );
+
+                if (context.mounted) {
+                  if (bothKept) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Baglanti kuruldu! Ileride profilinizden gorebilirsiniz.',
+                        ),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                    await Future.delayed(const Duration(seconds: 2));
+                  }
+                  if (context.mounted) context.go('/home');
+                }
               },
               child: const Text('Baglantiyi Koru'),
             ),

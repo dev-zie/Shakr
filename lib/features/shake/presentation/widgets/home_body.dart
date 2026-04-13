@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/features/shake/presentation/cubit/shake_cubit.dart';
+import 'package:shakr/injection.dart';
 
 class HomeBody extends StatelessWidget {
   const HomeBody({super.key});
@@ -25,6 +27,7 @@ class HomeBody extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: ElevatedButton(
               onPressed: () {
+                sl<ShakeCubit>().init();
                 context.go('/shaking');
               },
               child: Text(AppStrings.shakeString),

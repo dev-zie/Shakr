@@ -8,4 +8,5 @@ abstract class MatchRepository {
   Future<Either<Failure, void>> keepConnection(String matchId, String uid);
   Future<Either<Failure, void>> expireMatch(String matchId);
   Future<Either<Failure, void>> deleteMatch(String matchId);
+  Future<Either<Failure, bool>> checkBothKeptConnection(String matchId);
 }

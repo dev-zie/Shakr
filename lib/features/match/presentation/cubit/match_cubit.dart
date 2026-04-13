@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/features/match/domain/usecases/check_connection_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/delete_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/expire_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/get_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/keep_connection_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/watch_match_usecase.dart';
 import 'package:shakr/features/match/presentation/cubit/match_state.dart';
+import 'package:shakr/injection.dart';
 
 class MatchCubit extends Cubit<MatchState> {
   final WatchMatchUsecase watchMatchUsecase;
@@ -13,6 +15,7 @@ class MatchCubit extends Cubit<MatchState> {
   final KeepConnectionUsecase keepConnectionUsecase;
   final ExpireMatchUsecase expireMatchUsecase;
   final DeleteMatchUsecase deleteMatchUsecase;
+  final CheckConnectionUsecase checkConnectionUsecase;
 
   StreamSubscription? _subscription;
 
@@ -22,7 +25,12 @@ class MatchCubit extends Cubit<MatchState> {
     required this.keepConnectionUsecase,
     required this.expireMatchUsecase,
     required this.deleteMatchUsecase,
+    required this.checkConnectionUsecase,
   }) : super(MatchInitial());
+
+  void init(String matchId) {
+    sl<MatchCubit>().getMatch(matchId);
+  }
 
   void watchMatch(String uid) {
     _subscription = watchMatchUsecase.call(uid).listen((match) {
@@ -68,8 +76,13 @@ class MatchCubit extends Cubit<MatchState> {
   }
 
   void reset() {
-  _subscription?.cancel();
-  _subscription = null;
-  emit(MatchInitial());
-}
+    _subscription?.cancel();
+    _subscription = null;
+    emit(MatchInitial());
+  }
+
+  Future<bool> checkBothKeptConnection(String matchId) async {
+    final result = await checkConnectionUsecase.call(matchId);
+    return result.fold((l) => false, (r) => r);
+  }
 }

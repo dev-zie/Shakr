@@ -18,6 +18,11 @@ class OnboardingScreen extends StatelessWidget {
           if (state is OnboardingCompleted) {
             context.go('/home');
           }
+          if (state is OnboardingError) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
+          }
         },
         builder: (context, state) {
           final selectedVibes = state is OnboardingVibeSelected

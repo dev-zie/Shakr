@@ -21,6 +21,21 @@ class ChatLoaded extends ChatState with EquatableMixin {
   List<Object?> get props => [messages];
 }
 
+class ChatTimerTickState extends ChatState with EquatableMixin {
+  final int secondsLeft;
+  final List<MessageEntity> messages;
+
+  ChatTimerTickState(this.secondsLeft, this.messages);
+
+  @override
+  List<Object?> get props => [secondsLeft, messages];
+}
+
+class ChatTimeExpiredState extends ChatState with EquatableMixin {
+  @override
+  List<Object?> get props => [];
+}
+
 class ChatError extends ChatState with EquatableMixin {
   final String message;
 

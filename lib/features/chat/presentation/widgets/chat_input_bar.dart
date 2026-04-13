@@ -1,14 +1,30 @@
 import 'package:flutter/material.dart';
 
-class ChatInputBar extends StatelessWidget {
-  final TextEditingController controller;
-  final VoidCallback onSend;
+class ChatInputBar extends StatefulWidget {
+  final Function(String) onSend;
 
-  const ChatInputBar({
-    super.key,
-    required this.controller,
-    required this.onSend,
-  });
+  const ChatInputBar({super.key, required this.onSend});
+
+  @override
+  State<ChatInputBar> createState() => _ChatInputBarState();
+}
+
+class _ChatInputBarState extends State<ChatInputBar> {
+  final TextEditingController _controller = TextEditingController();
+
+  void _handleSend() {
+    final text = _controller.text.trim();
+    if (text.isEmpty) return;
+
+    widget.onSend(text);
+    _controller.clear();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +42,7 @@ class ChatInputBar extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
-              controller: controller,
+              controller: _controller,
               decoration: InputDecoration(
                 hintText: 'Mesajinizi yazin...',
                 border: OutlineInputBorder(
@@ -43,7 +59,7 @@ class ChatInputBar extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           IconButton(
-            onPressed: onSend,
+            onPressed: _handleSend,
             icon: Icon(
               Icons.send,
               color: Theme.of(context).colorScheme.primary,

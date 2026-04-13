@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shakr/core/services/local_storage_service.dart';
 import 'package:shakr/features/auth/domain/usecases/save_vibes_usecase.dart';
+import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.dart';
+import 'package:shakr/injection.dart';
 
 class OnboardingCubit extends Cubit<OnboardingState> {
   final LocalStorageService lsc;
@@ -45,7 +47,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
         ? (state as OnboardingVibeSelected).selectedVibes
         : <String>[];
 
-    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final uid = sl<AuthCubit>().currentUid;
     if (uid != null) {
       await saveVibesUsecase.call(uid, vibes);
     }

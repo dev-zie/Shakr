@@ -58,7 +58,35 @@ class MatchRemoteDatasource {
     await db.collection('matches').doc(matchId).update({'status': 'expired'});
   }
 
+  // Future<void> deleteMatch(String matchId) async {
+  //   await db.collection('matches').doc(matchId).delete();
+  // }
+
   Future<void> deleteMatch(String matchId) async {
+    // Önce mesajları sil
+    final messages = await db
+        .collection('chats')
+        .doc(matchId)
+        .collection('messages')
+        .get();
+
+    for (final doc in messages.docs) {
+      await doc.reference.delete();
+    }
+
+    // Sonra chat dokümanını sil
+    await db.collection('chats').doc(matchId).delete();
+
+    // Sonra match'i sil
     await db.collection('matches').doc(matchId).delete();
+  }
+
+  Future<bool> checkBothKeptConnection(String matchId) async {
+    final doc = await db.collection('matches').doc(matchId).get();
+    if (!doc.exists) return false;
+    final data = doc.data()!;
+    final user1Keep = data['user1KeepConnection'] ?? false;
+    final user2Keep = data['user2KeepConnection'] ?? false;
+    return user1Keep && user2Keep;
   }
 }

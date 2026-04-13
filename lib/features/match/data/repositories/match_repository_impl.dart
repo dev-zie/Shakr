@@ -65,4 +65,16 @@ class MatchRepositoryImpl implements MatchRepository {
       return Left(UnexpectedFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, bool>> checkBothKeptConnection(String matchId) async {
+    try {
+      final result = await remoteDatasource.checkBothKeptConnection(matchId);
+      return Right(result);
+    } on SocketException {
+      return Left(NetworkFailure());
+    } catch (e) {
+      return Left(UnexpectedFailure());
+    }
+  }
 }

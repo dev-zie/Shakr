@@ -6,27 +6,16 @@ import 'package:shakr/features/match/presentation/cubit/match_state.dart';
 import 'package:shakr/features/match/presentation/widgets/match_found_body.dart';
 import 'package:shakr/injection.dart';
 
-class MatchFoundScreen extends StatefulWidget {
+class MatchFoundScreen extends StatelessWidget {
   final String matchId;
+  
   const MatchFoundScreen({super.key, required this.matchId});
-
-  @override
-  State<MatchFoundScreen> createState() => _MatchFoundScreenState();
-}
-
-class _MatchFoundScreenState extends State<MatchFoundScreen> {
-  @override
-  void initState() {
-    super.initState();
-    sl<MatchCubit>().getMatch(widget.matchId);
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<MatchCubit, MatchState>(
+      body: BlocBuilder<MatchCubit, MatchState>(
         bloc: sl<MatchCubit>(),
-        listener: (context, state) {},
         builder: (context, state) {
           if (state is MatchLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -39,7 +28,7 @@ class _MatchFoundScreenState extends State<MatchFoundScreen> {
                 : state.match.user1Vibes;
 
             return MatchFoundBody(
-              matchId: widget.matchId,
+              matchId: matchId,
               otherUserVibes: otherUserVibes,
               createdAt: state.match.createdAt,
             );

@@ -31,7 +31,9 @@ class MatchFoundBody extends StatelessWidget {
           ),
           const SizedBox(height: 40),
           ElevatedButton(
-            onPressed: () => context.go('/chat/$matchId', extra: createdAt),
+            onPressed: () {
+              context.go('/chat/$matchId', extra: createdAt);
+            },
             child: const Text(AppStrings.startChat),
           ),
         ],
