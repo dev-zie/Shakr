@@ -65,8 +65,20 @@ class ChatExpiredBody extends StatelessWidget {
                       ),
                     );
                     await Future.delayed(const Duration(seconds: 2));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Maalesef biriniz kabul etmedi',
+                        ),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                    await Future.delayed(const Duration(seconds: 2));
                   }
                   if (context.mounted) context.go('/home');
+
+                  
                 }
               },
               child: const Text('Baglantiyi Koru'),
