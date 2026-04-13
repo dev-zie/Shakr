@@ -1,4 +1,6 @@
 class AppStrings {
+  AppStrings._();
+  
   static const appName = 'Shakr';
   static const onboardingTitle = '"Vibe"in ne?';
   static const onboardingSubtitle = '3 kelime sec, kendini ifade et';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:shakr/core/constants/app_strings.dart';
+import 'package:shakr/features/shake/presentation/widgets/home_body.dart';
+import 'package:shakr/features/shake/presentation/widgets/settings_button.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -8,40 +8,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () => context.go('/settings'),
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: .center,
-          children: [
-            Text(
-              AppStrings.appName,
-              style: Theme.of(context).textTheme.headlineLarge,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              AppStrings.welcomeString,
-              style: Theme.of(context).textTheme.labelMedium,
-            ),
-            const SizedBox(height: 50),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  context.go('/shaking');
-                },
-                child: Text(AppStrings.shakeString),
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: AppBar(actions: [SettingsButton()]),
+      body: HomeBody(),
     );
   }
 }

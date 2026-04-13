@@ -8,6 +8,6 @@ abstract class AuthRepository {
   Future<Either<Failure, UserEntity>> signInAnonymously();
 
   Future<Either<Failure, void>> saveVibes(String uid, List<String> vibes);
-  
+
   Future<Either<Failure, List<String>>> getUserVibes(String uid);
 }

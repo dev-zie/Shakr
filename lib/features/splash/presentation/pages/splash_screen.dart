@@ -7,36 +7,27 @@ import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_state.dart';
 import 'package:shakr/injection.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
-
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    sl<LocalStorageService>().resetOnboarding(); // gecici, test icin
-    sl<AuthCubit>().getCurrentUser();
-  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, AuthState>(
-      bloc: sl<AuthCubit>(),
+      bloc: sl<AuthCubit>()..getCurrentUser(),
       listener: (context, state) async {
         if (state is AuthSucces) {
           final isCompleted = await sl<LocalStorageService>()
               .isOnboardingCompleted();
           if (isCompleted) {
-            context.go('/home'); 
+            await Future.delayed(Duration(seconds: 3));
+            context.go('/home');
           } else {
+            await Future.delayed(Duration(seconds: 3));
             context.go('/onboarding');
           }
         }
         if (state is AuthError) {
+          Future.delayed(Duration(seconds: 3));
           sl<AuthCubit>().signInAnonymously();
         }
       },

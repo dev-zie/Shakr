@@ -20,6 +20,7 @@ class ShakeModel extends ShakeEntity {
 
   Map<String, dynamic> toMap() {
     return {
+      
       'location': location,
       'status': status,
       'timestamp': Timestamp.fromDate(timestamp),

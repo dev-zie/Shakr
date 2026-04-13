@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_state.dart';
+import 'package:shakr/features/match/presentation/widgets/match_found_body.dart';
 import 'package:shakr/injection.dart';
 
 class MatchFoundScreen extends StatefulWidget {
@@ -33,36 +33,15 @@ class _MatchFoundScreenState extends State<MatchFoundScreen> {
           }
 
           if (state is MatchFound) {
-            final currentUid = FirebaseAuth.instance.currentUser?.uid;
+            final currentUid = sl<AuthCubit>().currentUid;
             final otherUserVibes = state.match.user1Id == currentUid
                 ? state.match.user2Vibes
                 : state.match.user1Vibes;
 
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Esleme Bulundu!',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                  const SizedBox(height: 20),
-                  Wrap(
-                    spacing: 8,
-                    children: otherUserVibes
-                        .map((vibe) => Chip(label: Text(vibe)))
-                        .toList(),
-                  ),
-                  const SizedBox(height: 40),
-                  ElevatedButton(
-                    onPressed: () => context.go(
-                      '/chat/${widget.matchId}',
-                      extra: state.match.createdAt,
-                    ),
-                    child: const Text('Sohbete Basla'),
-                  ),
-                ],
-              ),
+            return MatchFoundBody(
+              matchId: widget.matchId,
+              otherUserVibes: otherUserVibes,
+              createdAt: state.match.createdAt,
             );
           }
 

@@ -2,9 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/chat/domain/entities/message_entity.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_state.dart';
+import 'package:shakr/features/chat/presentation/widgets/chat_input_bar.dart';
+import 'package:shakr/features/chat/presentation/widgets/chat_message_list.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_state.dart';
 import 'package:shakr/injection.dart';
@@ -34,23 +37,14 @@ class _ChatScreenState extends State<ChatScreen> {
     _chatCubit = sl<ChatCubit>();
     _secondsLeft = _calculateSecondsLeft(widget.createdAt);
     _chatCubit.watchMessages(widget.matchId);
-    _matchCubit.watchMatch(FirebaseAuth.instance.currentUser?.uid ?? '');
-    _startTimer();
 
-    // Match state'i direkt dinle
-    _matchCubit.stream.listen((state) {
-      if (!mounted) return;
-      if (state is MatchExpired) {
-        context.go('/chat-expired/${widget.matchId}'); // bunu degistir
-      }
-      if (state is MatchDeleted) {
-        context.go('/home');
-      }
-    });
+    _matchCubit.watchMatch(sl<AuthCubit>().currentUid ?? '');
+
+    _startTimer();
   }
 
   int _calculateSecondsLeft(DateTime createdAt) {
-    final expireTime = createdAt.add(const Duration(seconds: 10));
+    final expireTime = createdAt.add(const Duration(seconds: 50));
     final remaining = expireTime.difference(DateTime.now()).inSeconds;
     return remaining < 0 ? 0 : remaining;
   }
@@ -75,10 +69,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _sendMessage() {
     if (_controller.text.trim().isEmpty) return;
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+    final uid = sl<AuthCubit>().currentUid;
     final message = MessageEntity(
       id: const Uuid().v4(),
-      senderId: uid,
+      senderId: uid!,
       text: _controller.text.trim(),
       createdAt: DateTime.now(),
     );
@@ -95,7 +89,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUid = FirebaseAuth.instance.currentUser?.uid ?? '';
+    final currentUid = sl<AuthCubit>().currentUid;
 
     return Scaffold(
       appBar: AppBar(
@@ -136,44 +130,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is ChatLoaded) {
-                    if (state.messages.isEmpty) {
-                      return const Center(
-                        child: Text('Ilk mesaji sen gonder!'),
-                      );
-                    }
-                    return ListView.builder(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: state.messages.length,
-                      itemBuilder: (context, index) {
-                        final message = state.messages[index];
-                        final isMe = message.senderId == currentUid;
-                        return Align(
-                          alignment: isMe
-                              ? Alignment.centerRight
-                              : Alignment.centerLeft,
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom: 8),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: isMe
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context).colorScheme.surface,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Text(
-                              message.text,
-                              style: TextStyle(
-                                color: isMe
-                                    ? Colors.white
-                                    : Theme.of(context).colorScheme.onSurface,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+                    return ChatMessageList(
+                      messages: state.messages,
+                      currentUid: currentUid,
                     );
                   }
                   if (state is ChatError) {
@@ -183,48 +142,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 },
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                border: Border(
-                  top: BorderSide(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.outline.withAlpha(90),
-                  ),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      decoration: InputDecoration(
-                        hintText: 'Mesajinizi yazin...',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24),
-                          borderSide: BorderSide.none,
-                        ),
-                        filled: true,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    onPressed: _sendMessage,
-                    icon: Icon(
-                      Icons.send,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            ChatInputBar(controller: _controller, onSend: _sendMessage),
           ],
         ),
       ),

@@ -29,4 +29,11 @@ class AuthCubit extends Cubit<AuthState> {
       (user) => emit(AuthSucces(user)),
     );
   }
+
+  String? get currentUid {
+    if (state is AuthSucces) {
+      return (state as AuthSucces).user.uid;
+    }
+    return null;
+  }
 }

@@ -53,12 +53,12 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton(() => GetCurrentUserUsecase(repo: sl()));
   sl.registerLazySingleton(() => SignInAnonymouslyUsecase(repo: sl()));
-  sl.registerLazySingleton(
+  sl.registerLazySingleton(() => SaveVibesUsecase(repo: sl()));
+  sl.registerLazySingleton(() => GetUserVibesUsecase(repo: sl()));
+   sl.registerLazySingleton(
     () =>
         AuthCubit(getCurrentUserUsecase: sl(), signInAnonymouslyUsecase: sl()),
   );
-  sl.registerLazySingleton(() => SaveVibesUsecase(repo: sl()));
-  sl.registerLazySingleton(() => GetUserVibesUsecase(repo: sl()));
 
   //onboard
   sl.registerLazySingleton(
