@@ -42,7 +42,7 @@ class SettingsBody extends StatelessWidget {
             text: AppStrings.save,
             onPressed: selectedVibes.length == 3
                 ? () => context.read<SettingsCubit>().saveVibes()
-                : null, 
+                : null,
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shakr/common/constants/app_strings.dart';
 
 class ChatInputBar extends StatefulWidget {
   final Function(String) onSend;
@@ -44,7 +45,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
             child: TextField(
               controller: _controller,
               decoration: InputDecoration(
-                hintText: 'Mesajinizi yazin...',
+                hintText: AppStrings.writeMessage,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                   borderSide: BorderSide.none,

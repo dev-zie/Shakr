@@ -48,26 +48,20 @@ class ChatExpiredBody extends StatelessWidget {
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () async {
-                // 1. Kendi tarafını işaretle
                 await sl<MatchCubit>().keepConnection(matchId, currentUid!);
 
-                // 2. Diğer kişinin basıp basmadığını kontrol et
                 final bothKept = await sl<MatchCubit>().checkBothKeptConnection(
                   matchId,
                 );
 
                 if (context.mounted) {
                   if (bothKept) {
-                    // İKİSİ DE KORUDU
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text(AppStrings.connectSucces)),
                     );
-                    // Biraz bekle ki mesaj okunsun
                     await Future.delayed(const Duration(seconds: 3));
-                    sl<MatchCubit>().deleteMatch(matchId); // Temizlik
+                    sl<MatchCubit>().deleteMatch(matchId); 
                   } else {
-                    // HENÜZ DİĞERİ BASMADI VEYA VAZGEÇTİ
-                    // Burada silmiyoruz, kullanıcıya "Diğer kullanıcı bekleniyor..." diyebilirsin
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text(AppStrings.waitingOtherDecide),

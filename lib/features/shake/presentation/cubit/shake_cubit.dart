@@ -23,7 +23,7 @@ class ShakeCubit extends Cubit<ShakeState> {
   void init() {
     reset();
     sl<MatchCubit>().reset();
-    final uid = sl<AuthCubit>().currentUid;
+    final uid = sl<AuthCubit>().currentUid; //locale gecicem
     sl<ShakeService>().startListening(() async {
       final uid = sl<AuthCubit>().currentUid;
       if (uid == null) return;
@@ -44,6 +44,7 @@ class ShakeCubit extends Cubit<ShakeState> {
 
   void disposeScreen() {
     sl<ShakeService>().stopListening();
+    _matchTimer?.cancel();
     final uid = sl<AuthCubit>().currentUid;
     if (uid != null) deleteShake(uid);
   }
@@ -66,11 +67,6 @@ class ShakeCubit extends Cubit<ShakeState> {
   }
 
   void reset() => emit(ShakeInitial());
-
-  // void startMatchTimer(VoidCallback onTimeout) {
-  //   _matchTimer?.cancel();
-  //   _matchTimer = Timer(const Duration(seconds: 15), onTimeout);
-  // }
 
   void startMatchTimer() {
     _matchTimer?.cancel();

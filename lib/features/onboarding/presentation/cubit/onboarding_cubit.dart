@@ -54,4 +54,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     await lsc.setOnboardingCompleted();
     emit(OnboardingCompleted(selectedVibes: vibes));
   }
+
+  Future<void> resetOnboarding() async {
+    await lsc.resetOnboarding();
+  }
 }

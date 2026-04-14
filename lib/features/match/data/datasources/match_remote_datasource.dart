@@ -7,18 +7,6 @@ class MatchRemoteDatasource {
 
   MatchRemoteDatasource({required this.db});
 
-  // Stream<MatchEntity?> watchMatch(String uid) {
-  //   return db
-  //       .collection('matches')
-  //       .where('users', arrayContains: uid)
-  //       .snapshots()
-  //       .map((snapshot) {
-  //         if (snapshot.docs.isEmpty) return null;
-  //         final doc = snapshot.docs.first;
-  //         return MatchModel.fromMap(doc.data(), doc.id);
-  //       });
-  // }
-
   Stream<MatchEntity?> watchMatch(String uid) {
     return db
         .collection('matches')
@@ -26,7 +14,6 @@ class MatchRemoteDatasource {
         .snapshots()
         .map((snapshot) {
           if (snapshot.docs.isEmpty) return null;
-          // Sadece active veya expired match'i al
           final activeDocs = snapshot.docs.where((doc) {
             final status = doc.data()['status'];
             return status == 'active' || status == 'expired';
@@ -63,7 +50,6 @@ class MatchRemoteDatasource {
   // }
 
   Future<void> deleteMatch(String matchId) async {
-    // Önce mesajları sil
     final messages = await db
         .collection('chats')
         .doc(matchId)
@@ -74,10 +60,8 @@ class MatchRemoteDatasource {
       await doc.reference.delete();
     }
 
-    // Sonra chat dokümanını sil
     await db.collection('chats').doc(matchId).delete();
 
-    // Sonra match'i sil
     await db.collection('matches').doc(matchId).delete();
   }
 

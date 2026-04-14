@@ -58,9 +58,7 @@ class ChatExpiredScreen extends StatelessWidget {
               );
             }
 
-            return const Center(
-              child: Text("Hata oluştu veya eşleşme bulunamadı."),
-            );
+            return const Center(child: Text(AppStrings.StatelessWidget));
           },
         ),
       ),

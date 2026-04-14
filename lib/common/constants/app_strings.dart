@@ -25,4 +25,7 @@ class AppStrings {
   static const matchClosed = 'Eslesme Sonlandirildi';
   static const waitingOtherDecide =
       'İsteğin iletildi! Diğer kullanıcının kararı bekleniyor...';
+  // ignore: constant_identifier_names
+  static const StatelessWidget = 'Hata oluştu veya eşleşme bulunamadı.';
+  static const writeMessage = 'Bir mesaj yazin';
 }
