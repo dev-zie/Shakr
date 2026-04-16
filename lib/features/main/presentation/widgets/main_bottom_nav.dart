@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/main/presentation/cubit/navigation_cubit.dart';
 
 class MainBottomNav extends StatelessWidget {
@@ -27,14 +28,17 @@ class MainBottomNav extends StatelessWidget {
             BottomNavigationBarItem(
               icon: Icon(Icons.vibration),
               label: AppStrings.tabShake,
+              activeIcon: Icon(Icons.vibration, color: AppColors.primary),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.chat_bubble),
+              icon: Icon(Icons.chat_bubble_outline),
               label: AppStrings.tabChats,
+              activeIcon: Icon(Icons.chat_bubble, color: AppColors.primary),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
+              icon: Icon(Icons.person_2_outlined),
               label: AppStrings.tabProfile,
+              activeIcon: Icon(Icons.person, color: AppColors.primary),
             ),
           ],
         );

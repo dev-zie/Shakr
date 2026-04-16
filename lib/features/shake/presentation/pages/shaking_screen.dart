@@ -17,6 +17,9 @@ class ShakingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (sl<ShakeCubit>().state is ShakeInitial) {
+      sl<ShakeCubit>().init();
+    }
     return Scaffold(
       body: SafeArea(
         child: BlocListener<MatchCubit, MatchState>(

@@ -1,36 +1,31 @@
 import 'package:equatable/equatable.dart';
 import 'package:shakr/features/auth/domain/entities/user_entity.dart';
 
-abstract class AuthState {}
+enum AuthStatus { initial, loading, success, error, profileSaved }
 
-class AuthInitial extends AuthState with EquatableMixin {
+class AuthState extends Equatable {
+  final AuthStatus status;
+  final UserEntity? user;
+  final String? message;
+
+  const AuthState({
+    this.status = AuthStatus.initial,
+    this.user,
+    this.message,
+  });
+
+  AuthState copyWith({
+    AuthStatus? status,
+    UserEntity? user,
+    String? message,
+  }) {
+    return AuthState(
+      status: status ?? this.status,
+      user: user ?? this.user,
+      message: message ?? this.message,
+    );
+  }
+
   @override
-  List<Object?> get props => [];
-}
-
-class AuthLoading extends AuthState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
-}
-
-class AuthSucces extends AuthState with EquatableMixin {
-  final UserEntity user;
-
-  AuthSucces(this.user);
-
-  @override
-  List<Object?> get props => [user];
-}
-
-class AuthError extends AuthState with EquatableMixin {
-  final String message;
-  AuthError(this.message);
-
-  @override
-  List<Object?> get props => [message];
-}
-
-class AuthProfileSaved extends AuthState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
+  List<Object?> get props => [status, user, message];
 }

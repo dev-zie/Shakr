@@ -30,6 +30,8 @@ class ProfileCubit extends Cubit<ProfileState> {
         ProfileLoaded(
           user: user,
           editName: user.name,
+          editAge: user.age,
+          editGender: user.gender,
           editVibes: List<String>.from(user.vibes),
         ),
       ),
@@ -41,6 +43,18 @@ class ProfileCubit extends Cubit<ProfileState> {
   void updateName(String name) {
     if (state is ProfileLoaded) {
       emit((state as ProfileLoaded).copyWith(editName: name));
+    }
+  }
+
+  void updateAge(int age) {
+    if (state is ProfileLoaded) {
+      emit((state as ProfileLoaded).copyWith(editAge: age));
+    }
+  }
+
+  void updateGender(String gender) {
+    if (state is ProfileLoaded) {
+      emit((state as ProfileLoaded).copyWith(editGender: gender));
     }
   }
 
@@ -102,26 +116,25 @@ class ProfileCubit extends Cubit<ProfileState> {
     final updatedUser = UserEntity(
       uid: currentState.user.uid,
       name: currentState.editName.trim(),
-      age: currentState.user.age, // Yaş değiştirilemez, orijinal değer korunur
-      gender: currentState.user.gender,
+      age: currentState.editAge,
+      gender: currentState.editGender,
       photoUrl: currentState.user.photoUrl,
       vibes: currentState.editVibes,
     );
 
     final result = await saveProfileUsecase.call(updatedUser);
-    result.fold(
-      (failure) => emit(ProfileError(failure.message)),
-      (_) {
-        emit(ProfileUpdatedSuccess(updatedUser));
-        emit(
-          ProfileLoaded(
-            user: updatedUser,
-            editName: updatedUser.name,
-            editVibes: List<String>.from(updatedUser.vibes),
-            isEditing: false,
-          ),
-        );
-      },
-    );
+    result.fold((failure) => emit(ProfileError(failure.message)), (_) {
+      emit(ProfileUpdatedSuccess(updatedUser));
+      emit(
+        ProfileLoaded(
+          user: updatedUser,
+          editName: updatedUser.name,
+          editAge: updatedUser.age,
+          editGender: updatedUser.gender,
+          editVibes: List<String>.from(updatedUser.vibes),
+          isEditing: false,
+        ),
+      );
+    });
   }
 }

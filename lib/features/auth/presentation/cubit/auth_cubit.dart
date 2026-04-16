@@ -20,41 +20,41 @@ class AuthCubit extends Cubit<AuthState> {
     required this.signInAnonymouslyUsecase,
     required this.saveProfileUsecase,
     required this.getProfileUsecase,
-  }) : super(AuthInitial());
+  }) : super(const AuthState());
 
   Future<void> getCurrentUser() async {
-    emit(AuthLoading());
+    emit(state.copyWith(status: AuthStatus.loading));
     final result = await getCurrentUserUsecase.call();
     result.fold(
-      (failure) => emit(AuthError(failure.message)),
-      (user) => emit(AuthSucces(user)),
+      (failure) => emit(state.copyWith(status: AuthStatus.error, message: failure.message)),
+      (user) => emit(state.copyWith(status: AuthStatus.success, user: user)),
     );
   }
 
   Future<void> signInAnonymously() async {
-    emit(AuthLoading());
+    emit(state.copyWith(status: AuthStatus.loading));
     final result = await signInAnonymouslyUsecase.call();
     result.fold(
-      (failure) => emit(AuthError(failure.message)),
-      (user) => emit(AuthSucces(user)),
+      (failure) => emit(state.copyWith(status: AuthStatus.error, message: failure.message)),
+      (user) => emit(state.copyWith(status: AuthStatus.success, user: user)),
     );
   }
 
   Future<void> saveProfile(UserEntity user) async {
-    emit(AuthLoading());
+    emit(state.copyWith(status: AuthStatus.loading));
     final result = await saveProfileUsecase.call(user);
     result.fold(
-      (failure) => emit(AuthError(failure.message)),
-      (r) => emit(AuthProfileSaved()),
+      (failure) => emit(state.copyWith(status: AuthStatus.error, message: failure.message)),
+      (r) => emit(state.copyWith(status: AuthStatus.profileSaved, user: user)),
     );
   }
 
   Future<void> getProfile(String uid) async {
-    emit(AuthLoading());
+    emit(state.copyWith(status: AuthStatus.loading));
     final result = await getProfileUsecase.call(uid);
     result.fold(
-      (failure) => emit(AuthError(failure.message)),
-      (user) => emit(AuthSucces(user)),
+      (failure) => emit(state.copyWith(status: AuthStatus.error, message: failure.message)),
+      (user) => emit(state.copyWith(status: AuthStatus.success, user: user)),
     );
   }
 

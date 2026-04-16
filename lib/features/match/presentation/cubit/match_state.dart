@@ -57,6 +57,24 @@ class MatchBothKept extends MatchState with EquatableMixin {
 
 /// Kullanıcı bağlantıyı korumak istedi ama karşı taraf henüz karar vermedi.
 class MatchConnectionPending extends MatchState with EquatableMixin {
+  final MatchEntity match;
+  MatchConnectionPending(this.match);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [match];
+}
+
+/// Kullanıcı sohbete başlamayı kabul etti ama karşı taraf henüz karar vermedi.
+class MatchAcceptancePending extends MatchState with EquatableMixin {
+  final MatchEntity match;
+  MatchAcceptancePending(this.match);
+  @override
+  List<Object?> get props => [match];
+}
+
+/// Her iki taraf da sohbete başlamayı kabul etti.
+class MatchAccepted extends MatchState with EquatableMixin {
+  final MatchEntity match;
+  MatchAccepted(this.match);
+  @override
+  List<Object?> get props => [match];
 }

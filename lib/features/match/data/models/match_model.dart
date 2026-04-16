@@ -7,9 +7,14 @@ class MatchModel extends MatchEntity {
     required super.user1Id,
     required super.user2Id,
     required super.createdAt,
+    super.chatStartedAt,
     required super.status,
     required super.user1Vibes,
     required super.user2Vibes,
+    super.user1KeepConnection = false,
+    super.user2KeepConnection = false,
+    super.user1Accepted = false,
+    super.user2Accepted = false,
   });
 
   factory MatchModel.fromMap(Map<String, dynamic> map, String id) {
@@ -18,9 +23,16 @@ class MatchModel extends MatchEntity {
       user1Id: map['user1'],
       user2Id: map['user2'],
       createdAt: (map['createdAt'] as Timestamp).toDate(),
-      status: map['status'],
+      chatStartedAt: map['chatStartedAt'] != null
+          ? (map['chatStartedAt'] as Timestamp).toDate()
+          : null,
+      status: MatchStatusExt.fromString(map['status'] ?? ''),
       user1Vibes: List<String>.from(map['user1Vibes'] ?? []),
       user2Vibes: List<String>.from(map['user2Vibes'] ?? []),
+      user1KeepConnection: map['user1KeepConnection'] ?? false,
+      user2KeepConnection: map['user2KeepConnection'] ?? false,
+      user1Accepted: map['user1Accepted'] ?? false,
+      user2Accepted: map['user2Accepted'] ?? false,
     );
   }
 
@@ -28,8 +40,17 @@ class MatchModel extends MatchEntity {
     return {
       'user1': user1Id,
       'user2': user2Id,
+      'users': [user1Id, user2Id],
       'createdAt': Timestamp.fromDate(createdAt),
-      'status': status,
+      'chatStartedAt':
+          chatStartedAt != null ? Timestamp.fromDate(chatStartedAt!) : null,
+      'status': status.name,
+      'user1KeepConnection': user1KeepConnection,
+      'user2KeepConnection': user2KeepConnection,
+      'user1Accepted': user1Accepted,
+      'user2Accepted': user2Accepted,
+      'user1Vibes': user1Vibes,
+      'user2Vibes': user2Vibes,
     };
   }
 }

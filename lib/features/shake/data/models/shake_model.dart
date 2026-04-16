@@ -13,7 +13,7 @@ class ShakeModel extends ShakeEntity {
     return ShakeModel(
       uid: id,
       location: map['location'],
-      status: map['status'],
+      status: ShakeStatusExt.fromString(map['status'] ?? ''),
       timestamp: (map['timestamp'] as Timestamp).toDate(),
     );
   }
@@ -22,7 +22,7 @@ class ShakeModel extends ShakeEntity {
     return {
       
       'location': location,
-      'status': status,
+      'status': status.name,
       'timestamp': Timestamp.fromDate(timestamp),
     };
   }

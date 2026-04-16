@@ -10,8 +10,9 @@ class SendMessageUsecase {
 
   Future<Either<Failure, void>> call(
     String matchId,
-    MessageEntity message,
-  ) async {
-    return await repo.sendMessage(matchId, message);
+    MessageEntity message, {
+    bool isPermanent = false,
+  }) async {
+    return await repo.sendMessage(matchId, message, isPermanent: isPermanent);
   }
 }

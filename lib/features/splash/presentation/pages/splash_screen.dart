@@ -15,14 +15,14 @@ class SplashScreen extends StatelessWidget {
     return BlocListener<AuthCubit, AuthState>(
       bloc: sl<AuthCubit>()..getCurrentUser(),
       listener: (context, state) async {
-        if (state is AuthSucces) {
+        if (state.status == AuthStatus.success) {
           final isCompleted = await sl<LocalStorageService>()
               .isOnboardingCompleted();
           await Future.delayed(const Duration(seconds: 3));
           if (!context.mounted) return;
           context.replace(isCompleted ? '/main/shake' : '/onboarding');
         }
-        if (state is AuthError) {
+        if (state.status == AuthStatus.error) {
           sl<AuthCubit>().signInAnonymously();
         }
       },

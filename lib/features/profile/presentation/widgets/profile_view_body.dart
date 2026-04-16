@@ -28,7 +28,7 @@ class ProfileViewBody extends StatelessWidget {
         const SizedBox(height: AppSpacing.s),
         Center(
           child: Text(
-            '${user.age} ${AppStrings.yearsOld}',
+            '${user.age} ${AppStrings.yearsOld} • ${user.gender}',
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
@@ -43,10 +43,31 @@ class ProfileViewBody extends StatelessWidget {
           runSpacing: AppSpacing.s,
           children: user.vibes
               .map(
-                (vibe) => Chip(
-                  label: Text(
+                (vibe) => Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.m,
+                    vertical: AppSpacing.s,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Text(
                     vibe,
-                    style: const TextStyle(color: Colors.black87),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               )

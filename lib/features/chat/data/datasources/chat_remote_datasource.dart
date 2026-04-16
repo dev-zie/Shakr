@@ -7,10 +7,11 @@ class ChatRemoteDatasource {
 
   ChatRemoteDatasource({required this.db});
 
-  Stream<List<MessageModel>> watchMessage(String matchId) {
+  Stream<List<MessageModel>> watchMessage(String id, {bool isPermanent = false}) {
+    final collection = isPermanent ? 'conversations' : 'chats';
     return db
-        .collection('chats')
-        .doc(matchId)
+        .collection(collection)
+        .doc(id)
         .collection('messages')
         .orderBy('createdAt')
         .snapshots()
@@ -21,7 +22,8 @@ class ChatRemoteDatasource {
         );
   }
 
-  Future<void> sendMessage(String matchId, MessageEntity message) async {
+  Future<void> sendMessage(String id, MessageEntity message, {bool isPermanent = false}) async {
+    final collection = isPermanent ? 'conversations' : 'chats';
     final messageModel = MessageModel(
       id: message.id,
       senderId: message.senderId,
@@ -29,9 +31,25 @@ class ChatRemoteDatasource {
       createdAt: message.createdAt,
     );
     await db
-        .collection('chats')
-        .doc(matchId)
+        .collection(collection)
+        .doc(id)
         .collection('messages')
         .add(messageModel.toMap());
+
+    // Kalıcı sohbet ise lastMessage güncelle
+    if (isPermanent) {
+      await db.collection('conversations').doc(id).update({
+        'lastMessage': message.text,
+        'lastMessageAt': Timestamp.fromDate(message.createdAt),
+      });
+    }
+  }
+
+  Stream<List<Map<String, dynamic>>> watchConversations(String uid) {
+    return db
+        .collection('conversations')
+        .where('participants', arrayContains: uid)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => {...doc.data(), 'id': doc.id}).toList());
   }
 }

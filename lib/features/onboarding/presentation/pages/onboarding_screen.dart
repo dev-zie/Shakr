@@ -4,7 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:shakr/common/getit/injection.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.dart';
-import 'package:shakr/features/onboarding/presentation/widgets/age_gender_step.dart';
+import 'package:shakr/features/onboarding/presentation/widgets/age_step.dart';
+import 'package:shakr/features/onboarding/presentation/widgets/gender_step.dart';
 import 'package:shakr/features/onboarding/presentation/widgets/name_step.dart';
 import 'package:shakr/features/onboarding/presentation/widgets/photo_step.dart';
 import 'package:shakr/features/onboarding/presentation/widgets/vibe_step.dart';
@@ -44,8 +45,9 @@ class OnboardingScreen extends StatelessWidget {
             body: switch (state.step) {
               0 => const NameStep(),
               1 => const PhotoStep(),
-              2 => const AgeGenderStep(),
-              3 => const VibeStep(),
+              2 => const AgeStep(),
+              3 => const GenderStep(),
+              4 => const VibeStep(),
               _ => const SizedBox(),
             },
           );

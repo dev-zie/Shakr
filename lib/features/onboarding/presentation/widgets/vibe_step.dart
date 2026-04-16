@@ -18,6 +18,18 @@ class VibeStep extends StatelessWidget {
             ? state.vibes
             : <String>[];
 
+        Color buttonColor = Theme.of(context).colorScheme.primary;
+        if (selectedVibes.isNotEmpty) {
+          final lastVibe = selectedVibes.last;
+          for (final entry in AppVibes.categories.entries) {
+            final vibesList = entry.value['vibes'] as List;
+            if (vibesList.any((v) => v['label'] == lastVibe)) {
+              buttonColor = entry.value['color'] as Color;
+              break;
+            }
+          }
+        }
+
         return Padding(
           padding: const EdgeInsets.all(AppSpacing.l),
           child: Column(
@@ -107,6 +119,10 @@ class VibeStep extends StatelessWidget {
                 ),
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: selectedVibes.length == 3 ? buttonColor : Colors.grey,
+                  foregroundColor: Colors.white,
+                ),
                 onPressed: selectedVibes.length == 3
                     ? () => context.read<OnboardingCubit>().saveProfile()
                     : null,

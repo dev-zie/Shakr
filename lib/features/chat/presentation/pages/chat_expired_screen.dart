@@ -20,6 +20,15 @@ class ChatExpiredScreen extends StatelessWidget {
     matchCubit.ensureLoaded(matchId);
 
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () => sl<MatchCubit>().deleteMatch(matchId),
+          ),
+        ],
+      ),
       body: BlocListener<MatchCubit, MatchState>(
         bloc: matchCubit,
         listener: (context, state) async {
@@ -30,13 +39,12 @@ class ChatExpiredScreen extends StatelessWidget {
             messenger.showSnackBar(
               const SnackBar(content: Text(AppStrings.matchClosed)),
             );
-            router.go('/home');
+            router.go('/main/shake');
           } else if (state is MatchBothKept) {
             messenger.showSnackBar(
-              const SnackBar(content: Text(AppStrings.connectSucces)),
+              const SnackBar(content: Text(AppStrings.connectionSaved)),
             );
-            await Future.delayed(const Duration(seconds: 2));
-            router.go('/home');
+            router.go('/main/chats');
           } else if (state is MatchConnectionPending) {
             messenger.showSnackBar(
               const SnackBar(content: Text(AppStrings.waitingOtherDecide)),
@@ -53,6 +61,7 @@ class ChatExpiredScreen extends StatelessWidget {
             MatchEntity? match;
             if (state is MatchFound) match = state.match;
             if (state is MatchExpired) match = state.match;
+            if (state is MatchConnectionPending) match = state.match;
 
             if (match != null) {
               return ChatExpiredBody(
@@ -62,7 +71,7 @@ class ChatExpiredScreen extends StatelessWidget {
               );
             }
 
-            return const Center(child: Text(AppStrings.StatelessWidget));
+            return const Center(child: Text(''));
           },
         ),
       ),

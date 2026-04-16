@@ -28,6 +28,18 @@ class MatchRepositoryImpl implements MatchRepository {
   }
 
   @override
+  Future<Either<Failure, void>> acceptMatch(String matchId, String uid) async {
+    try {
+      await remoteDatasource.acceptMatch(matchId, uid);
+      return Right(unit);
+    } on SocketException {
+      return Left(NetworkFailure());
+    } catch (e) {
+      return Left(UnexpectedFailure());
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> keepConnection(
     String matchId,
     String uid,
@@ -46,6 +58,18 @@ class MatchRepositoryImpl implements MatchRepository {
   Future<Either<Failure, void>> expireMatch(String matchId) async {
     try {
       await remoteDatasource.expireMatch(matchId);
+      return Right(unit);
+    } on SocketException {
+      return Left(NetworkFailure());
+    } catch (e) {
+      return Left(UnexpectedFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> moveToPermanentChat(String matchId) async {
+    try {
+      await remoteDatasource.moveToPermanentChat(matchId);
       return Right(unit);
     } on SocketException {
       return Left(NetworkFailure());

@@ -6,6 +6,7 @@ class AppVibes {
   static const Map<String, Map<String, dynamic>> categories = {
     'Kultur': {
       'icon': Icons.book,
+      'color': Colors.deepPurple,
       'vibes': [
         {'label': 'kitap', 'icon': Icons.menu_book},
         {'label': 'muzik', 'icon': Icons.music_note},
@@ -16,6 +17,7 @@ class AppVibes {
     },
     'Yasam': {
       'icon': Icons.favorite,
+      'color': Colors.green,
       'vibes': [
         {'label': 'kahve', 'icon': Icons.coffee},
         {'label': 'yemek', 'icon': Icons.restaurant},
@@ -26,6 +28,7 @@ class AppVibes {
     },
     'Teknoloji': {
       'icon': Icons.computer,
+      'color': Colors.blue,
       'vibes': [
         {'label': 'kod', 'icon': Icons.code},
         {'label': 'oyun', 'icon': Icons.sports_esports},
@@ -35,6 +38,7 @@ class AppVibes {
     },
     'Sosyal': {
       'icon': Icons.people,
+      'color': Colors.orange,
       'vibes': [
         {'label': 'parti', 'icon': Icons.celebration},
         {'label': 'konser', 'icon': Icons.queue_music},

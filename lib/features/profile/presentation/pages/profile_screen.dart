@@ -9,8 +9,8 @@ import 'package:shakr/features/profile/presentation/cubit/profile_state.dart';
 import 'package:shakr/features/profile/presentation/widgets/profile_edit_form.dart';
 import 'package:shakr/features/profile/presentation/widgets/profile_view_body.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

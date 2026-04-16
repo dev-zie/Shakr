@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:shakr/features/chat/domain/entities/conversation_entity.dart';
 import 'package:shakr/features/chat/domain/entities/message_entity.dart';
 
 class ChatState {}
@@ -34,6 +35,14 @@ class ChatTimerTickState extends ChatState with EquatableMixin {
 class ChatTimeExpiredState extends ChatState with EquatableMixin {
   @override
   List<Object?> get props => [];
+}
+
+class ChatConversationsLoaded extends ChatState with EquatableMixin {
+  final List<ConversationEntity> conversations;
+  ChatConversationsLoaded(this.conversations);
+
+  @override
+  List<Object?> get props => [conversations];
 }
 
 class ChatError extends ChatState with EquatableMixin {

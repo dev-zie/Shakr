@@ -18,16 +18,19 @@ import 'package:shakr/features/chat/data/datasources/chat_remote_datasource.dart
 import 'package:shakr/features/chat/data/repositories/chat_repository_impl.dart';
 import 'package:shakr/features/chat/domain/repositories/chat_repository.dart';
 import 'package:shakr/features/chat/domain/usecases/send_message_usecase.dart';
+import 'package:shakr/features/chat/domain/usecases/watch_conversations_usecase.dart';
 import 'package:shakr/features/chat/domain/usecases/watch_messages_usecase.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:shakr/features/match/data/datasources/match_remote_datasource.dart';
 import 'package:shakr/features/match/data/repositories/match_repository_impl.dart';
 import 'package:shakr/features/match/domain/repositories/match_repository.dart';
+import 'package:shakr/features/match/domain/usecases/accept_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/check_connection_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/delete_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/expire_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/get_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/keep_connection_usecase.dart';
+import 'package:shakr/features/match/domain/usecases/move_to_permanent_chat_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/watch_match_usecase.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
@@ -103,6 +106,8 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => ExpireMatchUsecase(repo: sl()));
   sl.registerLazySingleton(() => DeleteMatchUsecase(repo: sl()));
   sl.registerLazySingleton(() => CheckConnectionUsecase(repo: sl()));
+  sl.registerLazySingleton(() => AcceptMatchUsecase(repository: sl()));
+  sl.registerLazySingleton(() => MoveToPermanentChatUsecase(repository: sl()));
 
   sl.registerLazySingleton(
     () => MatchCubit(
@@ -112,6 +117,8 @@ Future<void> initDependencies() async {
       deleteMatchUsecase: sl(),
       expireMatchUsecase: sl(),
       checkConnectionUsecase: sl(),
+      acceptMatchUsecase: sl(),
+      moveToPermanentChatUsecase: sl(),
     ),
   );
 
@@ -122,9 +129,14 @@ Future<void> initDependencies() async {
   );
   sl.registerLazySingleton(() => SendMessageUsecase(repo: sl()));
   sl.registerLazySingleton(() => WatchMessagesUsecase(repo: sl()));
+  sl.registerLazySingleton(() => WatchConversationsUsecase(repo: sl()));
 
   sl.registerLazySingleton(
-    () => ChatCubit(sendMessageUsecase: sl(), watchMessagesUsecase: sl()),
+    () => ChatCubit(
+      sendMessageUsecase: sl(),
+      watchMessagesUsecase: sl(),
+      watchConversationsUsecase: sl(),
+    ),
   );
 
   //settings

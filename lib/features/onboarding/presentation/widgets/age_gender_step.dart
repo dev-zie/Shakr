@@ -58,16 +58,14 @@ class AgeGenderStep extends StatelessWidget {
                     vertical: AppSpacing.l,
                   ),
                   decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .primary
-                        .withValues(alpha: .08),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: .08),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withValues(alpha: .3),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: .3),
                     ),
                   ),
                   child: Row(
@@ -77,9 +75,7 @@ class AgeGenderStep extends StatelessWidget {
                         children: [
                           Text(
                             '$birthYear',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall
+                            style: Theme.of(context).textTheme.displaySmall
                                 ?.copyWith(
                                   color: Theme.of(context).colorScheme.primary,
                                   fontWeight: FontWeight.bold,
@@ -87,10 +83,9 @@ class AgeGenderStep extends StatelessWidget {
                           ),
                           Text(
                             AppStrings.birthYearLabel,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(color: Colors.grey),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(color: Colors.grey),
                           ),
                         ],
                       ),
@@ -106,10 +101,9 @@ class AgeGenderStep extends StatelessWidget {
               const SizedBox(height: AppSpacing.s),
               Text(
                 '$age ${AppStrings.yearsOld}',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(color: Colors.grey),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(color: Colors.grey),
               ),
 
               const SizedBox(height: AppSpacing.xl),
@@ -124,8 +118,9 @@ class AgeGenderStep extends StatelessWidget {
                     child: GenderButton(
                       label: AppStrings.male,
                       isSelected: gender == Gender.male.name,
-                      onTap: () =>
-                          context.read<OnboardingCubit>().updateGender(Gender.male),
+                      onTap: () => context.read<OnboardingCubit>().updateGender(
+                        Gender.male,
+                      ),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.m),
@@ -133,9 +128,9 @@ class AgeGenderStep extends StatelessWidget {
                     child: GenderButton(
                       label: AppStrings.female,
                       isSelected: gender == Gender.female.name,
-                      onTap: () => context
-                          .read<OnboardingCubit>()
-                          .updateGender(Gender.female),
+                      onTap: () => context.read<OnboardingCubit>().updateGender(
+                        Gender.female,
+                      ),
                     ),
                   ),
                 ],
@@ -144,9 +139,10 @@ class AgeGenderStep extends StatelessWidget {
               ElevatedButton(
                 onPressed: gender == null
                     ? null
-                    : () => context
-                        .read<OnboardingCubit>()
-                        .setAgeAndGender(age, gender),
+                    : () => context.read<OnboardingCubit>().setAgeAndGender(
+                        age,
+                        gender,
+                      ),
                 child: const Text(AppStrings.continueButton),
               ),
             ],
@@ -188,7 +184,7 @@ class _BirthYearPickerDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('İptal'),
+          child: const Text(AppStrings.cancel),
         ),
       ],
     );

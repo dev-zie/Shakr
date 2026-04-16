@@ -21,11 +21,20 @@ class AppTheme {
         fontWeight: FontWeight.w600,
       ),
     ),
+    textTheme: const TextTheme(
+      headlineLarge: TextStyle(fontWeight: FontWeight.w600),
+      headlineMedium: TextStyle(fontWeight: FontWeight.w600),
+      headlineSmall: TextStyle(fontWeight: FontWeight.w600),
+      titleLarge: TextStyle(fontWeight: FontWeight.w600),
+      titleMedium: TextStyle(fontWeight: FontWeight.w600),
+      titleSmall: TextStyle(fontWeight: FontWeight.w600),
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         minimumSize: const Size(double.infinity, 52),
+        textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     ),
@@ -95,6 +104,14 @@ class AppTheme {
         fontWeight: FontWeight.w600,
       ),
     ),
+    textTheme: const TextTheme(
+      headlineLarge: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+      headlineMedium: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+      headlineSmall: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+      titleLarge: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+      titleMedium: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+      titleSmall: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
@@ -102,6 +119,7 @@ class AppTheme {
         disabledBackgroundColor: AppColors.primary.withValues(alpha: .4),
         disabledForegroundColor: Colors.white.withValues(alpha: .6),
         minimumSize: const Size(double.infinity, 52),
+        textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     ),

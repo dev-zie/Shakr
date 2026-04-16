@@ -5,7 +5,6 @@ import 'package:shakr/features/main/presentation/pages/main_screen.dart';
 import 'package:shakr/features/match/presentation/pages/match_found_screen.dart';
 import 'package:shakr/features/onboarding/presentation/pages/onboarding_screen.dart';
 import 'package:shakr/features/settings/presentation/pages/settings_screen.dart';
-import 'package:shakr/features/shake/presentation/pages/home_screen.dart';
 import 'package:shakr/features/shake/presentation/pages/shaking_screen.dart';
 import 'package:shakr/features/splash/presentation/pages/splash_screen.dart';
 
@@ -13,7 +12,6 @@ final GoRouter router = GoRouter(
   initialLocation: '/',
   routes: [
     GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
-    GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
     GoRoute(
       path: '/onboarding',
       builder: (context, state) => const OnboardingScreen(),
@@ -33,7 +31,18 @@ final GoRouter router = GoRouter(
       path: '/chat/:matchId',
       builder: (context, state) {
         final matchId = state.pathParameters['matchId']!;
-        return ChatScreen(matchId: matchId);
+        final chatStartTime = state.extra as DateTime?;
+        final isPermanent = state.uri.queryParameters['permanent'] == 'true';
+        final name = state.uri.queryParameters['name'];
+        final photo = state.uri.queryParameters['photo'];
+        
+        return ChatScreen(
+          matchId: matchId,
+          chatStartTime: chatStartTime ?? DateTime.now(),
+          isPermanent: isPermanent,
+          otherUserName: name,
+          otherUserPhoto: photo,
+        );
       },
     ),
     GoRoute(
@@ -43,13 +52,21 @@ final GoRouter router = GoRouter(
         return ChatExpiredScreen(matchId: matchId);
       },
     ),
-    // GoRoute(
-    //   path: '/settings',
-    //   builder: (context, state) => const SettingsScreen(),
-    // ),
+    GoRoute(
+      path: '/settings',
+      builder: (context, state) => const SettingsScreen(),
+    ),
     GoRoute(
       path: '/main/shake',
-      builder: (context, state) => const MainScreen(),
+      builder: (context, state) => const MainScreen(initialIndex: 0),
+    ),
+    GoRoute(
+      path: '/main/chats',
+      builder: (context, state) => const MainScreen(initialIndex: 1),
+    ),
+    GoRoute(
+      path: '/main/profile',
+      builder: (context, state) => const MainScreen(initialIndex: 2),
     ),
   ],
 );

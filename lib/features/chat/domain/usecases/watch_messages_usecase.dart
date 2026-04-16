@@ -6,7 +6,7 @@ class WatchMessagesUsecase {
 
   WatchMessagesUsecase({required this.repo});
 
-  Stream<List<MessageEntity>> call(String matchId) {
-    return repo.watchMessage(matchId);
+  Stream<List<MessageEntity>> call(String id, {bool isPermanent = false}) {
+    return repo.watchMessage(id, isPermanent: isPermanent);
   }
 }

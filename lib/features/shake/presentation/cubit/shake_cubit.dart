@@ -32,7 +32,7 @@ class ShakeCubit extends Cubit<ShakeState> {
         ShakeEntity(
           uid: uid,
           location: location,
-          status: 'waiting',
+          status: ShakeStatus.waiting,
           timestamp: DateTime.now(),
         ),
       );

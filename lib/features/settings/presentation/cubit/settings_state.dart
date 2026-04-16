@@ -14,9 +14,25 @@ class SettingsLoading extends SettingsState with EquatableMixin {
 
 class SettingsLoaded extends SettingsState with EquatableMixin {
   final List<String> selectedVibes;
-  SettingsLoaded(this.selectedVibes);
+  final bool notificationsEnabled;
+  
+  SettingsLoaded({
+    required this.selectedVibes,
+    required this.notificationsEnabled,
+  });
+
+  SettingsLoaded copyWith({
+    List<String>? selectedVibes,
+    bool? notificationsEnabled,
+  }) {
+    return SettingsLoaded(
+      selectedVibes: selectedVibes ?? this.selectedVibes,
+      notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
+    );
+  }
+
   @override
-  List<Object?> get props => [selectedVibes];
+  List<Object?> get props => [selectedVibes, notificationsEnabled];
 }
 
 class SettingsError extends SettingsState with EquatableMixin {

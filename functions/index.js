@@ -60,71 +60,87 @@
 
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 const admin = require("firebase-admin");
+const geolib = require("geolib");
 
 admin.initializeApp();
 const db = admin.firestore();
 
 exports.findMatch = onDocumentCreated({
     document: "shakes/{uid}",
-    region: "europe-west3", // Bölge seçimini Avrupa yapman ping süresi için çok iyi!
+    region: "europe-west3",
 }, async (event) => {
     const snap = event.data;
     const newShake = snap.data();
     const uid = event.params.uid;
 
-    const tenSecondsAgo = new Date(Date.now() - 10000);
-
-    // Havuzda bekleyen (waiting) ve son 10 sn içinde sallayanları bul
-    const candidates = await db
-        .collection("shakes")
-        .where("status", "==", "waiting")
-        .where("timestamp", ">=", tenSecondsAgo)
-        .get();
-
-    // Kendimizi listeden çıkarıyoruz
-    const others = candidates.docs.filter((doc) => doc.id !== uid);
-
-    if (others.length === 0) {
-        console.log("Kimse bulunamadi, bekleniyor...");
+    if (!newShake || !newShake.location || !newShake.timestamp) {
+        console.log("Geçersiz veya eksik shake verisi.");
         return null;
     }
 
-    // İlk bulduğumuz kişiyle eşleşiyoruz
-    const matchDoc = others[0];
+    // 5 Saniye Kuralı (±5 saniye içinde sallayanlar eşleşir)
+    // -5 saniye öncesine kadar olanları çekiyoruz
+    const fiveSecondsAgo = new Date(Date.now() - 5000);
+
+    const candidatesSnap = await db
+        .collection("shakes")
+        .where("status", "==", "waiting")
+        .where("timestamp", ">=", fiveSecondsAgo)
+        .get();
+
+    // Kendimizi listeden çıkarıyoruz ve eşleşme kriterlerine uyanları filtreliyoruz
+    const validCandidates = candidatesSnap.docs.filter((doc) => {
+        if (doc.id === uid) return false;
+
+        const candidateData = doc.data();
+        if (!candidateData.location) return false;
+
+        // Zaman farkı kontrolü (±5 sn)
+        const timeDiff = Math.abs(newShake.timestamp.toDate() - candidateData.timestamp.toDate());
+        if (timeDiff > 5000) return false;
+
+        // Mesafe hesaplaması (150 metre yarıçap kuralı)
+        const distance = geolib.getDistance(
+            { latitude: newShake.location.latitude, longitude: newShake.location.longitude },
+            { latitude: candidateData.location.latitude, longitude: candidateData.location.longitude }
+        );
+
+        return distance <= 150; // Sadece 150m ve altındakiler
+    });
+
+    if (validCandidates.length === 0) {
+        console.log("Yakınlarda uyumlu shake bulunamadı, bekleniyor...");
+        return null;
+    }
+
+    // İlk uyumlu adayla eşleş
+    const matchDoc = validCandidates[0];
     const matchUid = matchDoc.id;
 
-    // Her iki kullanıcının vibe'larını veritabanından çekiyoruz
     const user1Doc = await db.collection("users").doc(uid).get();
     const user2Doc = await db.collection("users").doc(matchUid).get();
 
-    // Veri yoksa hata vermemesi için boş dizi atıyoruz
     const user1Vibes = user1Doc.exists ? user1Doc.data().vibes ?? [] : [];
     const user2Vibes = user2Doc.exists ? user2Doc.data().vibes ?? [] : [];
 
-    // --- BURADAN İTİBAREN TAMAMLADIK ---
-
-    // Toplu işlem (Batch) başlatıyoruz ki işlemlerden biri patlarsa hepsi geri alınsın
     const batch = db.batch();
 
-    // 1. Yeni eşleşme (match) dokümanını oluştur
-    const matchRef = db.collection("matches").doc(); // Rastgele güvenli bir ID üretir
+    const matchRef = db.collection("matches").doc();
     batch.set(matchRef, {
         user1: uid,
         user2: matchUid,
-        users: [uid, matchUid], // Flutter'daki arrayContains sorgun için çok kritik!
+        users: [uid, matchUid],
         user1Vibes: user1Vibes,
         user2Vibes: user2Vibes,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
         status: "active"
     });
 
-    // 2. Eşleşen kullanıcıları 'shakes' (sallayanlar) havuzundan sil
     batch.delete(db.collection("shakes").doc(uid));
     batch.delete(db.collection("shakes").doc(matchUid));
 
-    // İşlemleri tek seferde çalıştır
     await batch.commit();
 
-    console.log(`Başarılı eşleşme: ${uid} ve ${matchUid}`);
+    console.log(`Başarılı eşleşme: ${uid} ve ${matchUid} (Zaman ve Mesafe Doğrulandı)`);
     return null;
 });

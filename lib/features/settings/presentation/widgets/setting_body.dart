@@ -1,51 +1,69 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:shakr/common/widgets/save_button.dart';
-// import 'package:shakr/common/constants/app_strings.dart';
-// import 'package:shakr/common/constants/app_vibes.dart';
-// import 'package:shakr/features/settings/presentation/cubit/settings_cubit.dart';
-// import 'package:shakr/features/settings/presentation/widgets/vibe_items.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/constants/app_spacing.dart';
+import 'package:shakr/features/settings/presentation/cubit/settings_cubit.dart';
+import 'package:shakr/features/settings/presentation/cubit/settings_state.dart';
 
-// class SettingsBody extends StatelessWidget {
-//   const SettingsBody({super.key, required this.selectedVibes});
-//   final List selectedVibes;
+class SettingsBody extends StatelessWidget {
+  const SettingsBody({super.key});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.all(24),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Text(
-//             AppStrings.selectThree,
-//             style: Theme.of(context).textTheme.titleMedium,
-//           ),
-//           const SizedBox(height: 16),
-//           Expanded(
-//             child: ListView.builder(
-//               itemCount: AppVibes.categories.entries.length,
-//               itemBuilder: (context, index) {
-//                 final entry = AppVibes.categories.entries.elementAt(index);
-//                 final category = entry.key;
-//                 final vibes = entry.value;
-//                 return VibeItems(
-//                   category: category,
-//                   vibes: vibes,
-//                   selectedVibes: selectedVibes,
-//                 );
-//               },
-//             ),
-//           ),
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, state) {
+        final bool notificationsEnabled =
+            state is SettingsLoaded ? state.notificationsEnabled : true;
 
-//           SaveButton(
-//             text: AppStrings.save,
-//             onPressed: selectedVibes.length == 3
-//                 ? () => context.read<SettingsCubit>().saveVibes()
-//                 : null,
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+        return ListView(
+          padding: const EdgeInsets.all(AppSpacing.l),
+          children: [
+            SwitchListTile(
+              title: const Text(AppStrings.notifications),
+              subtitle: const Text(AppStrings.notificationsDesc),
+              value: notificationsEnabled,
+              onChanged: (val) {
+                context.read<SettingsCubit>().toggleNotifications(val);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.description),
+              title: const Text(AppStrings.termsofservice),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.privacy_tip),
+              title: const Text(AppStrings.privacypolicy),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.star),
+              title: const Text(AppStrings.rateus),
+              onTap: () {},
+            ),
+            const SizedBox(height: AppSpacing.xxl),
+            ListTile(
+              iconColor: Colors.red,
+              textColor: Colors.red,
+              leading: const Icon(Icons.logout),
+              title: const Text(AppStrings.logout),
+              onTap: () {
+                // Logout logic
+              },
+            ),
+            ListTile(
+              iconColor: Colors.red,
+              textColor: Colors.red,
+              leading: const Icon(Icons.delete_forever),
+              title: const Text(AppStrings.deleteAccount),
+              onTap: () {
+                // Delete account logic
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
