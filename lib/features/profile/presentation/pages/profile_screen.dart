@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/getit/injection.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
@@ -47,12 +48,12 @@ class ProfileScreen extends StatelessWidget {
               actions: [
                 if (state is ProfileLoaded)
                   IconButton(
-                    icon: Icon(state.isEditing ? Icons.close : Icons.edit),
+                    icon: Icon(state.isEditing ? LucideIcons.x : LucideIcons.pencil),
                     onPressed: () =>
                         context.read<ProfileCubit>().toggleEditMode(),
                   ),
                 IconButton(
-                  icon: const Icon(Icons.settings),
+                  icon: const Icon(LucideIcons.settings),
                   onPressed: () => context.push('/settings'),
                 ),
               ],

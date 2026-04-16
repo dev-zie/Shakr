@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/getit/injection.dart';
+import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_state.dart';
@@ -11,7 +14,6 @@ import 'package:shakr/features/chat/presentation/widgets/chat_message_list.dart'
 import 'package:shakr/features/chat/presentation/widgets/chat_timer_title.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_state.dart';
-import 'package:shakr/common/getit/injection.dart';
 import 'package:shakr/features/shake/presentation/widgets/go_back_button.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -48,32 +50,29 @@ class ChatScreen extends StatelessWidget {
           ),
           title: isPermanent
               ? Row(
-                  mainAxisAlignment: .spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleAvatar(
-                      radius: 18,
-                      backgroundColor: Theme.of(
-                        context,
-                      ).primaryColor.withOpacity(0.1),
-                      backgroundImage: otherUserPhoto != null
-                          ? NetworkImage(otherUserPhoto!)
-                          : null,
+                    Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary50,
+                        shape: BoxShape.circle,
+                        image: otherUserPhoto != null
+                            ? DecorationImage(
+                                image: NetworkImage(otherUserPhoto!),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
                       child: otherUserPhoto == null
-                          ? Icon(
-                              Icons.person,
-                              size: 20,
-                              color: Theme.of(context).primaryColor,
-                            )
+                          ? const Icon(LucideIcons.user, size: 18, color: AppColors.primary)
                           : null,
                     ),
                     const SizedBox(width: AppSpacing.s),
                     Expanded(
                       child: Text(
                         otherUserName ?? 'Sohbet',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -104,7 +103,7 @@ class ChatScreen extends StatelessWidget {
                           sl<ChatCubit>().deleteConversation(matchId);
                         }
                       },
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(LucideIcons.trash2),
                     ),
                   ],
                 )
@@ -113,7 +112,7 @@ class ChatScreen extends StatelessWidget {
           actions: [
             if (!isPermanent)
               IconButton(
-                icon: const Icon(Icons.close),
+                icon: const Icon(LucideIcons.x),
                 tooltip: AppStrings.endMatch,
                 onPressed: () async {
                   final confirm = await showDialog<bool>(

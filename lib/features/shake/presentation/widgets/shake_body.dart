@@ -8,6 +8,9 @@ import 'package:shakr/features/shake/domain/entities/shake_entity.dart';
 import 'package:shakr/features/shake/presentation/cubit/shake_cubit.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:shakr/common/theme/app_shadows.dart';
+
 class ShakeBody extends StatelessWidget {
   const ShakeBody({super.key});
 
@@ -37,16 +40,10 @@ class ShakeBody extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.primary,
                     shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.3),
-                        blurRadius: 20,
-                        spreadRadius: 5,
-                      ),
-                    ],
+                    boxShadow: AppShadows.primary,
                   ),
                   child: const Icon(
-                    Icons.vibration,
+                    LucideIcons.vibrate,
                     size: 60,
                     color: Colors.white,
                   ),
@@ -57,16 +54,14 @@ class ShakeBody extends StatelessWidget {
           const SizedBox(height: AppSpacing.xxl),
           Text(
             AppStrings.shakeString,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+            style: Theme.of(context).textTheme.headlineSmall,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSpacing.s),
           Text(
             'Eşleşmek için telefonunu salla!',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey,
+                  color: AppColors.textSecondaryLight,
                 ),
           ),
           const SizedBox(height: AppSpacing.xxl),
@@ -84,10 +79,10 @@ class ShakeBody extends StatelessWidget {
               );
               sl<ShakeCubit>().recordShake(shake);
             },
-            icon: const Icon(Icons.touch_app, size: 16),
+            icon: const Icon(LucideIcons.mousePointer2, size: 16),
             label: const Text('Emulator: Sallanmayı Simüle Et'),
             style: TextButton.styleFrom(
-              foregroundColor: Colors.grey.withValues(alpha: 0.5),
+              foregroundColor: AppColors.textSecondaryLight.withOpacity(0.5),
             ),
           ),
         ],

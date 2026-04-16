@@ -8,6 +8,8 @@ import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.da
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.dart';
 import 'package:shakr/features/onboarding/presentation/widgets/gender_button.dart';
 
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+
 class GenderStep extends StatelessWidget {
   const GenderStep({super.key});
 
@@ -22,12 +24,10 @@ class GenderStep extends StatelessWidget {
           padding: const EdgeInsets.all(AppSpacing.l),
           child: Column(
             children: [
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.xxl),
               Text(
                 AppStrings.gender,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: AppSpacing.s),
               Text(
@@ -42,6 +42,7 @@ class GenderStep extends StatelessWidget {
                   Expanded(
                     child: GenderButton(
                       label: AppStrings.male,
+                      icon: LucideIcons.user,
                       isSelected: gender == Gender.male.name,
                       onTap: () =>
                           context.read<OnboardingCubit>().updateGender(Gender.male),
@@ -51,6 +52,7 @@ class GenderStep extends StatelessWidget {
                   Expanded(
                     child: GenderButton(
                       label: AppStrings.female,
+                      icon: LucideIcons.userRound,
                       isSelected: gender == Gender.female.name,
                       onTap: () => context
                           .read<OnboardingCubit>()
@@ -66,7 +68,7 @@ class GenderStep extends StatelessWidget {
                     : () => context.read<OnboardingCubit>().setGender(gender),
                 child: const Text(AppStrings.continueButton),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.l),
             ],
           ),
         );

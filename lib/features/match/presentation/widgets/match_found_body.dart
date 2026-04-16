@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/common/getit/injection.dart';
@@ -30,33 +32,55 @@ class MatchFoundBody extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Container(
+              padding: const EdgeInsets.all(AppSpacing.m),
+              decoration: BoxDecoration(
+                color: AppColors.primary50,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(LucideIcons.zap, size: 40, color: AppColors.primary),
+            ),
+            const SizedBox(height: AppSpacing.l),
             Text(
               AppStrings.matchFound,
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryColor,
+                    color: AppColors.primary,
                   ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppSpacing.l),
             Text(
               AppStrings.otherUsersVibes,
-              style: Theme.of(context).textTheme.titleSmall,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: AppColors.textSecondaryLight,
+                  ),
             ),
             const SizedBox(height: AppSpacing.s),
             Wrap(
               spacing: AppSpacing.s,
               runSpacing: AppSpacing.s,
               alignment: WrapAlignment.center,
-              children: otherUserVibes
-                  .map(
-                    (vibe) => Chip(
-                      label: Text(vibe),
-                      backgroundColor:
-                          Theme.of(context).primaryColor.withValues(alpha: 0.1),
+              children: otherUserVibes.map((vibe) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.m,
+                    vertical: AppSpacing.xs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary50,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+                  ),
+                  child: Text(
+                    vibe,
+                    style: const TextStyle(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
                     ),
-                  )
-                  .toList(),
+                  ),
+                );
+              }).toList(),
             ),
             const SizedBox(height: AppSpacing.xxl),
             TweenAnimationBuilder<double>(
@@ -72,15 +96,13 @@ class MatchFoundBody extends StatelessWidget {
                       child: CircularProgressIndicator(
                         value: value / 15.0,
                         strokeWidth: 8,
-                        backgroundColor: Colors.grey.withValues(alpha: 0.2),
+                        color: AppColors.primary,
+                        backgroundColor: AppColors.primary100,
                       ),
                     ),
                     Text(
                       '${value.ceil()}',
-                      style:
-                          Theme.of(context).textTheme.headlineLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                      style: Theme.of(context).textTheme.headlineLarge,
                     ),
                   ],
                 );
@@ -90,32 +112,27 @@ class MatchFoundBody extends StatelessWidget {
             if (isPending) ...[
               const CircularProgressIndicator(),
               const SizedBox(height: AppSpacing.m),
-              const Text(
+              Text(
                 AppStrings.waitDecision,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleSmall,
               ),
             ] else ...[
-              ElevatedButton(
+              ElevatedButton.icon(
                 onPressed: () {
                   final uid = sl<AuthCubit>().currentUid;
                   if (uid != null) {
                     sl<MatchCubit>().acceptMatch(matchId, uid);
                   }
                 },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(200, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppSpacing.m),
-                  ),
-                ),
-                child: const Text(AppStrings.startChat),
+                icon: const Icon(LucideIcons.messageCircle, size: 18),
+                label: const Text(AppStrings.startChat),
               ),
               const SizedBox(height: AppSpacing.m),
               TextButton(
                 onPressed: () => sl<MatchCubit>().deleteMatch(matchId),
                 child: Text(
                   AppStrings.cancel,
-                  style: const TextStyle(color: Colors.grey),
+                  style: const TextStyle(color: AppColors.textSecondaryLight),
                 ),
               ),
             ],
@@ -125,3 +142,4 @@ class MatchFoundBody extends StatelessWidget {
     );
   }
 }
+

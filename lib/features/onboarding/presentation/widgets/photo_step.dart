@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.dart';
 
@@ -19,13 +21,17 @@ class PhotoStep extends StatelessWidget {
           Text(
             AppStrings.uploadYourPhoto,
             style: Theme.of(context).textTheme.headlineMedium,
+            textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSpacing.s),
           Text(
             AppStrings.peopleSee,
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.textSecondaryLight,
+                ),
+            textAlign: TextAlign.center,
           ),
-          const SizedBox(height: AppSpacing.xl),
+          const SizedBox(height: AppSpacing.xxl),
           BlocBuilder<OnboardingCubit, OnboardingState>(
             builder: (context, state) {
               final photoUrl = state is OnboardingStepChanged
@@ -33,19 +39,52 @@ class PhotoStep extends StatelessWidget {
                   : null;
               return GestureDetector(
                 onTap: () => context.read<OnboardingCubit>().pickPhoto(),
-                child: CircleAvatar(
-                  radius: 60,
-                  backgroundImage: photoUrl != null
-                      ? FileImage(File(photoUrl))
-                      : null,
-                  child: photoUrl == null
-                      ? const Icon(Icons.camera_alt, size: 40)
-                      : null,
+                child: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.primary50,
+                        border: Border.all(
+                          color: AppColors.primary.withOpacity(0.2),
+                          width: 2,
+                        ),
+                        image: photoUrl != null
+                            ? DecorationImage(
+                                image: FileImage(File(photoUrl)),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
+                      child: photoUrl == null
+                          ? const Icon(
+                              LucideIcons.user,
+                              size: 50,
+                              color: AppColors.primary,
+                            )
+                          : null,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(AppSpacing.s),
+                      decoration: const BoxDecoration(
+                        color: AppColors.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        LucideIcons.camera,
+                        size: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
               );
             },
           ),
-          const SizedBox(height: AppSpacing.xl),
+          const SizedBox(height: AppSpacing.xxl),
           ElevatedButton(
             onPressed: () => context.read<OnboardingCubit>().setPhoto(),
             child: const Text(AppStrings.continueButton),
@@ -53,10 +92,14 @@ class PhotoStep extends StatelessWidget {
           const SizedBox(height: AppSpacing.s),
           TextButton(
             onPressed: () => context.read<OnboardingCubit>().setPhoto(),
-            child: const Text(AppStrings.skipForNow),
+            child: Text(
+              AppStrings.skipForNow,
+              style: const TextStyle(color: AppColors.textSecondaryLight),
+            ),
           ),
         ],
       ),
     );
   }
 }
+

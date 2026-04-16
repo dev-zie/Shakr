@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/constants/app_enums.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
@@ -116,6 +117,8 @@ class AgeGenderStep extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GenderButton(
+                      icon: LucideIcons.user,
+
                       label: AppStrings.male,
                       isSelected: gender == Gender.male.name,
                       onTap: () => context.read<OnboardingCubit>().updateGender(
@@ -126,6 +129,7 @@ class AgeGenderStep extends StatelessWidget {
                   const SizedBox(width: AppSpacing.m),
                   Expanded(
                     child: GenderButton(
+                      icon: LucideIcons.userRound,
                       label: AppStrings.female,
                       isSelected: gender == Gender.female.name,
                       onTap: () => context.read<OnboardingCubit>().updateGender(

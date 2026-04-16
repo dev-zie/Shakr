@@ -1,49 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:shakr/common/theme/app_colors.dart';
 
 class AppVibes {
   AppVibes._();
 
   static const Map<String, Map<String, dynamic>> categories = {
-    'Kultur': {
-      'icon': Icons.book,
-      'color': Colors.deepPurple,
+    'Kültür': {
+      'icon': LucideIcons.bookOpen,
+      'color': AppColors.primary,
       'vibes': [
-        {'label': 'kitap', 'icon': Icons.menu_book},
-        {'label': 'muzik', 'icon': Icons.music_note},
-        {'label': 'sanat', 'icon': Icons.palette},
-        {'label': 'sinema', 'icon': Icons.movie},
-        {'label': 'tiyatro', 'icon': Icons.theater_comedy},
+        {'label': 'kitap', 'icon': LucideIcons.bookOpen},
+        {'label': 'muzik', 'icon': LucideIcons.music},
+        {'label': 'sanat', 'icon': LucideIcons.palette},
+        {'label': 'sinema', 'icon': LucideIcons.clapperboard},
+        {'label': 'tiyatro', 'icon': LucideIcons.drama},
       ],
     },
-    'Yasam': {
-      'icon': Icons.favorite,
-      'color': Colors.green,
+    'Yaşam': {
+      'icon': LucideIcons.heart,
+      'color': Color(0xFF10B981),
       'vibes': [
-        {'label': 'kahve', 'icon': Icons.coffee},
-        {'label': 'yemek', 'icon': Icons.restaurant},
-        {'label': 'spor', 'icon': Icons.sports_basketball},
-        {'label': 'doga', 'icon': Icons.park},
-        {'label': 'seyahat', 'icon': Icons.flight},
+        {'label': 'kahve', 'icon': LucideIcons.coffee},
+        {'label': 'yemek', 'icon': LucideIcons.utensils},
+        {'label': 'spor', 'icon': LucideIcons.dumbbell},
+        {'label': 'doga', 'icon': LucideIcons.treeDeciduous},
+        {'label': 'seyahat', 'icon': LucideIcons.plane},
       ],
     },
     'Teknoloji': {
-      'icon': Icons.computer,
-      'color': Colors.blue,
+      'icon': LucideIcons.laptop,
+      'color': Color(0xFF3B82F6),
       'vibes': [
-        {'label': 'kod', 'icon': Icons.code},
-        {'label': 'oyun', 'icon': Icons.sports_esports},
-        {'label': 'podcast', 'icon': Icons.podcasts},
-        {'label': 'tasarim', 'icon': Icons.design_services},
+        {'label': 'kod', 'icon': LucideIcons.code},
+        {'label': 'oyun', 'icon': LucideIcons.gamepad2},
+        {'label': 'podcast', 'icon': LucideIcons.mic},
+        {'label': 'tasarim', 'icon': LucideIcons.penTool},
       ],
     },
     'Sosyal': {
-      'icon': Icons.people,
-      'color': Colors.orange,
+      'icon': LucideIcons.users,
+      'color': Color(0xFFF59E0B),
       'vibes': [
-        {'label': 'parti', 'icon': Icons.celebration},
-        {'label': 'konser', 'icon': Icons.queue_music},
-        {'label': 'etkinlik', 'icon': Icons.event},
-        {'label': 'kafe', 'icon': Icons.local_cafe},
+        {'label': 'parti', 'icon': LucideIcons.partyPopper},
+        {'label': 'konser', 'icon': LucideIcons.headphones},
+        {'label': 'etkinlik', 'icon': LucideIcons.calendarDays},
+        {'label': 'kafe', 'icon': LucideIcons.cupSoda},
       ],
     },
   };

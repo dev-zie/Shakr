@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
+import 'package:shakr/common/theme/app_colors.dart';
+import 'package:shakr/common/theme/app_shadows.dart';
 import 'package:shakr/features/chat/domain/entities/message_entity.dart';
 
 class ChatMessageList extends StatelessWidget {
@@ -15,21 +18,35 @@ class ChatMessageList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (messages.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.chat_bubble_outline, size: 48, color: Colors.grey),
-            SizedBox(height: AppSpacing.s),
+            Container(
+              padding: const EdgeInsets.all(AppSpacing.xl),
+              decoration: BoxDecoration(
+                color: AppColors.primary50,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                LucideIcons.messageSquare,
+                size: 48,
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.m),
             Text(
               'İlk mesajı sen gönder!',
-              style: TextStyle(color: Colors.grey),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: AppColors.textSecondaryLight,
+              ),
             ),
           ],
         ),
       );
     }
     return ListView.builder(
+      reverse: false, // Keeping initial order for now, check if needed
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.m,
         vertical: AppSpacing.l,
@@ -40,7 +57,7 @@ class ChatMessageList extends StatelessWidget {
         final isMe = message.senderId == currentUid;
 
         return Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.s),
+          padding: const EdgeInsets.only(bottom: AppSpacing.m),
           child: Align(
             alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
             child: Container(
@@ -52,32 +69,24 @@ class ChatMessageList extends StatelessWidget {
                 vertical: AppSpacing.s + 2,
               ),
               decoration: BoxDecoration(
-                color: isMe
-                    ? Theme.of(context).primaryColor
-                    : Theme.of(
-                        context,
-                      ).colorScheme.surfaceVariant.withOpacity(0.5),
+                color: isMe ? AppColors.primary : Theme.of(context).cardColor,
                 borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(AppSpacing.m),
-                  topRight: const Radius.circular(AppSpacing.m),
-                  bottomLeft: Radius.circular(isMe ? AppSpacing.m : 0),
-                  bottomRight: Radius.circular(isMe ? 0 : AppSpacing.m),
+                  topLeft: const Radius.circular(20),
+                  topRight: const Radius.circular(20),
+                  bottomLeft: Radius.circular(isMe ? 20 : 4),
+                  bottomRight: Radius.circular(isMe ? 4 : 20),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+                boxShadow: AppShadows.soft,
+                border: isMe
+                    ? null
+                    : Border.all(color: AppColors.primary.withOpacity(0.05)),
               ),
               child: Text(
                 message.text,
                 style: TextStyle(
-                  color: isMe
-                      ? Colors.white
-                      : Theme.of(context).colorScheme.onSurface,
+                  color: isMe ? Colors.white : AppColors.textPrimaryLight,
                   fontSize: 15,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),

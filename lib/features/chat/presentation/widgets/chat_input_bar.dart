@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shakr/common/constants/app_strings.dart';
-import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
+import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/theme/app_colors.dart';
+import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
 
 class ChatInputBar extends StatelessWidget {
   final String id;
@@ -25,16 +27,16 @@ class ChatInputBar extends StatelessWidget {
         AppSpacing.m,
         AppSpacing.m,
         AppSpacing.m,
-        AppSpacing.xl, // Alt padding artırıldı
+        AppSpacing.xl,
       ),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        color: Theme.of(context).cardColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
+            blurRadius: 20,
+            offset: const Offset(0, -4),
           ),
         ],
       ),
@@ -50,6 +52,7 @@ class ChatInputBar extends StatelessWidget {
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
+                fillColor: Theme.of(context).colorScheme.surface,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: AppSpacing.m,
                   vertical: AppSpacing.s,
@@ -58,15 +61,18 @@ class ChatInputBar extends StatelessWidget {
             ),
           ),
           const SizedBox(width: AppSpacing.s),
-          IconButton(
-            onPressed: () => cubit.sendMessageFromInput(
-              id,
-              currentUid,
-              isPermanent: isPermanent,
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              shape: BoxShape.circle,
             ),
-            icon: Icon(
-              Icons.send,
-              color: Theme.of(context).colorScheme.primary,
+            child: IconButton(
+              onPressed: () => cubit.sendMessageFromInput(
+                id,
+                currentUid,
+                isPermanent: isPermanent,
+              ),
+              icon: const Icon(LucideIcons.sendHorizontal, color: Colors.white),
             ),
           ),
         ],

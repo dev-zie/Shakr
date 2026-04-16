@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/auth/domain/entities/user_entity.dart';
 import 'profile_avatar.dart';
+import 'vibe_card.dart';
 
 class ProfileViewBody extends StatelessWidget {
   const ProfileViewBody({super.key, required this.user});
@@ -19,59 +21,34 @@ class ProfileViewBody extends StatelessWidget {
         Center(
           child: Text(
             user.name,
-            style: Theme.of(context)
-                .textTheme
-                .headlineMedium
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),
         const SizedBox(height: AppSpacing.s),
         Center(
           child: Text(
             '${user.age} ${AppStrings.yearsOld} • ${user.gender}',
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(color: Colors.grey),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: AppColors.textSecondaryLight,
+                ),
           ),
         ),
         const SizedBox(height: AppSpacing.xxl),
         Text(AppStrings.vibes, style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: AppSpacing.m),
-        Wrap(
-          spacing: AppSpacing.s,
-          runSpacing: AppSpacing.s,
-          children: user.vibes
-              .map(
-                (vibe) => Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.m,
-                    vertical: AppSpacing.s,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Text(
-                    vibe,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              )
-              .toList(),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: user.vibes.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            mainAxisSpacing: AppSpacing.m,
+            crossAxisSpacing: AppSpacing.m,
+            childAspectRatio: 0.9,
+          ),
+          itemBuilder: (context, index) {
+            return VibeCard(vibe: user.vibes[index]);
+          },
         ),
       ],
     );

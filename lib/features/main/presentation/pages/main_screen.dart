@@ -15,7 +15,7 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => NavigationCubit()..emit(initialIndex),
+      create: (context) => NavigationCubit()..goTo(initialIndex),
       child: BlocListener<NavigationCubit, int>(
         listener: (context, index) {
           if (index == 0) {
