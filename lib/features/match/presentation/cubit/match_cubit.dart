@@ -7,7 +7,6 @@ import 'package:shakr/features/match/domain/usecases/get_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/keep_connection_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/watch_match_usecase.dart';
 import 'package:shakr/features/match/presentation/cubit/match_state.dart';
-import 'package:shakr/injection.dart';
 
 class MatchCubit extends Cubit<MatchState> {
   final WatchMatchUsecase watchMatchUsecase;
@@ -28,8 +27,15 @@ class MatchCubit extends Cubit<MatchState> {
     required this.checkConnectionUsecase,
   }) : super(MatchInitial());
 
-  void init(String matchId) {
-    sl<MatchCubit>().getMatch(matchId);
+  /// Eşleşme verilerini bir kez çeker (stream olmadan).
+  Future<void> init(String matchId) => getMatch(matchId);
+
+  /// Maç verisi henüz yüklü değilse çeker; tekrar çağrılması güvenlidir.
+  void ensureLoaded(String matchId) {
+    if (state is MatchLoading || state is MatchFound || state is MatchExpired) {
+      return;
+    }
+    getMatch(matchId);
   }
 
   void watchMatch(String uid) {
@@ -54,26 +60,45 @@ class MatchCubit extends Cubit<MatchState> {
     );
   }
 
-  Future<void> keepConnection(String matchId, String uid) async {
-    final result = await keepConnectionUsecase.call(matchId, uid);
-    result.fold((failure) => emit(MatchError(failure.message)), (r) => null);
-  }
-
   Future<void> expireMatch(String matchId) async {
     final result = await expireMatchUsecase.call(matchId);
-    result.fold((l) => emit(MatchError(l.message)), (r) => null);
+    result.fold((l) => emit(MatchError(l.message)), (_) => null);
   }
 
   Future<void> deleteMatch(String matchId) async {
     final result = await deleteMatchUsecase.call(matchId);
-    result.fold((l) => emit(MatchError(l.message)), (r) => null);
+    result.fold((l) => emit(MatchError(l.message)), (_) => null);
     emit(MatchInitial());
   }
 
-  @override
-  Future<void> close() {
-    _subscription?.cancel();
-    return super.close();
+  /// Bağlantıyı koruma akışı: keepConnection → ikisi de kabul ettiyse MatchBothKept,
+  /// aksi hâlde MatchConnectionPending emit eder.
+  Future<void> keepConnectionFlow(String matchId, String uid) async {
+    final currentState = state;
+
+    await keepConnectionUsecase.call(matchId, uid);
+
+    final checkResult = await checkConnectionUsecase.call(matchId);
+    final bothKept = checkResult.fold((_) => false, (r) => r);
+
+    if (bothKept) {
+      final match = currentState is MatchExpired
+          ? currentState.match
+          : currentState is MatchFound
+              ? currentState.match
+              : null;
+
+      // Stream aboneliğini iptal et — silme işlemi MatchDeleted tetiklemesin
+      _subscription?.cancel();
+      _subscription = null;
+
+      if (match != null) emit(MatchBothKept(match));
+
+      // Arka planda temizlik
+      await deleteMatchUsecase.call(matchId);
+    } else {
+      emit(MatchConnectionPending());
+    }
   }
 
   void reset() {
@@ -82,8 +107,9 @@ class MatchCubit extends Cubit<MatchState> {
     emit(MatchInitial());
   }
 
-  Future<bool> checkBothKeptConnection(String matchId) async {
-    final result = await checkConnectionUsecase.call(matchId);
-    return result.fold((l) => false, (r) => r);
+  @override
+  Future<void> close() {
+    _subscription?.cancel();
+    return super.close();
   }
 }

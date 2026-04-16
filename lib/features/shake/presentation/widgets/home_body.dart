@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/features/shake/presentation/cubit/shake_cubit.dart';
-import 'package:shakr/injection.dart';
+import 'package:shakr/common/getit/injection.dart';
 
 class HomeBody extends StatelessWidget {
   const HomeBody({super.key});

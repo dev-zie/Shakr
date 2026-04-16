@@ -47,3 +47,16 @@ class MatchDeleted extends MatchState with EquatableMixin {
   @override
   List<Object?> get props => [];
 }
+
+class MatchBothKept extends MatchState with EquatableMixin {
+  final MatchEntity match;
+  MatchBothKept(this.match);
+  @override
+  List<Object?> get props => [match];
+}
+
+/// Kullanıcı bağlantıyı korumak istedi ama karşı taraf henüz karar vermedi.
+class MatchConnectionPending extends MatchState with EquatableMixin {
+  @override
+  List<Object?> get props => [];
+}

@@ -8,7 +8,7 @@ import 'package:shakr/features/shake/domain/entities/shake_entity.dart';
 import 'package:shakr/features/shake/domain/usecases/delete_shake_usecase.dart';
 import 'package:shakr/features/shake/domain/usecases/record_shake_usecase.dart';
 import 'package:shakr/features/shake/presentation/cubit/shake_state.dart';
-import 'package:shakr/injection.dart';
+import 'package:shakr/common/getit/injection.dart';
 
 class ShakeCubit extends Cubit<ShakeState> {
   final DeleteShakeUsecase deleteShakeUsecase;
@@ -25,7 +25,7 @@ class ShakeCubit extends Cubit<ShakeState> {
     sl<MatchCubit>().reset();
     final uid = sl<AuthCubit>().currentUid; //locale gecicem
     sl<ShakeService>().startListening(() async {
-      final uid = sl<AuthCubit>().currentUid;
+      // final uid = sl<AuthCubit>().currentUid;
       if (uid == null) return;
       final location = await sl<LocationService>().getCurrentLocation();
       recordShake(
@@ -54,7 +54,10 @@ class ShakeCubit extends Cubit<ShakeState> {
     final result = await recordShakeUsecase.call(shake);
     result.fold(
       (l) => emit(ShakeError(l.message)),
-      (r) => emit(ShakeRecorded()),
+      (r) {
+        emit(ShakeRecorded());
+        startMatchTimer();
+      },
     );
   }
 

@@ -4,7 +4,7 @@ import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_state.dart';
 import 'package:shakr/features/match/presentation/widgets/match_found_body.dart';
-import 'package:shakr/injection.dart';
+import 'package:shakr/common/getit/injection.dart';
 
 class MatchFoundScreen extends StatelessWidget {
   final String matchId;

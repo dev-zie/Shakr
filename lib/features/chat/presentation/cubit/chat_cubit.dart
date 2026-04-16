@@ -1,15 +1,19 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:shakr/features/chat/domain/entities/message_entity.dart';
 import 'package:shakr/features/chat/domain/usecases/send_message_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/features/chat/domain/usecases/watch_messages_usecase.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_state.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
-import 'package:shakr/injection.dart';
+import 'package:shakr/common/getit/injection.dart';
+import 'package:uuid/uuid.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   final SendMessageUsecase sendMessageUsecase;
   final WatchMessagesUsecase watchMessagesUsecase;
+
+  final messageController = TextEditingController();
 
   StreamSubscription? _subscription;
   Timer? _timer;
@@ -50,10 +54,24 @@ class ChatCubit extends Cubit<ChatState> {
     });
   }
 
+  Future<void> sendMessageFromInput(String matchId, String uid) async {
+    final text = messageController.text.trim();
+    if (text.isEmpty) return;
+    messageController.clear();
+    final message = MessageEntity(
+      id: const Uuid().v4(),
+      senderId: uid,
+      text: text,
+      createdAt: DateTime.now(),
+    );
+    await sendMessage(matchId, message);
+  }
+
   @override
   Future<void> close() {
     _timer?.cancel();
     _subscription?.cancel();
+    messageController.dispose();
     return super.close();
   }
 

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/core/services/local_storage_service.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_state.dart';
-import 'package:shakr/injection.dart';
+import 'package:shakr/features/splash/presentation/widgets/splash_body.dart';
+import 'package:shakr/common/getit/injection.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -18,33 +18,15 @@ class SplashScreen extends StatelessWidget {
         if (state is AuthSucces) {
           final isCompleted = await sl<LocalStorageService>()
               .isOnboardingCompleted();
-          if (isCompleted) {
-            await Future.delayed(Duration(seconds: 3));
-            context.go('/home');
-          } else {
-            await Future.delayed(Duration(seconds: 3));
-            context.go('/onboarding');
-          }
+          await Future.delayed(const Duration(seconds: 3));
+          if (!context.mounted) return;
+          context.replace(isCompleted ? '/main/shake' : '/onboarding');
         }
         if (state is AuthError) {
           sl<AuthCubit>().signInAnonymously();
         }
       },
-      child: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: .center,
-            children: [
-              Text(
-                AppStrings.appName,
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              SizedBox(height: 20),
-              CircularProgressIndicator(),
-            ],
-          ),
-        ),
-      ),
+      child: const Scaffold(body: SplashBody()),
     );
   }
 }

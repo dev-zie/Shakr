@@ -1,34 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
 
-class ChatInputBar extends StatefulWidget {
-  final Function(String) onSend;
+class ChatInputBar extends StatelessWidget {
+  final String matchId;
+  final String currentUid;
 
-  const ChatInputBar({super.key, required this.onSend});
-
-  @override
-  State<ChatInputBar> createState() => _ChatInputBarState();
-}
-
-class _ChatInputBarState extends State<ChatInputBar> {
-  final TextEditingController _controller = TextEditingController();
-
-  void _handleSend() {
-    final text = _controller.text.trim();
-    if (text.isEmpty) return;
-
-    widget.onSend(text);
-    _controller.clear();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  const ChatInputBar({
+    super.key,
+    required this.matchId,
+    required this.currentUid,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<ChatCubit>();
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -43,7 +31,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
         children: [
           Expanded(
             child: TextField(
-              controller: _controller,
+              controller: cubit.messageController,
               decoration: InputDecoration(
                 hintText: AppStrings.writeMessage,
                 border: OutlineInputBorder(
@@ -60,7 +48,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
           ),
           const SizedBox(width: 8),
           IconButton(
-            onPressed: _handleSend,
+            onPressed: () => cubit.sendMessageFromInput(matchId, currentUid),
             icon: Icon(
               Icons.send,
               color: Theme.of(context).colorScheme.primary,

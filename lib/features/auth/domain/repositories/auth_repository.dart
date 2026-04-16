@@ -7,7 +7,10 @@ abstract class AuthRepository {
 
   Future<Either<Failure, UserEntity>> signInAnonymously();
 
-  Future<Either<Failure, void>> saveVibes(String uid, List<String> vibes);
+  Future<Either<Failure, void>> saveProfile(UserEntity user);
 
-  Future<Either<Failure, List<String>>> getUserVibes(String uid);
+  Future<Either<Failure, UserEntity>> getProfile(String uid);
+
+  Future<Either<Failure, String>> uploadPhoto(String uid, String filePath);
+
 }

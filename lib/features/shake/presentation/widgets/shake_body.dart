@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/core/services/location_service.dart';
 import 'package:shakr/features/shake/domain/entities/shake_entity.dart';
 import 'package:shakr/features/shake/presentation/cubit/shake_cubit.dart';
-import 'package:shakr/injection.dart';
+import 'package:shakr/common/getit/injection.dart';
 
 class ShakeBody extends StatelessWidget {
   const ShakeBody({super.key});
@@ -14,7 +15,7 @@ class ShakeBody extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('Telefonunu salla!'),
+          const Text(AppStrings.shakeString),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {

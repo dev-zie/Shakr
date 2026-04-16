@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shakr/common/constants/app_strings.dart';
 
 class SearchingBody extends StatelessWidget {
   const SearchingBody({super.key});
@@ -11,7 +12,7 @@ class SearchingBody extends StatelessWidget {
         children: [
           CircularProgressIndicator(),
           SizedBox(height: 50),
-          Text('Araniyor..'),
+          Text(AppStrings.searchingText),
         ],
       ),
     );

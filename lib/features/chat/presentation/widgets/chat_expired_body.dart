@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/features/match/domain/entities/match_entity.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
-import 'package:shakr/injection.dart';
+import 'package:shakr/common/getit/injection.dart';
 
 class ChatExpiredBody extends StatelessWidget {
-  final MatchEntity match;
-  final String matchId;
-  final String? currentUid;
-
   const ChatExpiredBody({
     super.key,
     required this.match,
     required this.matchId,
     required this.currentUid,
   });
+
+  final MatchEntity match;
+  final String matchId;
+  final String? currentUid;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class ChatExpiredBody extends StatelessWidget {
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSpacing.l),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -33,51 +33,28 @@ class ChatExpiredBody extends StatelessWidget {
               AppStrings.timesUp,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.s),
             Text(
               AppStrings.otherUsersVibes,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.m),
             Wrap(
-              spacing: 8,
+              spacing: AppSpacing.s,
               children: otherUserVibes
                   .map((vibe) => Chip(label: Text(vibe)))
                   .toList(),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: AppSpacing.xxl),
             ElevatedButton(
-              onPressed: () async {
-                await sl<MatchCubit>().keepConnection(matchId, currentUid!);
-
-                final bothKept = await sl<MatchCubit>().checkBothKeptConnection(
-                  matchId,
-                );
-
-                if (context.mounted) {
-                  if (bothKept) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text(AppStrings.connectSucces)),
-                    );
-                    await Future.delayed(const Duration(seconds: 3));
-                    sl<MatchCubit>().deleteMatch(matchId); 
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(AppStrings.waitingOtherDecide),
-                      ),
-                    );
-                  }
-                }
-              },
+              onPressed: currentUid == null
+                  ? null
+                  : () => sl<MatchCubit>().keepConnectionFlow(matchId, currentUid!),
               child: const Text(AppStrings.saveConnect),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.m),
             OutlinedButton(
-              onPressed: () {
-                sl<MatchCubit>().deleteMatch(matchId);
-                context.go('/home');
-              },
+              onPressed: () => sl<MatchCubit>().deleteMatch(matchId),
               child: const Text(AppStrings.deleteConnect),
             ),
           ],

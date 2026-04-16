@@ -5,7 +5,7 @@ import 'package:shakr/common/router/app_router.dart';
 import 'package:shakr/common/theme/app_theme.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/firebase_options.dart';
-import 'package:shakr/injection.dart';
+import 'package:shakr/common/getit/injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

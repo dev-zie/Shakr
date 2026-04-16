@@ -7,32 +7,40 @@ import 'package:shakr/features/chat/presentation/widgets/chat_expired_body.dart'
 import 'package:shakr/features/match/domain/entities/match_entity.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_state.dart';
-import 'package:shakr/injection.dart';
+import 'package:shakr/common/getit/injection.dart';
 
 class ChatExpiredScreen extends StatelessWidget {
-  final String matchId;
   const ChatExpiredScreen({super.key, required this.matchId});
+
+  final String matchId;
 
   @override
   Widget build(BuildContext context) {
     final matchCubit = sl<MatchCubit>();
-    final currentUid = sl<AuthCubit>().currentUid;
-
-    final currentState = matchCubit.state;
-    if (currentState is! MatchExpired && currentState is! MatchFound) {
-      matchCubit.getMatch(matchId);
-    }
+    matchCubit.ensureLoaded(matchId);
 
     return Scaffold(
       body: BlocListener<MatchCubit, MatchState>(
         bloc: matchCubit,
-        listener: (context, state) {
+        listener: (context, state) async {
+          final messenger = ScaffoldMessenger.of(context);
+          final router = GoRouter.of(context);
+
           if (state is MatchDeleted) {
-            ScaffoldMessenger.of(context).showSnackBar(
+            messenger.showSnackBar(
               const SnackBar(content: Text(AppStrings.matchClosed)),
             );
-
-            context.go('/home');
+            router.go('/home');
+          } else if (state is MatchBothKept) {
+            messenger.showSnackBar(
+              const SnackBar(content: Text(AppStrings.connectSucces)),
+            );
+            await Future.delayed(const Duration(seconds: 2));
+            router.go('/home');
+          } else if (state is MatchConnectionPending) {
+            messenger.showSnackBar(
+              const SnackBar(content: Text(AppStrings.waitingOtherDecide)),
+            );
           }
         },
         child: BlocBuilder<MatchCubit, MatchState>(
@@ -40,10 +48,6 @@ class ChatExpiredScreen extends StatelessWidget {
           builder: (context, state) {
             if (state is MatchLoading) {
               return const Center(child: CircularProgressIndicator());
-            }
-
-            if (state is MatchDeleted) {
-              context.go('/home');
             }
 
             MatchEntity? match;
@@ -54,7 +58,7 @@ class ChatExpiredScreen extends StatelessWidget {
               return ChatExpiredBody(
                 match: match,
                 matchId: matchId,
-                currentUid: currentUid,
+                currentUid: sl<AuthCubit>().currentUid,
               );
             }
 

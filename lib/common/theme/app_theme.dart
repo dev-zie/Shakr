@@ -10,7 +10,7 @@ class AppTheme {
       error: AppColors.error,
     ),
     scaffoldBackgroundColor: AppColors.backgroundLight,
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.backgroundLight,
       elevation: 0,
       centerTitle: true,
@@ -25,9 +25,54 @@ class AppTheme {
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
-        minimumSize: Size(double.infinity, 52),
+        minimumSize: const Size(double.infinity, 52),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
+    ),
+    // GÜNCELLENEN: Light mod için ChipTheme ayarları
+    chipTheme: ChipThemeData(
+      showCheckmark: false,
+      color: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return AppColors.primary;
+        }
+        // Seçili değilse, çok açık mor arka plan
+        return AppColors.primary.withOpacity(0.1); 
+      }),
+      labelStyle: WidgetStateTextStyle.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return const TextStyle(color: Colors.white);
+        }
+        // Seçili değilse, primary mor metin
+        return const TextStyle(color: AppColors.primary);
+      }),
+      side: WidgetStateBorderSide.resolveWith((states) {
+        // Seçili değilse bile kenarlık olsun
+        return const BorderSide(color: AppColors.primary, width: 1);
+      }),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: Colors.transparent,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: AppColors.primary.withOpacity(0.3)),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: AppColors.primary.withOpacity(0.3)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.primary, width: 2),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.error, width: 1.5),
+      ),
+      hintStyle: const TextStyle(color: AppColors.textSecondaryLight),
+      labelStyle: const TextStyle(color: AppColors.textSecondaryLight),
     ),
   );
 
@@ -39,7 +84,7 @@ class AppTheme {
       error: AppColors.error,
     ),
     scaffoldBackgroundColor: AppColors.backgroundDark,
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.backgroundDark,
       elevation: 0,
       centerTitle: true,
@@ -54,11 +99,58 @@ class AppTheme {
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
-        disabledBackgroundColor: AppColors.primary.withOpacity(0.4),
-        disabledForegroundColor: Colors.white.withOpacity(0.6),
-        minimumSize: Size(double.infinity, 52),
+        disabledBackgroundColor: AppColors.primary.withValues(alpha: .4),
+        disabledForegroundColor: Colors.white.withValues(alpha: .6),
+        minimumSize: const Size(double.infinity, 52),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
+    ),
+    // GÜNCELLENEN: Dark mod için ChipTheme ayarları
+    chipTheme: ChipThemeData(
+      selectedColor: AppColors.primary,
+      checkmarkColor: Colors.white,
+      showCheckmark: false,
+      labelStyle: WidgetStateTextStyle.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return const TextStyle(color: Colors.white);
+        }
+        // Seçili değilse, dark modda primary mor metin
+        return const TextStyle(color: AppColors.primaryDark);
+      }),
+      color: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return AppColors.primary;
+        }
+        // Seçili değilse, çok açık mor arka plan (opacity daha düşük olabilir)
+        return AppColors.primaryDark.withOpacity(0.15); 
+      }),
+      side: WidgetStateBorderSide.resolveWith((states) {
+        // Seçili değilse bile kenarlık olsun
+        return const BorderSide(color: AppColors.primaryDark, width: 1);
+      }),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: Colors.transparent,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: AppColors.primaryDark.withOpacity(0.3)),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: AppColors.primaryDark.withOpacity(0.3)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.primary, width: 2),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.error, width: 1.5),
+      ),
+      hintStyle: const TextStyle(color: AppColors.textSecondaryDark),
+      labelStyle: const TextStyle(color: AppColors.textSecondaryDark),
     ),
   );
 }

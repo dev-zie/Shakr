@@ -1,61 +1,135 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:shakr/common/constants/app_enums.dart';
+import 'package:shakr/common/getit/injection.dart';
 import 'package:shakr/core/services/local_storage_service.dart';
-import 'package:shakr/features/auth/domain/usecases/save_vibes_usecase.dart';
+import 'package:shakr/core/services/location_service.dart';
+import 'package:shakr/core/services/media_service.dart';
+import 'package:shakr/features/auth/domain/entities/user_entity.dart';
+import 'package:shakr/features/auth/domain/usecases/save_profile_usecase.dart';
+import 'package:shakr/features/auth/domain/usecases/upload_photo_usecase.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.dart';
-import 'package:shakr/injection.dart';
 
 class OnboardingCubit extends Cubit<OnboardingState> {
   final LocalStorageService lsc;
-  final SaveVibesUsecase saveVibesUsecase;
+  final SaveProfileUsecase saveProfileUsecase;
+  final UploadPhotoUsecase uploadPhotoUsecase;
 
-  OnboardingCubit({required this.lsc, required this.saveVibesUsecase})
-    : super(OnboardingInitial());
+  final nameController = TextEditingController();
 
-  void selectVibe(String vibe) {
-    final currentVibes = state is OnboardingVibeSelected
-        ? (state as OnboardingVibeSelected).selectedVibes
-        : <String>[];
+  OnboardingCubit({
+    required this.lsc,
+    required this.saveProfileUsecase,
+    required this.uploadPhotoUsecase,
+  }) : super(OnboardingInitial());
 
-    if (currentVibes.length >= 3) return;
-    emit(OnboardingVibeSelected(selectedVibes: [...currentVibes, vibe]));
+  void updateAge(int age) {
+    final current = _currentStep();
+    emit(current.copyWith(age: age));
   }
 
-  void deselectVibe(String vibe) {
-    final currentVibes = state is OnboardingVibeSelected
-        ? (state as OnboardingVibeSelected).selectedVibes
-        : <String>[];
-    emit(
-      OnboardingVibeSelected(
-        selectedVibes: currentVibes.where((v) => v != vibe).toList(),
-      ),
+  void updateGender(Gender gender) {
+    final current = _currentStep();
+    emit(current.copyWith(gender: gender.name));
+  }
+
+  void start() {
+    emit(OnboardingStepChanged(step: 0));
+  }
+
+  void setName(String name) {
+    final current = _currentStep();
+    emit(current.copyWith(name: name, step: 1));
+  }
+
+  Future<void> setPhoto() async {
+    final current = _currentStep();
+    if (current.photoUrl == null || current.photoUrl!.isEmpty) {
+      emit(current.copyWith(step: 2));
+      return;
+    }
+
+    final uid = sl<AuthCubit>().currentUid ?? '';
+    final result = await uploadPhotoUsecase.call(uid, current.photoUrl!);
+    result.fold(
+      (failure) => emit(OnboardingError(message: failure.message)),
+      (url) => emit(current.copyWith(photoUrl: url, step: 2)),
     );
   }
 
-  Future<void> saveVibes() async {
-    final permission = await Geolocator.requestPermission();
+  void setAgeAndGender(int age, String gender) {
+    final current = _currentStep();
+    emit(current.copyWith(age: age, gender: gender, step: 3));
+  }
 
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
+  void selectVibe(String vibe) {
+    final current = _currentStep();
+    if (current.vibes.length >= 3) return;
+    emit(current.copyWith(vibes: [...current.vibes, vibe]));
+  }
+
+  void deselectVibe(String vibe) {
+    final current = _currentStep();
+    emit(
+      current.copyWith(vibes: current.vibes.where((v) => v != vibe).toList()),
+    );
+  }
+
+  void goBack() {
+    final current = _currentStep();
+    if (current.step > 0) {
+      emit(current.copyWith(step: current.step - 1));
+    }
+  }
+
+  Future<void> pickPhoto() async {
+    final path = await sl<MediaService>().pickPhoto();
+    if (path != null) {
+      final current = _currentStep();
+      emit(current.copyWith(photoUrl: path));
+    }
+  }
+
+  Future<void> saveProfile() async {
+    final current = _currentStep();
+
+    final hasPermission = await sl<LocationService>().requestPermission();
+    if (!hasPermission) {
       emit(OnboardingError(message: 'Konum izni gerekli'));
       return;
     }
 
-    final vibes = state is OnboardingVibeSelected
-        ? (state as OnboardingVibeSelected).selectedVibes
-        : <String>[];
+    final uid = sl<AuthCubit>().currentUid ?? '';
 
-    final uid = sl<AuthCubit>().currentUid;
-    if (uid != null) {
-      await saveVibesUsecase.call(uid, vibes);
-    }
+    final user = UserEntity(
+      uid: uid,
+      name: current.name,
+      age: current.age ?? 0,
+      gender: current.gender ?? '',
+      photoUrl: current.photoUrl,
+      vibes: current.vibes,
+    );
 
-    await lsc.setOnboardingCompleted();
-    emit(OnboardingCompleted(selectedVibes: vibes));
+    final result = await saveProfileUsecase.call(user);
+    result.fold((failure) => emit(OnboardingError(message: failure.message)), (
+      r,
+    ) async {
+      await lsc.setOnboardingCompleted();
+      emit(OnboardingCompleted());
+    });
   }
 
-  Future<void> resetOnboarding() async {
-    await lsc.resetOnboarding();
+  OnboardingStepChanged _currentStep() {
+    if (state is OnboardingStepChanged) {
+      return state as OnboardingStepChanged;
+    }
+    return OnboardingStepChanged(step: 0);
+  }
+
+  @override
+  Future<void> close() {
+    nameController.dispose();
+    return super.close();
   }
 }

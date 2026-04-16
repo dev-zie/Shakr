@@ -1,30 +1,21 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shakr/features/auth/domain/usecases/get_user_vibes_usecase.dart';
-import 'package:shakr/features/auth/domain/usecases/save_vibes_usecase.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/settings/presentation/cubit/settings_state.dart';
-import 'package:shakr/injection.dart';
+import 'package:shakr/common/getit/injection.dart';
 
 class SettingsCubit extends Cubit<SettingsState> {
-  final GetUserVibesUsecase getUserVibesUsecase;
-  final SaveVibesUsecase saveVibesUsecase;
+  SettingsCubit() : super(SettingsInitial());
 
-  SettingsCubit({
-    required this.getUserVibesUsecase,
-    required this.saveVibesUsecase,
-  }) : super(SettingsInitial());
+  // Future<void> loadVibes() async {
+  //   emit(SettingsLoading());
 
-  Future<void> loadVibes() async {
-    emit(SettingsLoading());
-
-    final uid = sl<AuthCubit>().currentUid;
-    final result = await getUserVibesUsecase.call(uid ?? '');
-    result.fold(
-      (failure) => emit(SettingsError(failure.message)),
-      (vibes) => emit(SettingsLoaded(vibes)),
-    );
-  }
+  //   final uid = sl<AuthCubit>().currentUid;
+  //   final result = await getUserVibesUsecase.call(uid ?? '');
+  //   result.fold(
+  //     (failure) => emit(SettingsError(failure.message)),
+  //     (vibes) => emit(SettingsLoaded(vibes)),
+  //   );
+  // }
 
   void selectVibe(String vibe) {
     final currentVibes = state is SettingsLoaded
@@ -41,15 +32,15 @@ class SettingsCubit extends Cubit<SettingsState> {
     emit(SettingsLoaded(currentVibes.where((v) => v != vibe).toList()));
   }
 
-  Future<void> saveVibes() async {
-    final uid = sl<AuthCubit>().currentUid;
-    final vibes = state is SettingsLoaded
-        ? (state as SettingsLoaded).selectedVibes
-        : <String>[];
-    final result = await saveVibesUsecase.call(uid ?? '', vibes);
-    result.fold(
-      (failure) => emit(SettingsError(failure.message)),
-      (r) => emit(SettingsSaved()),
-    );
-  }
+  // Future<void> saveVibes() async {
+  //   final uid = sl<AuthCubit>().currentUid;
+  //   final vibes = state is SettingsLoaded
+  //       ? (state as SettingsLoaded).selectedVibes
+  //       : <String>[];
+  //   final result = await saveVibesUsecase.call(uid ?? '', vibes);
+  //   result.fold(
+  //     (failure) => emit(SettingsError(failure.message)),
+  //     (r) => emit(SettingsSaved()),
+  //   );
+  // }
 }

@@ -3,14 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shakr/core/services/local_storage_service.dart';
 import 'package:shakr/core/services/location_service.dart';
+import 'package:shakr/core/services/media_service.dart';
 import 'package:shakr/core/services/shake_service.dart';
 import 'package:shakr/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:shakr/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:shakr/features/auth/domain/repositories/auth_repository.dart';
 import 'package:shakr/features/auth/domain/usecases/get_current_user_usecase.dart';
-import 'package:shakr/features/auth/domain/usecases/get_user_vibes_usecase.dart';
-import 'package:shakr/features/auth/domain/usecases/save_vibes_usecase.dart';
+import 'package:shakr/features/auth/domain/usecases/get_profile_usecase.dart';
+import 'package:shakr/features/auth/domain/usecases/save_profile_usecase.dart';
 import 'package:shakr/features/auth/domain/usecases/sign_in_anonymously_usecase.dart';
+import 'package:shakr/features/auth/domain/usecases/upload_photo_usecase.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/chat/data/datasources/chat_remote_datasource.dart';
 import 'package:shakr/features/chat/data/repositories/chat_repository_impl.dart';
@@ -29,6 +31,7 @@ import 'package:shakr/features/match/domain/usecases/keep_connection_usecase.dar
 import 'package:shakr/features/match/domain/usecases/watch_match_usecase.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
+import 'package:shakr/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:shakr/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:shakr/features/shake/data/datasources/shake_remote_datasource.dart';
 import 'package:shakr/features/shake/data/repositories/shake_repository_impl.dart';
@@ -54,16 +57,25 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton(() => GetCurrentUserUsecase(repo: sl()));
   sl.registerLazySingleton(() => SignInAnonymouslyUsecase(repo: sl()));
-  sl.registerLazySingleton(() => SaveVibesUsecase(repo: sl()));
-  sl.registerLazySingleton(() => GetUserVibesUsecase(repo: sl()));
+  sl.registerLazySingleton(() => SaveProfileUsecase(repo: sl()));
+  sl.registerLazySingleton(() => UploadPhotoUsecase(repo: sl()));
+  sl.registerLazySingleton(() => GetProfileUsecase(repo: sl()));
   sl.registerLazySingleton(
-    () =>
-        AuthCubit(getCurrentUserUsecase: sl(), signInAnonymouslyUsecase: sl()),
+    () => AuthCubit(
+      getCurrentUserUsecase: sl(),
+      signInAnonymouslyUsecase: sl(),
+      getProfileUsecase: sl(),
+      saveProfileUsecase: sl(),
+    ),
   );
+  sl.registerLazySingleton(() => MediaService());
 
-  //onboard
-  sl.registerLazySingleton(
-    () => OnboardingCubit(lsc: sl(), saveVibesUsecase: sl()),
+  sl.registerFactory(
+    () => OnboardingCubit(
+      lsc: sl(),
+      saveProfileUsecase: sl(),
+      uploadPhotoUsecase: sl(),
+    ),
   );
 
   // Shake
@@ -116,7 +128,14 @@ Future<void> initDependencies() async {
   );
 
   //settings
+  sl.registerFactory(() => SettingsCubit());
+
+  //profile
   sl.registerFactory(
-    () => SettingsCubit(getUserVibesUsecase: sl(), saveVibesUsecase: sl()),
+    () => ProfileCubit(
+      getProfileUsecase: sl(),
+      saveProfileUsecase: sl(),
+      uploadPhotoUsecase: sl(),
+    ),
   );
 }

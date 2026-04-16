@@ -29,3 +29,8 @@ class AuthError extends AuthState with EquatableMixin {
   @override
   List<Object?> get props => [message];
 }
+
+class AuthProfileSaved extends AuthState with EquatableMixin {
+  @override
+  List<Object?> get props => [];
+}

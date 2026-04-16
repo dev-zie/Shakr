@@ -35,12 +35,22 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> saveVibes(
-    String uid,
-    List<String> vibes,
-  ) async {
+  Future<Either<Failure, UserEntity>> getProfile(String uid) async {
     try {
-      await authRemoteDatasource.saveVibes(uid, vibes);
+      final profile = await authRemoteDatasource.getProfile(uid);
+      if (profile == null) return Left(NotFoundFailure());
+      return Right(profile);
+    } on SocketException {
+      return Left(NetworkFailure());
+    } catch (e) {
+      return Left(UnexpectedFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> saveProfile(UserEntity user) async {
+    try {
+      await authRemoteDatasource.saveProfile(user);
       return Right(unit);
     } on SocketException {
       return Left(NetworkFailure());
@@ -50,10 +60,13 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, List<String>>> getUserVibes(String uid) async {
+  Future<Either<Failure, String>> uploadPhoto(
+    String uid,
+    String filePath,
+  ) async {
     try {
-      final vibes = await authRemoteDatasource.getUserVibes(uid);
-      return Right(vibes);
+      final url = await authRemoteDatasource.uploadPhoto(uid, filePath);
+      return Right(url);
     } on SocketException {
       return Left(NetworkFailure());
     } catch (e) {

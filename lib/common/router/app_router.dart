@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:shakr/features/chat/presentation/pages/chat_expired_screen.dart';
 import 'package:shakr/features/chat/presentation/pages/chat_screen.dart';
+import 'package:shakr/features/main/presentation/pages/main_screen.dart';
 import 'package:shakr/features/match/presentation/pages/match_found_screen.dart';
 import 'package:shakr/features/onboarding/presentation/pages/onboarding_screen.dart';
 import 'package:shakr/features/settings/presentation/pages/settings_screen.dart';
@@ -42,9 +43,13 @@ final GoRouter router = GoRouter(
         return ChatExpiredScreen(matchId: matchId);
       },
     ),
+    // GoRoute(
+    //   path: '/settings',
+    //   builder: (context, state) => const SettingsScreen(),
+    // ),
     GoRoute(
-      path: '/settings',
-      builder: (context, state) => const SettingsScreen(),
+      path: '/main/shake',
+      builder: (context, state) => const MainScreen(),
     ),
   ],
 );
