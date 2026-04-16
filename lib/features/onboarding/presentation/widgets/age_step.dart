@@ -7,108 +7,94 @@ import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.dart';
 
-class AgeStep extends StatefulWidget {
+class AgeStep extends StatelessWidget {
   const AgeStep({super.key});
 
-  @override
-  State<AgeStep> createState() => _AgeStepState();
-}
-
-class _AgeStepState extends State<AgeStep> {
-  late FixedExtentScrollController _controller;
-  final int minAge = 18;
-  final int maxAge = 99;
-  late int selectedAge;
-
-  @override
-  void initState() {
-    super.initState();
-    final state = context.read<OnboardingCubit>().state;
-    selectedAge = (state is OnboardingStepChanged) ? (state.age ?? 20) : 20;
-    _controller = FixedExtentScrollController(initialItem: selectedAge - minAge);
-  }
+  static const int _minAge = 18;
+  static const int _maxAge = 99;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.l),
-      child: Column(
-        children: [
-          const SizedBox(height: AppSpacing.xl),
-          Text(
-            AppStrings.howOldAreYou,
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-          ),
-          const SizedBox(height: AppSpacing.s),
-          Text(
-            'Doğum yılın otomatik hesaplanacaktır.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textSecondaryLight,
-                ),
-          ),
-          const Expanded(
-            child: SizedBox(),
-          ),
-          SizedBox(
-            height: 250,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // Arka plan çizgileri veya vurgu
-                Container(
-                  height: 50,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                CupertinoPicker(
-                  scrollController: _controller,
-                  itemExtent: 50,
-                  onSelectedItemChanged: (index) {
-                    setState(() {
-                      selectedAge = minAge + index;
-                    });
-                  },
-                  children: List.generate(maxAge - minAge + 1, (index) {
-                    final age = minAge + index;
-                    final isSelected = age == selectedAge;
-                    return Center(
-                      child: Text(
-                        age.toString(),
-                        style: TextStyle(
-                          fontSize: isSelected ? 32 : 24,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                          color: isSelected ? AppColors.primary : Colors.grey.withOpacity(0.5),
-                        ),
-                      ),
-                    );
-                  }),
-                ),
-              ],
-            ),
-          ),
-          const Expanded(
-            child: SizedBox(),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              context.read<OnboardingCubit>().setAge(selectedAge);
-            },
-            child: const Text(AppStrings.continueButton),
-          ),
-          const SizedBox(height: AppSpacing.xl),
-        ],
-      ),
-    );
-  }
+    final cubit = context.read<OnboardingCubit>();
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+    return BlocBuilder<OnboardingCubit, OnboardingState>(
+      builder: (context, state) {
+        final currentAge =
+            (state is OnboardingStepChanged) ? (state.age ?? 20) : 20;
+
+        return Padding(
+          padding: const EdgeInsets.all(AppSpacing.l),
+          child: Column(
+            children: [
+              const SizedBox(height: AppSpacing.xl),
+              Text(
+                AppStrings.howOldAreYou,
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+              const SizedBox(height: AppSpacing.s),
+              Text(
+                'Doğum yılın otomatik hesaplanacaktır.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textSecondaryLight,
+                    ),
+              ),
+              const Expanded(child: SizedBox()),
+              SizedBox(
+                height: 250,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      height: 50,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    CupertinoPicker(
+                      scrollController: cubit.ageScrollController,
+                      itemExtent: 50,
+                      onSelectedItemChanged: (index) {
+                        cubit.updateAge(_minAge + index);
+                      },
+                      children: List.generate(
+                        _maxAge - _minAge + 1,
+                        (index) {
+                          final age = _minAge + index;
+                          final isSelected = age == currentAge;
+                          return Center(
+                            child: Text(
+                              age.toString(),
+                              style: TextStyle(
+                                fontSize: isSelected ? 32 : 24,
+                                fontWeight: isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                                color: isSelected
+                                    ? AppColors.primary
+                                    : Colors.grey.withValues(alpha: 0.5),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+              ElevatedButton(
+                onPressed: () => cubit.setAge(currentAge),
+                child: const Text(AppStrings.continueButton),
+              ),
+              const SizedBox(height: AppSpacing.xl),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

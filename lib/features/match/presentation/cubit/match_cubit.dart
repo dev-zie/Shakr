@@ -23,6 +23,9 @@ class MatchCubit extends Cubit<MatchState> {
 
   StreamSubscription? _subscription;
 
+  /// 15 saniyelik kabul penceresi için zamanlayıcı (StatelessWidget dönüşümü için cubitte)
+  Timer? _acceptTimer;
+
   MatchCubit({
     required this.watchMatchUsecase,
     required this.getMatchUsecase,
@@ -39,7 +42,13 @@ class MatchCubit extends Cubit<MatchState> {
 
   /// Maç verisi henüz yüklü değilse çeker; tekrar çağrılması güvenlidir.
   void ensureLoaded(String matchId) {
-    if (state is MatchLoading || state is MatchFound || state is MatchExpired) {
+    if (state is MatchLoading ||
+        state is MatchFound ||
+        state is MatchExpired ||
+        state is MatchConnectionPending ||
+        state is MatchBothKept ||
+        state is MatchAcceptancePending ||
+        state is MatchAccepted) {
       return;
     }
     getMatch(matchId);
@@ -48,8 +57,10 @@ class MatchCubit extends Cubit<MatchState> {
   void watchMatch(String uid) {
     _subscription = watchMatchUsecase.call(uid).listen((match) {
       if (match == null) {
+        _cancelAcceptTimer();
         emit(MatchDeleted());
       } else if (match.status == MatchStatus.expired) {
+        _cancelAcceptTimer();
         final isUser1 = match.user1Id == uid;
         final myKeep = isUser1
             ? match.user1KeepConnection
@@ -71,16 +82,40 @@ class MatchCubit extends Cubit<MatchState> {
         final myAccepted = isUser1 ? match.user1Accepted : match.user2Accepted;
 
         if (match.user1Accepted && match.user2Accepted) {
+          _cancelAcceptTimer();
           emit(MatchAccepted(match));
         } else if (myAccepted) {
+          // Zamanlayıcı hâlâ çalışıyor — karşı taraf kabul edene kadar devam eder
           emit(MatchAcceptancePending(match));
         } else {
+          _startAcceptTimer(match.matchId, match.createdAt);
           emit(MatchFound(match));
         }
       } else {
+        _startAcceptTimer(match.matchId, match.createdAt);
         emit(MatchFound(match));
       }
     });
+  }
+
+  /// Kabul penceresi için 15 saniyelik tek-atış zamanlayıcı başlatır.
+  /// Zaten çalışıyorsa yeniden başlatmaz (idempotent).
+  void _startAcceptTimer(String matchId, DateTime createdAt) {
+    if (_acceptTimer?.isActive == true) return;
+    final elapsed = DateTime.now().difference(createdAt).inSeconds;
+    final remaining = (15 - elapsed).clamp(0, 15);
+    if (remaining <= 0) {
+      deleteMatch(matchId);
+      return;
+    }
+    _acceptTimer = Timer(Duration(seconds: remaining), () {
+      deleteMatch(matchId);
+    });
+  }
+
+  void _cancelAcceptTimer() {
+    _acceptTimer?.cancel();
+    _acceptTimer = null;
   }
 
   Future<void> getMatch(String matchId) async {
@@ -122,26 +157,14 @@ class MatchCubit extends Cubit<MatchState> {
     emit(MatchInitial());
   }
 
-  /// Bağlantıyı koruma akışı: keepConnection → ikisi de kabul ettiyse MatchBothKept,
-  /// aksi hâlde MatchConnectionPending emit eder.
+  /// Bağlantıyı koruma akışı: keepConnection kaydeder,
+  /// watchMatch stream üzerinden state otomatik güncellenir.
   Future<void> keepConnectionFlow(String matchId, String uid) async {
     await keepConnectionUsecase.call(matchId, uid);
-    // watchMatch üzerinden otomatik olarak state güncellenecektir.
-  }
-
-  Future<void> cancelKeepConnectionFlow(String matchId, String uid) async {
-    // Repository'ye cancel metodu eklenmesi gerekecek, şimdilik manuel update gibi düşünelim
-    // Ama repo bazlı gitmek daha doğru.
-    final result = await deleteMatchUsecase.call(
-      matchId,
-    ); // Veya özel vazgeç metodu
-    result.fold(
-      (l) => emit(MatchError(l.message)),
-      (_) => emit(MatchInitial()),
-    );
   }
 
   void reset() {
+    _cancelAcceptTimer();
     _subscription?.cancel();
     _subscription = null;
     emit(MatchInitial());
@@ -149,6 +172,7 @@ class MatchCubit extends Cubit<MatchState> {
 
   @override
   Future<void> close() {
+    _acceptTimer?.cancel();
     _subscription?.cancel();
     return super.close();
   }

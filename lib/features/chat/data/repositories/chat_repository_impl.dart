@@ -39,6 +39,20 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
+  Future<Either<Failure, void>> deleteConversation(
+    String conversationId,
+  ) async {
+    try {
+      await remoteDatasource.deleteConversation(conversationId);
+      return Right(unit);
+    } on SocketException {
+      return Left(NetworkFailure());
+    } catch (e) {
+      return Left(UnexpectedFailure());
+    }
+  }
+
+  @override
   Stream<Either<Failure, List<ConversationEntity>>> watchConversations(
     String uid,
   ) {

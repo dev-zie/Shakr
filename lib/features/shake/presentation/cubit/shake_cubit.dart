@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/core/services/location_service.dart';
 import 'package:shakr/core/services/shake_service.dart';
@@ -15,6 +16,10 @@ class ShakeCubit extends Cubit<ShakeState> {
   final RecordShakeUsecase recordShakeUsecase;
   Timer? _matchTimer;
 
+  /// Radar animasyonu için (ShakeBody StatelessWidget — vsync yerine ValueNotifier kullanır)
+  final ValueNotifier<double> radarProgress = ValueNotifier(0.0);
+  Timer? _radarTimer;
+
   ShakeCubit({
     required this.deleteShakeUsecase,
     required this.recordShakeUsecase,
@@ -23,9 +28,9 @@ class ShakeCubit extends Cubit<ShakeState> {
   void init() {
     reset();
     sl<MatchCubit>().reset();
-    final uid = sl<AuthCubit>().currentUid; //locale gecicem
+    _startRadar();
+    final uid = sl<AuthCubit>().currentUid;
     sl<ShakeService>().startListening(() async {
-      // final uid = sl<AuthCubit>().currentUid;
       if (uid == null) return;
       final location = await sl<LocationService>().getCurrentLocation();
       recordShake(
@@ -43,10 +48,24 @@ class ShakeCubit extends Cubit<ShakeState> {
   }
 
   void disposeScreen() {
+    _stopRadar();
     sl<ShakeService>().stopListening();
     _matchTimer?.cancel();
     final uid = sl<AuthCubit>().currentUid;
     if (uid != null) deleteShake(uid);
+  }
+
+  void _startRadar() {
+    _radarTimer?.cancel();
+    _radarTimer = Timer.periodic(const Duration(milliseconds: 16), (_) {
+      radarProgress.value = (radarProgress.value + 16 / 3000) % 1.0;
+    });
+  }
+
+  void _stopRadar() {
+    _radarTimer?.cancel();
+    _radarTimer = null;
+    radarProgress.value = 0.0;
   }
 
   Future<void> recordShake(ShakeEntity shake) async {
@@ -83,6 +102,8 @@ class ShakeCubit extends Cubit<ShakeState> {
   @override
   Future<void> close() {
     _matchTimer?.cancel();
+    _radarTimer?.cancel();
+    radarProgress.dispose();
     return super.close();
   }
 }

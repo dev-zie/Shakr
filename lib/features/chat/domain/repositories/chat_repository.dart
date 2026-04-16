@@ -18,4 +18,6 @@ abstract class ChatRepository {
   Stream<Either<Failure, List<ConversationEntity>>> watchConversations(
     String uid,
   );
+
+  Future<Either<Failure, void>> deleteConversation(String conversationId);
 }

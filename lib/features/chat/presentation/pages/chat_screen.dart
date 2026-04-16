@@ -12,6 +12,7 @@ import 'package:shakr/features/chat/presentation/widgets/chat_timer_title.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_state.dart';
 import 'package:shakr/common/getit/injection.dart';
+import 'package:shakr/features/shake/presentation/widgets/go_back_button.dart';
 
 class ChatScreen extends StatelessWidget {
   final String matchId;
@@ -40,8 +41,14 @@ class ChatScreen extends StatelessWidget {
       value: chatCubit,
       child: Scaffold(
         appBar: AppBar(
+          leading: GoBackButton(
+            onPressed: () {
+              context.replace('/main/chats');
+            },
+          ),
           title: isPermanent
               ? Row(
+                  mainAxisAlignment: .spaceBetween,
                   children: [
                     CircleAvatar(
                       radius: 18,
@@ -69,6 +76,35 @@ class ChatScreen extends StatelessWidget {
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Sohbeti Sil'),
+                            content: const Text(
+                              'Bu sohbeti ve tüm mesajları silmek istediğinize emin misiniz?',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(context, false),
+                                child: const Text(AppStrings.cancel),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(context, true),
+                                child: const Text(AppStrings.okay),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirm == true) {
+                          sl<ChatCubit>().deleteConversation(matchId);
+                        }
+                      },
+                      icon: const Icon(Icons.close),
                     ),
                   ],
                 )
@@ -124,6 +160,8 @@ class ChatScreen extends StatelessWidget {
               listener: (context, state) {
                 if (state is ChatTimeExpiredState) {
                   context.go('/chat-expired/$matchId');
+                } else if (state is ChatConversationDeleted) {
+                  context.go('/main/chats');
                 }
               },
             ),

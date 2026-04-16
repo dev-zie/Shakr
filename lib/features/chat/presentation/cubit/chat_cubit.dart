@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/features/chat/domain/entities/message_entity.dart';
+import 'package:shakr/features/chat/domain/usecases/delete_conversation_usecase.dart';
 import 'package:shakr/features/chat/domain/usecases/send_message_usecase.dart';
 import 'package:shakr/features/chat/domain/usecases/watch_conversations_usecase.dart';
 import 'package:shakr/features/chat/domain/usecases/watch_messages_usecase.dart';
@@ -14,6 +15,7 @@ class ChatCubit extends Cubit<ChatState> {
   final SendMessageUsecase sendMessageUsecase;
   final WatchMessagesUsecase watchMessagesUsecase;
   final WatchConversationsUsecase watchConversationsUsecase;
+  final DeleteConversationUsecase deleteConversationUsecase;
 
   final messageController = TextEditingController();
 
@@ -24,6 +26,7 @@ class ChatCubit extends Cubit<ChatState> {
     required this.sendMessageUsecase,
     required this.watchMessagesUsecase,
     required this.watchConversationsUsecase,
+    required this.deleteConversationUsecase,
   }) : super(ChatInitial());
 
   void initChat(
@@ -145,6 +148,14 @@ class ChatCubit extends Cubit<ChatState> {
         (conversations) => ChatConversationsLoaded(conversations),
       );
     });
+  }
+
+  Future<void> deleteConversation(String conversationId) async {
+    final result = await deleteConversationUsecase.call(conversationId);
+    result.fold(
+      (l) => emit(ChatError(l.message)),
+      (_) => emit(ChatConversationDeleted()),
+    );
   }
 
   void disposeScreen() {

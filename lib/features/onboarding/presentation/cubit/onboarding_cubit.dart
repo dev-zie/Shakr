@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/constants/app_enums.dart';
 import 'package:shakr/common/getit/injection.dart';
@@ -17,6 +18,9 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   final UploadPhotoUsecase uploadPhotoUsecase;
 
   final nameController = TextEditingController();
+
+  /// Yaş adımındaki CupertinoPicker için scroll controller (18 → 99, başlangıç: 20)
+  final ageScrollController = FixedExtentScrollController(initialItem: 2);
 
   OnboardingCubit({
     required this.lsc,
@@ -140,6 +144,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   @override
   Future<void> close() {
     nameController.dispose();
+    ageScrollController.dispose();
     return super.close();
   }
 }

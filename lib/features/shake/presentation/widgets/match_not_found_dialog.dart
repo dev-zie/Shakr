@@ -18,7 +18,7 @@ class MatchNotFoundDialog extends StatelessWidget {
           onPressed: () {
             sl<ShakeCubit>().disposeScreen();
             Navigator.pop(context);
-            context.go('/home');
+            context.go('/main/shake');
           },
         ),
       ],

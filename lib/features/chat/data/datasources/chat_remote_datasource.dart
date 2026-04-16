@@ -52,4 +52,25 @@ class ChatRemoteDatasource {
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => {...doc.data(), 'id': doc.id}).toList());
   }
+
+  Future<void> deleteConversation(String conversationId) async {
+    final messagesRef = db
+        .collection('conversations')
+        .doc(conversationId)
+        .collection('messages');
+
+    // Delete messages in batches of 500
+    QuerySnapshot snapshot;
+    do {
+      snapshot = await messagesRef.limit(500).get();
+      if (snapshot.docs.isEmpty) break;
+      final batch = db.batch();
+      for (final doc in snapshot.docs) {
+        batch.delete(doc.reference);
+      }
+      await batch.commit();
+    } while (snapshot.docs.length == 500);
+
+    await db.collection('conversations').doc(conversationId).delete();
+  }
 }

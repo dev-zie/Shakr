@@ -125,7 +125,7 @@ class MyChatsScreen extends StatelessWidget {
                           spacing: 4,
                           children: conv.otherUserVibes
                               .take(3)
-                              .map(
+                              .map<Widget>(
                                 (v) => Container(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 6,
@@ -134,7 +134,7 @@ class MyChatsScreen extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: Theme.of(
                                       context,
-                                    ).primaryColor.withOpacity(0.1),
+                                    ).primaryColor.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Text(

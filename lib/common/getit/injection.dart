@@ -17,6 +17,7 @@ import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/chat/data/datasources/chat_remote_datasource.dart';
 import 'package:shakr/features/chat/data/repositories/chat_repository_impl.dart';
 import 'package:shakr/features/chat/domain/repositories/chat_repository.dart';
+import 'package:shakr/features/chat/domain/usecases/delete_conversation_usecase.dart';
 import 'package:shakr/features/chat/domain/usecases/send_message_usecase.dart';
 import 'package:shakr/features/chat/domain/usecases/watch_conversations_usecase.dart';
 import 'package:shakr/features/chat/domain/usecases/watch_messages_usecase.dart';
@@ -130,12 +131,14 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => SendMessageUsecase(repo: sl()));
   sl.registerLazySingleton(() => WatchMessagesUsecase(repo: sl()));
   sl.registerLazySingleton(() => WatchConversationsUsecase(repo: sl()));
+  sl.registerLazySingleton(() => DeleteConversationUsecase(repo: sl()));
 
   sl.registerLazySingleton(
     () => ChatCubit(
       sendMessageUsecase: sl(),
       watchMessagesUsecase: sl(),
       watchConversationsUsecase: sl(),
+      deleteConversationUsecase: sl(),
     ),
   );
 

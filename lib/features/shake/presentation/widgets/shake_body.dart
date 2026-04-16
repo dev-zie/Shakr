@@ -8,31 +8,8 @@ import 'package:shakr/features/shake/domain/entities/shake_entity.dart';
 import 'package:shakr/features/shake/presentation/cubit/shake_cubit.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 
-class ShakeBody extends StatefulWidget {
+class ShakeBody extends StatelessWidget {
   const ShakeBody({super.key});
-
-  @override
-  State<ShakeBody> createState() => _ShakeBodyState();
-}
-
-class _ShakeBodyState extends State<ShakeBody>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,17 +23,15 @@ class _ShakeBodyState extends State<ShakeBody>
             child: Stack(
               alignment: Alignment.center,
               children: [
-                // Radar Animasyonu
-                AnimatedBuilder(
-                  animation: _controller,
-                  builder: (context, child) {
+                ValueListenableBuilder<double>(
+                  valueListenable: sl<ShakeCubit>().radarProgress,
+                  builder: (context, progress, _) {
                     return CustomPaint(
-                      painter: RadarPainter(_controller.value),
+                      painter: _RadarPainter(progress),
                       size: const Size(300, 300),
                     );
                   },
                 ),
-                // Merkez İkon
                 Container(
                   padding: const EdgeInsets.all(AppSpacing.xl),
                   decoration: BoxDecoration(
@@ -64,7 +39,7 @@ class _ShakeBodyState extends State<ShakeBody>
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withOpacity(0.3),
+                        color: AppColors.primary.withValues(alpha: 0.3),
                         blurRadius: 20,
                         spreadRadius: 5,
                       ),
@@ -82,24 +57,25 @@ class _ShakeBodyState extends State<ShakeBody>
           const SizedBox(height: AppSpacing.xxl),
           Text(
             AppStrings.shakeString,
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSpacing.s),
           Text(
             'Eşleşmek için telefonunu salla!',
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey,
+                ),
           ),
           const SizedBox(height: AppSpacing.xxl),
           TextButton.icon(
             onPressed: () async {
               final uid = FirebaseAuth.instance.currentUser?.uid;
               if (uid == null) return;
-              final location = await sl<LocationService>().getCurrentLocation();
+              final location =
+                  await sl<LocationService>().getCurrentLocation();
               final shake = ShakeEntity(
                 uid: uid,
                 location: location,
@@ -111,7 +87,7 @@ class _ShakeBodyState extends State<ShakeBody>
             icon: const Icon(Icons.touch_app, size: 16),
             label: const Text('Emulator: Sallanmayı Simüle Et'),
             style: TextButton.styleFrom(
-              foregroundColor: Colors.grey.withOpacity(0.5),
+              foregroundColor: Colors.grey.withValues(alpha: 0.5),
             ),
           ),
         ],
@@ -120,10 +96,10 @@ class _ShakeBodyState extends State<ShakeBody>
   }
 }
 
-class RadarPainter extends CustomPainter {
+class _RadarPainter extends CustomPainter {
   final double progress;
 
-  RadarPainter(this.progress);
+  const _RadarPainter(this.progress);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -132,16 +108,15 @@ class RadarPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 
-    // 3 adet halka
     for (int i = 0; i < 3; i++) {
       final currentProgress = (progress + (i / 3)) % 1.0;
       final radius = (size.width / 2) * currentProgress;
-      paint.color = AppColors.primary.withOpacity(1.0 - currentProgress);
+      paint.color = AppColors.primary.withValues(alpha: 1.0 - currentProgress);
       canvas.drawCircle(center, radius, paint);
     }
   }
 
   @override
-  bool shouldRepaint(RadarPainter oldDelegate) =>
+  bool shouldRepaint(_RadarPainter oldDelegate) =>
       oldDelegate.progress != progress;
 }

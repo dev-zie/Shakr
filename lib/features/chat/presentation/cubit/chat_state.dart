@@ -45,6 +45,11 @@ class ChatConversationsLoaded extends ChatState with EquatableMixin {
   List<Object?> get props => [conversations];
 }
 
+class ChatConversationDeleted extends ChatState with EquatableMixin {
+  @override
+  List<Object?> get props => [];
+}
+
 class ChatError extends ChatState with EquatableMixin {
   final String message;
 
