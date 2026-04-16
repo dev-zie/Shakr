@@ -44,7 +44,7 @@ class ChatExpiredScreen extends StatelessWidget {
             messenger.showSnackBar(
               const SnackBar(content: Text(AppStrings.connectionSaved)),
             );
-            router.go('/main/chats');
+            context.go('/main/chats');
           } else if (state is MatchConnectionPending) {
             messenger.showSnackBar(
               const SnackBar(content: Text(AppStrings.waitingOtherDecide)),
