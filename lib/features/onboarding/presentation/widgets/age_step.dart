@@ -75,7 +75,9 @@ class AgeStep extends StatelessWidget {
                                     : FontWeight.normal,
                                 color: isSelected
                                     ? AppColors.primary
-                                    : Colors.grey.withValues(alpha: 0.5),
+                                    : AppColors.textSecondaryLight.withValues(
+                                        alpha: 0.5,
+                                      ),
                               ),
                             ),
                           );

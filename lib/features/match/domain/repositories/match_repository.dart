@@ -10,5 +10,4 @@ abstract class MatchRepository {
   Future<Either<Failure, void>> expireMatch(String matchId);
   Future<Either<Failure, void>> deleteMatch(String matchId);
   Future<Either<Failure, void>> moveToPermanentChat(String matchId);
-  Future<Either<Failure, bool>> checkBothKeptConnection(String matchId);
 }

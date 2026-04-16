@@ -42,12 +42,12 @@ class ProfileViewBody extends StatelessWidget {
           itemCount: user.vibes.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
-            mainAxisSpacing: AppSpacing.m,
-            crossAxisSpacing: AppSpacing.m,
-            childAspectRatio: 0.9,
+            mainAxisSpacing: AppSpacing.s,
+            crossAxisSpacing: AppSpacing.s,
+            childAspectRatio: 1.4, // Making it more badge-like (horizontal)
           ),
           itemBuilder: (context, index) {
-            return VibeCard(vibe: user.vibes[index]);
+            return VibeCard(vibe: user.vibes[index], isSelected: true); // Show as 'active' badge
           },
         ),
       ],

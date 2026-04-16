@@ -7,9 +7,9 @@ import 'package:shakr/core/services/location_service.dart';
 import 'package:shakr/features/shake/domain/entities/shake_entity.dart';
 import 'package:shakr/features/shake/presentation/cubit/shake_cubit.dart';
 import 'package:shakr/common/theme/app_colors.dart';
-
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/theme/app_shadows.dart';
+import 'package:shakr/features/shake/presentation/widgets/radar_painter.dart';
 
 class ShakeBody extends StatelessWidget {
   const ShakeBody({super.key});
@@ -30,7 +30,7 @@ class ShakeBody extends StatelessWidget {
                   valueListenable: sl<ShakeCubit>().radarProgress,
                   builder: (context, progress, _) {
                     return CustomPaint(
-                      painter: _RadarPainter(progress),
+                      painter: RadarPainter(progress),
                       size: const Size(300, 300),
                     );
                   },
@@ -82,7 +82,7 @@ class ShakeBody extends StatelessWidget {
             icon: const Icon(LucideIcons.mousePointer2, size: 16),
             label: const Text('Emulator: Sallanmayı Simüle Et'),
             style: TextButton.styleFrom(
-              foregroundColor: AppColors.textSecondaryLight.withOpacity(0.5),
+              foregroundColor: AppColors.textSecondaryLight.withValues(alpha: 0.5),
             ),
           ),
         ],
@@ -91,27 +91,3 @@ class ShakeBody extends StatelessWidget {
   }
 }
 
-class _RadarPainter extends CustomPainter {
-  final double progress;
-
-  const _RadarPainter(this.progress);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-
-    for (int i = 0; i < 3; i++) {
-      final currentProgress = (progress + (i / 3)) % 1.0;
-      final radius = (size.width / 2) * currentProgress;
-      paint.color = AppColors.primary.withValues(alpha: 1.0 - currentProgress);
-      canvas.drawCircle(center, radius, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(_RadarPainter oldDelegate) =>
-      oldDelegate.progress != progress;
-}

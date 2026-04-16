@@ -48,7 +48,9 @@ class ProfileScreen extends StatelessWidget {
               actions: [
                 if (state is ProfileLoaded)
                   IconButton(
-                    icon: Icon(state.isEditing ? LucideIcons.x : LucideIcons.pencil),
+                    icon: Icon(
+                      state.isEditing ? LucideIcons.x : LucideIcons.pencil,
+                    ),
                     onPressed: () =>
                         context.read<ProfileCubit>().toggleEditMode(),
                   ),

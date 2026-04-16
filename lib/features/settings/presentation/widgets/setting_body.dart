@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
+import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:shakr/features/settings/presentation/cubit/settings_state.dart';
 
@@ -44,8 +45,8 @@ class SettingsBody extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.xxl),
             ListTile(
-              iconColor: Colors.red,
-              textColor: Colors.red,
+              iconColor: AppColors.error,
+              textColor: AppColors.error,
               leading: const Icon(Icons.logout),
               title: const Text(AppStrings.logout),
               onTap: () {
@@ -53,8 +54,8 @@ class SettingsBody extends StatelessWidget {
               },
             ),
             ListTile(
-              iconColor: Colors.red,
-              textColor: Colors.red,
+              iconColor: AppColors.error,
+              textColor: AppColors.error,
               leading: const Icon(Icons.delete_forever),
               title: const Text(AppStrings.deleteAccount),
               onTap: () {

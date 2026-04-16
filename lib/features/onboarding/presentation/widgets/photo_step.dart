@@ -54,7 +54,9 @@ class PhotoStep extends StatelessWidget {
                         ),
                         image: photoUrl != null
                             ? DecorationImage(
-                                image: FileImage(File(photoUrl)),
+                                image: photoUrl.startsWith('http')
+                                    ? NetworkImage(photoUrl) as ImageProvider
+                                    : FileImage(File(photoUrl)),
                                 fit: BoxFit.cover,
                               )
                             : null,

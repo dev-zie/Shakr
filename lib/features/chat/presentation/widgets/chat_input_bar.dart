@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/theme/app_colors.dart';
+import 'package:shakr/common/theme/app_shadows.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
 
 class ChatInputBar extends StatelessWidget {
@@ -32,13 +33,7 @@ class ChatInputBar extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 20,
-            offset: const Offset(0, -4),
-          ),
-        ],
+        boxShadow: AppShadows.upward,
       ),
       child: Row(
         children: [

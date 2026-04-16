@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_state.dart';
@@ -35,17 +36,23 @@ class MyChatsScreen extends StatelessWidget {
             }
 
             // Sort conversations locally by lastMessageAt descending
-            final sortedConversations = List<ConversationEntity>.from(state.conversations)
-              ..sort((a, b) => b.lastMessageAt.compareTo(a.lastMessageAt));
+            final sortedConversations = List<ConversationEntity>.from(
+              state.conversations,
+            )..sort((a, b) => b.lastMessageAt.compareTo(a.lastMessageAt));
 
             return ListView.separated(
               itemCount: sortedConversations.length,
               separatorBuilder: (context, index) => Padding(
                 padding: const EdgeInsets.only(left: 72),
-                child: Divider(height: 1, color: Colors.grey.withOpacity(0.1)),
+                child: Divider(
+                  height: 1,
+                  color: AppColors.textSecondaryLight.withValues(alpha: 0.1),
+                ),
               ),
               itemBuilder: (context, index) {
-                return ConversationTile(conversation: sortedConversations[index]);
+                return ConversationTile(
+                  conversation: sortedConversations[index],
+                );
               },
             );
           }

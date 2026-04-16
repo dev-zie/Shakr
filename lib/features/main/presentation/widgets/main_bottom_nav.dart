@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/features/main/presentation/cubit/navigation_cubit.dart';
+import 'package:shakr/common/theme/app_shadows.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class MainBottomNav extends StatelessWidget {
@@ -12,15 +13,7 @@ class MainBottomNav extends StatelessWidget {
     return BlocBuilder<NavigationCubit, int>(
       builder: (context, currentIndex) {
         return Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 20,
-                offset: const Offset(0, -4),
-              ),
-            ],
-          ),
+          decoration: BoxDecoration(boxShadow: AppShadows.upward),
           child: BottomNavigationBar(
             currentIndex: currentIndex,
             onTap: (index) {

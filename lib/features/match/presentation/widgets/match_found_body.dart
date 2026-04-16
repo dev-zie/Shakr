@@ -6,6 +6,8 @@ import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/common/getit/injection.dart';
+import 'package:shakr/features/match/presentation/widgets/match_timer_display.dart';
+import 'package:shakr/features/match/presentation/widgets/match_vibe_chips.dart';
 
 class MatchFoundBody extends StatelessWidget {
   const MatchFoundBody({
@@ -56,58 +58,9 @@ class MatchFoundBody extends StatelessWidget {
                   ),
             ),
             const SizedBox(height: AppSpacing.s),
-            Wrap(
-              spacing: AppSpacing.s,
-              runSpacing: AppSpacing.s,
-              alignment: WrapAlignment.center,
-              children: otherUserVibes.map((vibe) {
-                return Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.m,
-                    vertical: AppSpacing.xs,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary50,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: AppColors.primary.withOpacity(0.2)),
-                  ),
-                  child: Text(
-                    vibe,
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
+            MatchVibeChips(vibes: otherUserVibes),
             const SizedBox(height: AppSpacing.xxl),
-            TweenAnimationBuilder<double>(
-              tween: Tween(begin: remaining, end: 0.0),
-              duration: Duration(seconds: remaining.toInt()),
-              builder: (context, value, _) {
-                return Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    SizedBox(
-                      width: 120,
-                      height: 120,
-                      child: CircularProgressIndicator(
-                        value: value / 15.0,
-                        strokeWidth: 8,
-                        color: AppColors.primary,
-                        backgroundColor: AppColors.primary100,
-                      ),
-                    ),
-                    Text(
-                      '${value.ceil()}',
-                      style: Theme.of(context).textTheme.headlineLarge,
-                    ),
-                  ],
-                );
-              },
-            ),
+            MatchTimerDisplay(remainingSeconds: remaining),
             const SizedBox(height: AppSpacing.xxl),
             if (isPending) ...[
               const CircularProgressIndicator(),
@@ -130,9 +83,9 @@ class MatchFoundBody extends StatelessWidget {
               const SizedBox(height: AppSpacing.m),
               TextButton(
                 onPressed: () => sl<MatchCubit>().deleteMatch(matchId),
-                child: Text(
+                child: const Text(
                   AppStrings.cancel,
-                  style: const TextStyle(color: AppColors.textSecondaryLight),
+                  style: TextStyle(color: AppColors.textSecondaryLight),
                 ),
               ),
             ],

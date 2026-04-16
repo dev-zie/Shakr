@@ -154,13 +154,7 @@ class ChatCubit extends Cubit<ChatState> {
     final result = await deleteConversationUsecase.call(conversationId);
     result.fold(
       (l) => emit(ChatError(l.message)),
-      (_) => emit(ChatConversationDeleted()),
+      (l) => emit(ChatConversationDeleted()),
     );
-  }
-
-  void disposeScreen() {
-    _timer?.cancel();
-    _subscription?.cancel();
-    emit(ChatInitial());
   }
 }

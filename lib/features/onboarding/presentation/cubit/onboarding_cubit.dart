@@ -72,11 +72,6 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     emit(current.copyWith(gender: gender, step: 4));
   }
 
-  void setAgeAndGender(int age, String gender) {
-    final current = _currentStep();
-    emit(current.copyWith(age: age, gender: gender, step: 4));
-  }
-
   void selectVibe(String vibe) {
     final current = _currentStep();
     if (current.vibes.length >= 3) return;

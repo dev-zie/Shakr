@@ -69,9 +69,9 @@ class AppStrings {
   static const peopleSee = 'Bu fotoğraf senin vitrinin olacak';
   static const skipForNow = 'Şimdilik Atla';
   static const howOldAreYou = 'Yaşını öğrenebilir miyiz?';
-  static const selectBirthYear = 'Doğum yılını seç';
-  static const birthYearLabel = 'Doğum Yılı';
-  static const gender = 'Nasıl tanımlarsın?';
+  static const selectAge = 'Yaşını seç';
+  static const ageLabel = 'Yaşın';
+  static const gender = 'Cinsiyet';
   static const male = 'Erkek';
   static const female = 'Kadın';
 

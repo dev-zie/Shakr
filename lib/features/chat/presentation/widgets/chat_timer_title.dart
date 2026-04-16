@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_state.dart';
 
@@ -21,8 +22,8 @@ class ChatTimerTitle extends StatelessWidget {
         return Text(
           _formatTime(secondsLeft),
           style: TextStyle(
-            color: secondsLeft < 60
-                ? Colors.red
+            color: secondsLeft < 10
+                ? AppColors.error
                 : Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.bold,
           ),

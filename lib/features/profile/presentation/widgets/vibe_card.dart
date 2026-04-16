@@ -22,62 +22,48 @@ class VibeCard extends StatelessWidget {
     Color vibeColor = AppColors.primary;
 
     // Map vibe string to icon and color
+    loop:
     for (var category in AppVibes.categories.values) {
       final List vibesList = category['vibes'];
-      final match = vibesList.firstWhere(
-        (v) => v['label'] == vibe,
-        orElse: () => null,
-      );
-      if (match != null) {
-        iconData = match['icon'] as IconData;
-        vibeColor = category['color'] as Color;
-        break;
+      for (var v in vibesList) {
+        if (v['label'] == vibe) {
+          iconData = v['icon'] as IconData;
+          vibeColor = category['color'] as Color;
+          break loop;
+        }
       }
     }
 
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        decoration: BoxDecoration(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      decoration: BoxDecoration(
+        color: isSelected
+            ? vibeColor.withValues(alpha: 0.08)
+            : Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
           color: isSelected
-              ? vibeColor.withOpacity(0.1)
-              : Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected ? vibeColor : Colors.transparent,
-            width: 2,
+              ? vibeColor.withValues(alpha: 0.5)
+              : vibeColor.withValues(alpha: 0.1),
+          width: 1.5,
+        ),
+        boxShadow: isSelected ? [] : AppShadows.soft,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(iconData, color: vibeColor, size: 24),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            vibe,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: vibeColor,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+            ),
+            textAlign: TextAlign.center,
           ),
-          boxShadow: isSelected ? [] : AppShadows.soft,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(AppSpacing.s),
-              decoration: BoxDecoration(
-                color: vibeColor.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                iconData,
-                color: vibeColor,
-                size: 28,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.s),
-            Text(
-              vibe,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: isSelected ? vibeColor : null,
-                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                  ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }

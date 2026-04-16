@@ -4,6 +4,7 @@ import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/constants/app_vibes.dart';
 import 'package:shakr/common/theme/app_colors.dart';
+import 'package:shakr/features/onboarding/presentation/widgets/vibe_chip.dart';
 import 'package:shakr/features/profile/presentation/cubit/profile_cubit.dart';
 
 class ProfileVibesSelector extends StatelessWidget {
@@ -47,19 +48,19 @@ class _VibeCountBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: isComplete
-            ? AppColors.primary.withValues(alpha: .12)
-            : Colors.orange.withValues(alpha: .12),
-        borderRadius: BorderRadius.circular(20),
+      color: isComplete
+          ? AppColors.primary.withValues(alpha: .12)
+          : AppColors.warning.withValues(alpha: .12),
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: Text(
+      '$count/3',
+      style: TextStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.w600,
+        color: isComplete ? AppColors.primary : AppColors.warning,
       ),
-      child: Text(
-        '$count/3',
-        style: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w600,
-          color: isComplete ? AppColors.primary : Colors.orange,
-        ),
-      ),
+    ),
     );
   }
 }
@@ -96,20 +97,19 @@ class _VibeCategorySection extends StatelessWidget {
         const SizedBox(height: AppSpacing.s),
         Wrap(
           spacing: AppSpacing.s,
-          runSpacing: AppSpacing.s,
+          runSpacing: AppSpacing.xs,
           children: vibes.map((vibe) {
             final label = vibe['label'] as String;
             final icon = vibe['icon'] as IconData;
             final isSelected = selectedVibes.contains(label);
+            final categoryColor = categoryData['color'] as Color;
 
-            return FilterChip(
-              avatar: Icon(icon, size: 16),
-              label: Text(label),
-              selected: isSelected,
-              labelStyle: TextStyle(
-                color: isSelected ? Colors.white : Colors.black87,
-              ),
-              onSelected: (_) {
+            return VibeChip(
+              label: label,
+              icon: icon,
+              isSelected: isSelected,
+              activeColor: categoryColor,
+              onTap: () {
                 if (!isSelected && selectedVibes.length >= 3) {
                   ScaffoldMessenger.of(context).clearSnackBars();
                   ScaffoldMessenger.of(context).showSnackBar(

@@ -17,6 +17,7 @@ Uygulama, profesyonel standartlarda **Clean Architecture** prensipleriyle geliş
 *   **Domain Layer:** Uygulamanın kalbidir. İş kurallarını (UseCases) ve veri yapılarını (Entities) barındırır.
 *   **Data Layer:** Verilerin nereden ve nasıl geldiğini yönetir. Firebase entegrasyonu, veri modelleri (Models) ve API çağrıları bu katmandadır.
 *   **Presentation Layer:** Kullanıcının gördüğü kısımdır. Flutter widget'ları ve **BloC (Cubit)** state yönetimi burada bulunur.
+    *   **Modular Widgets:** Büyük ekranlar (Pages), bağımsız ve tekrar kullanılabilir küçük bileşenlere (Widgets) bölünmüştür (Örn: `MatchTimerDisplay`, `RadarPainter`). Bu sayede kod okunabilirliği ve bakım kolaylığı maksimize edilmiştir.
 
 ---
 
@@ -42,25 +43,38 @@ Uygulama, profesyonel standartlarda **Clean Architecture** prensipleriyle geliş
 
 ---
 
-## 4. Kullanılan Teknolojiler 🛠️
+## 4. Modern Tasarım Sistemi (Design System) 🎨
+Uygulama, "Premium UX" hedefiyle özel bir tasarım sistemi üzerine inşa edilmiştir:
+*   **Renk Paleti (`AppColors`):** Markanın ana rengi (Primary) etrafında 10 farklı tondan oluşan modern bir palet ve tema duyarlı (Dark/Light mode) metin renkleri kullanılır.
+*   **Gölge Yönetimi (`AppShadows`):** Derinlik algısını artırmak için standartlaştırılmış yumuşak (Soft), orta (Medium) ve yukarı yönlü (Upward) gölge efektleri sisteme entegre edilmiştir.
+*   **Tipografi:** Gövde metinleri ve başlıklar için hiyerarşik bir yapı kurulmuştur.
+
+---
+
+## 5. Kullanılan Teknolojiler 🛠️
 *   **Framework:** Flutter (Android & iOS).
 *   **Backend:** Firebase (Auth, Firestore, Storage).
 *   **State Management:** BloC / Cubit.
 *   **Dependency Injection:** GetIt.
 *   **Navigation:** GoRouter.
+*   **Design Icons:** Lucide Icons.
 
 ---
 
-## 5. Sistem Denetimi (Gereksiz/Kullanılmayan Fonksiyonlar) 🧹
+## 6. Sistem Temizliği ve Optimizasyon (Audit Sonuçları) 🧹
 
-Sistem genelinde yapılan incelemede şu an aktif olarak kullanılmayan veya temizlenmesi sunumdan sonra önerilen kısımlar:
+Sistem genelinde yapılan denetimler sonucunda atıl (kullanılmayan) kodlar temizlenmiş ve mimari sadeleştirilmiştir:
 
-> [!NOTE]
-> Bu fonksiyonlar kodda mevcuttur ancak şu anki kullanıcı akışında (v1.0) aktif bir tetikleyicisi (UI butonu vb.) bulunmamaktadır.
+> [!IMPORTANT]
+> **Temizlik Yapılan Alanlar:**
 
-1.  **`ChatCubit.deleteConversation`**: Sohbet silme fonksiyonu hazır ancak arayüzde henüz sil butonu eklenmemiştir.
-2.  **`MatchCubit.checkConnectionUsecase`**: Bağlantı kontrolü mantığı artık `moveToPermanentChat` içinde daha entegre yapılıyor, bağımsız UseCase şu an atıl durumda.
-3.  **`OnboardingCubit.setAgeAndGender`**: Onboarding adımları 5'e bölündüğü için bu "toplu kaydetme" metodu yeni sistemde kullanılmamaktadır (Geriye dönük uyumluluk için durmaktadır).
+1.  **`MatchCubit.checkConnectionUsecase`**: Tamamen kaldırıldı. Bağlantı kontrolü artık `moveToPermanentChat` akışı içinde entegre ve dinamik olarak yönetiliyor.
+2.  **`OnboardingCubit.setAgeAndGender`**: Kaldırıldı. Onboarding akışı 5 bağımsız adım (`Name`, `Photo`, `Age`, `Gender`, `Vibes`) olarak standardize edildi.
+3.  **`AgeGenderStep` (Widget)**: Kullanılmadığı için silindi. Yerine `AgeStep` ve `GenderStep` bileşenleri aktif edildi.
+4.  **`ChatCubit.disposeScreen`**: Kullanılmayan bu metod temizlendi.
+
+> [!TIP]
+> **`ChatCubit.deleteConversation`** fonksiyonu artık UI üzerinden (Sohbet ekranı AppBar) tetiklenebilmektedir.
 
 ---
 

@@ -151,13 +151,4 @@ class MatchRemoteDatasource {
       rethrow;
     }
   }
-
-  Future<bool> checkBothKeptConnection(String matchId) async {
-    final doc = await db.collection('matches').doc(matchId).get();
-    if (!doc.exists) return false;
-    final data = doc.data()!;
-    final user1Keep = data['user1KeepConnection'] ?? false;
-    final user2Keep = data['user2KeepConnection'] ?? false;
-    return user1Keep && user2Keep;
-  }
 }

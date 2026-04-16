@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shakr/common/constants/app_radius.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/common/theme/app_shadows.dart';
@@ -26,9 +27,11 @@ class GenderButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppRadius.xl),
           border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.primary.withValues(alpha: 0.1),
+            color: isSelected
+                ? AppColors.primary
+                : AppColors.primary.withValues(alpha: 0.1),
             width: 2,
           ),
           boxShadow: isSelected ? AppShadows.primary : AppShadows.soft,
@@ -40,13 +43,13 @@ class GenderButton extends StatelessWidget {
               size: 40,
               color: isSelected ? Colors.white : AppColors.primary,
             ),
-            const SizedBox(height: AppSpacing.m),
+            const SizedBox(height: AppSpacing.xs),
             Text(
               label,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: isSelected ? Colors.white : AppColors.textPrimaryLight,
-                    fontWeight: FontWeight.w700,
-                  ),
+                color: isSelected ? Colors.white : AppColors.textPrimaryLight,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ],
         ),

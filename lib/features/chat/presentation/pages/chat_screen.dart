@@ -48,98 +48,9 @@ class ChatScreen extends StatelessWidget {
               context.replace('/main/chats');
             },
           ),
-          title: isPermanent
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: 36,
-                      height: 36,
-                      decoration: BoxDecoration(
-                        color: AppColors.primary50,
-                        shape: BoxShape.circle,
-                        image: otherUserPhoto != null
-                            ? DecorationImage(
-                                image: NetworkImage(otherUserPhoto!),
-                                fit: BoxFit.cover,
-                              )
-                            : null,
-                      ),
-                      child: otherUserPhoto == null
-                          ? const Icon(LucideIcons.user, size: 18, color: AppColors.primary)
-                          : null,
-                    ),
-                    const SizedBox(width: AppSpacing.s),
-                    Expanded(
-                      child: Text(
-                        otherUserName ?? 'Sohbet',
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () async {
-                        final confirm = await showDialog<bool>(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('Sohbeti Sil'),
-                            content: const Text(
-                              'Bu sohbeti ve tüm mesajları silmek istediğinize emin misiniz?',
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.pop(context, false),
-                                child: const Text(AppStrings.cancel),
-                              ),
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.pop(context, true),
-                                child: const Text(AppStrings.okay),
-                              ),
-                            ],
-                          ),
-                        );
-                        if (confirm == true) {
-                          sl<ChatCubit>().deleteConversation(matchId);
-                        }
-                      },
-                      icon: const Icon(LucideIcons.trash2),
-                    ),
-                  ],
-                )
-              : const ChatTimerTitle(),
+          title: _buildAppBarTitle(context),
           centerTitle: !isPermanent,
-          actions: [
-            if (!isPermanent)
-              IconButton(
-                icon: const Icon(LucideIcons.x),
-                tooltip: AppStrings.endMatch,
-                onPressed: () async {
-                  final confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text(AppStrings.endMatch),
-                      content: const Text(
-                        'Eşleşmeyi sonlandırmak istediğinize emin misiniz?',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, false),
-                          child: const Text(AppStrings.cancel),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, true),
-                          child: const Text(AppStrings.okay),
-                        ),
-                      ],
-                    ),
-                  );
-                  if (confirm == true) {
-                    sl<MatchCubit>().endMatch(matchId);
-                  }
-                },
-              ),
-          ],
+          actions: _buildAppBarActions(context),
         ),
         body: MultiBlocListener(
           listeners: [
@@ -193,5 +104,107 @@ class ChatScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildAppBarTitle(BuildContext context) {
+    if (!isPermanent) {
+      return const ChatTimerTitle();
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: AppColors.primary50,
+            shape: BoxShape.circle,
+            image: otherUserPhoto != null
+                ? DecorationImage(
+                    image: NetworkImage(otherUserPhoto!),
+                    fit: BoxFit.cover,
+                  )
+                : null,
+          ),
+          child: otherUserPhoto == null
+              ? const Icon(LucideIcons.user, size: 18, color: AppColors.primary)
+              : null,
+        ),
+        const SizedBox(width: AppSpacing.s),
+        Expanded(
+          child: Text(
+            otherUserName ?? 'Sohbet',
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        IconButton(
+          onPressed: () => _showDeleteDialog(context),
+          icon: const Icon(LucideIcons.trash2),
+        ),
+      ],
+    );
+  }
+
+  List<Widget> _buildAppBarActions(BuildContext context) {
+    if (isPermanent) return [];
+
+    return [
+      IconButton(
+        icon: const Icon(LucideIcons.x),
+        tooltip: AppStrings.endMatch,
+        onPressed: () => _showEndMatchDialog(context),
+      ),
+    ];
+  }
+
+  Future<void> _showDeleteDialog(BuildContext context) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Sohbeti Sil'),
+        content: const Text(
+          'Bu sohbeti ve tüm mesajları silmek istediğinize emin misiniz?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text(AppStrings.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text(AppStrings.okay),
+          ),
+        ],
+      ),
+    );
+    if (confirm == true) {
+      sl<ChatCubit>().deleteConversation(matchId);
+    }
+  }
+
+  Future<void> _showEndMatchDialog(BuildContext context) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(AppStrings.endMatch),
+        content: const Text(
+          'Eşleşmeyi sonlandırmak istediğinize emin misiniz?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text(AppStrings.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text(AppStrings.okay),
+          ),
+        ],
+      ),
+    );
+    if (confirm == true) {
+      sl<MatchCubit>().endMatch(matchId);
+    }
   }
 }

@@ -11,6 +11,7 @@ class AppTheme {
       error: AppColors.error,
     ),
     scaffoldBackgroundColor: AppColors.backgroundLight,
+
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.backgroundLight,
       elevation: 0,
@@ -23,23 +24,33 @@ class AppTheme {
         letterSpacing: -0.5,
       ),
     ),
+
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: AppColors.backgroundLight,
       selectedItemColor: AppColors.primary,
       unselectedItemColor: AppColors.textSecondaryLight,
       selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
-      unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
+      unselectedLabelStyle: TextStyle(
+        fontWeight: FontWeight.w500,
+        fontSize: 12,
+      ),
       type: BottomNavigationBarType.fixed,
       elevation: 8,
     ),
+
     textTheme: const TextTheme(
       headlineLarge: TextStyle(fontWeight: FontWeight.w800, letterSpacing: -1),
-      headlineMedium: TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.5),
+      headlineMedium: TextStyle(
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.5,
+      ),
+
       headlineSmall: TextStyle(fontWeight: FontWeight.w700),
       titleLarge: TextStyle(fontWeight: FontWeight.w700),
       titleMedium: TextStyle(fontWeight: FontWeight.w600),
       titleSmall: TextStyle(fontWeight: FontWeight.w600),
     ),
+
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
@@ -50,15 +61,23 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     ),
+
     chipTheme: ChipThemeData(
       showCheckmark: false,
       backgroundColor: AppColors.primary50,
       selectedColor: AppColors.primary,
-      labelStyle: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600),
-      secondaryLabelStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-      side: BorderSide(color: AppColors.primary.withOpacity(0.2)),
+      labelStyle: const TextStyle(
+        color: AppColors.primary,
+        fontWeight: FontWeight.w600,
+      ),
+      secondaryLabelStyle: const TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.w600,
+      ),
+      side: BorderSide(color: AppColors.primary.withValues(alpha: 0.2)),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
+
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColors.surfaceLight,
@@ -69,7 +88,7 @@ class AppTheme {
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide(color: AppColors.primary.withOpacity(0.1)),
+        borderSide: BorderSide(color: AppColors.primary.withValues(alpha: 0.1)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
@@ -92,6 +111,7 @@ class AppTheme {
       error: AppColors.error,
     ),
     scaffoldBackgroundColor: AppColors.backgroundDark,
+
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.backgroundDark,
       elevation: 0,
@@ -104,23 +124,43 @@ class AppTheme {
         letterSpacing: -0.5,
       ),
     ),
+
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: AppColors.surfaceDark,
       selectedItemColor: AppColors.primary,
       unselectedItemColor: AppColors.textSecondaryDark,
       selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
-      unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
+      unselectedLabelStyle: TextStyle(
+        fontWeight: FontWeight.w500,
+        fontSize: 12,
+      ),
       type: BottomNavigationBarType.fixed,
       elevation: 0,
     ),
+
     textTheme: const TextTheme(
-      headlineLarge: TextStyle(fontWeight: FontWeight.w800, letterSpacing: -1, color: Colors.white),
-      headlineMedium: TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.5, color: Colors.white),
-      headlineSmall: TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
+      headlineLarge: TextStyle(
+        fontWeight: FontWeight.w800,
+        letterSpacing: -1,
+        color: Colors.white,
+      ),
+
+      headlineMedium: TextStyle(
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.5,
+        color: Colors.white,
+      ),
+
+      headlineSmall: TextStyle(
+        fontWeight: FontWeight.w700,
+        color: Colors.white,
+      ),
+
       titleLarge: TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
       titleMedium: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
       titleSmall: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
     ),
+
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
@@ -131,15 +171,23 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     ),
+
     chipTheme: ChipThemeData(
       showCheckmark: false,
       backgroundColor: AppColors.primary900,
       selectedColor: AppColors.primary,
-      labelStyle: const TextStyle(color: AppColors.primaryLight, fontWeight: FontWeight.w600),
-      secondaryLabelStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-      side: BorderSide(color: AppColors.primary.withOpacity(0.3)),
+      labelStyle: const TextStyle(
+        color: AppColors.primaryLight,
+        fontWeight: FontWeight.w600,
+      ),
+      secondaryLabelStyle: const TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.w600,
+      ),
+      side: BorderSide(color: AppColors.primary.withValues(alpha: 0.3)),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
+
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColors.surfaceDark,
@@ -150,7 +198,7 @@ class AppTheme {
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide(color: AppColors.primary.withOpacity(0.2)),
+        borderSide: BorderSide(color: AppColors.primary.withValues(alpha: 0.2)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/features/match/domain/entities/match_entity.dart';
 import 'package:shakr/features/match/domain/usecases/accept_match_usecase.dart';
-import 'package:shakr/features/match/domain/usecases/check_connection_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/delete_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/expire_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/get_match_usecase.dart';
@@ -17,7 +16,6 @@ class MatchCubit extends Cubit<MatchState> {
   final KeepConnectionUsecase keepConnectionUsecase;
   final ExpireMatchUsecase expireMatchUsecase;
   final DeleteMatchUsecase deleteMatchUsecase;
-  final CheckConnectionUsecase checkConnectionUsecase;
   final AcceptMatchUsecase acceptMatchUsecase;
   final MoveToPermanentChatUsecase moveToPermanentChatUsecase;
 
@@ -32,7 +30,6 @@ class MatchCubit extends Cubit<MatchState> {
     required this.keepConnectionUsecase,
     required this.expireMatchUsecase,
     required this.deleteMatchUsecase,
-    required this.checkConnectionUsecase,
     required this.acceptMatchUsecase,
     required this.moveToPermanentChatUsecase,
   }) : super(MatchInitial());

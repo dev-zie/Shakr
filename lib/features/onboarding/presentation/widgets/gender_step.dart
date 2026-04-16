@@ -33,8 +33,8 @@ class GenderStep extends StatelessWidget {
               Text(
                 'Seni en iyi tanımlayan seçeneği seç.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textSecondaryLight,
-                    ),
+                  color: AppColors.textSecondaryLight,
+                ),
               ),
               const Spacer(),
               Row(
@@ -42,21 +42,22 @@ class GenderStep extends StatelessWidget {
                   Expanded(
                     child: GenderButton(
                       label: AppStrings.male,
-                      icon: LucideIcons.user,
+                      icon: LucideIcons.mars,
                       isSelected: gender == Gender.male.name,
-                      onTap: () =>
-                          context.read<OnboardingCubit>().updateGender(Gender.male),
+                      onTap: () => context.read<OnboardingCubit>().updateGender(
+                        Gender.male,
+                      ),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.m),
                   Expanded(
                     child: GenderButton(
                       label: AppStrings.female,
-                      icon: LucideIcons.userRound,
+                      icon: LucideIcons.venus,
                       isSelected: gender == Gender.female.name,
-                      onTap: () => context
-                          .read<OnboardingCubit>()
-                          .updateGender(Gender.female),
+                      onTap: () => context.read<OnboardingCubit>().updateGender(
+                        Gender.female,
+                      ),
                     ),
                   ),
                 ],

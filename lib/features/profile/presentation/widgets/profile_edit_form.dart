@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/common/constants/app_radius.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/theme/app_colors.dart';
+import 'package:shakr/features/onboarding/presentation/widgets/gender_button.dart';
 import 'package:shakr/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:shakr/features/profile/presentation/cubit/profile_state.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:shakr/features/profile/presentation/widgets/age_wheel_picker_dialog.dart';
 import 'profile_photo_editor.dart';
 import 'profile_vibes_selector.dart';
 
@@ -29,7 +34,7 @@ class ProfileEditForm extends StatelessWidget {
             labelText: AppStrings.nameLabel,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: Theme.of(context).primaryColor.withOpacity(0.3),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
               ),
               borderRadius: BorderRadius.circular(12),
             ),
@@ -38,70 +43,63 @@ class ProfileEditForm extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.l),
 
-        // Yaş (Doğum Yılı) Düzenleme
+        // Yaş Düzenleme
         InkWell(
           onTap: () async {
-            final now = DateTime.now();
-            final currentYear = now.year;
-            final initialYear = currentYear - state.editAge;
-            final selectedDate = await showDialog<DateTime>(
+            final selectedAge = await showDialog<int>(
               context: context,
-              builder: (context) => AlertDialog(
-                title: const Text(AppStrings.selectBirthYear),
-                content: SizedBox(
-                  width: 300,
-                  height: 300,
-                  child: YearPicker(
-                    firstDate: DateTime(1940),
-                    lastDate: DateTime(currentYear - 18),
-                    selectedDate: DateTime(initialYear),
-                    onChanged: (date) => Navigator.pop(context, date),
-                  ),
-                ),
-              ),
+              builder: (context) =>
+                  AgeWheelPickerDialog(initialAge: state.editAge),
             );
-            if (selectedDate != null) {
-              context.read<ProfileCubit>().updateAge(
-                currentYear - selectedDate.year,
-              );
+
+            if (selectedAge != null) {
+              context.read<ProfileCubit>().updateAge(selectedAge);
             }
           },
           child: InputDecorator(
             decoration: InputDecoration(
-              labelText: AppStrings.birthYearLabel,
+              labelText: AppStrings.ageLabel,
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: Theme.of(context).primaryColor.withOpacity(0.3),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                 ),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.m),
               ),
             ),
-            child: Text(
-              '${DateTime.now().year - state.editAge} (${state.editAge} ${AppStrings.yearsOld})',
-            ),
+            child: Text('${state.editAge} ${AppStrings.yearsOld}'),
           ),
         ),
         const SizedBox(height: AppSpacing.l),
 
         // Cinsiyet Düzenleme
-        DropdownButtonFormField<String>(
-          value: state.editGender,
-          decoration: InputDecoration(
-            labelText: AppStrings.gender,
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Theme.of(context).primaryColor.withOpacity(0.3),
+        Text(
+          AppStrings.gender,
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(color: AppColors.textSecondaryLight),
+        ),
+        const SizedBox(height: AppSpacing.m),
+        Row(
+          children: [
+            Expanded(
+              child: GenderButton(
+                label: AppStrings.male,
+                icon: LucideIcons.mars,
+                isSelected: state.editGender == 'male',
+                onTap: () => context.read<ProfileCubit>().updateGender('male'),
               ),
-              borderRadius: BorderRadius.circular(12),
             ),
-          ),
-          items: const [
-            DropdownMenuItem(value: 'male', child: Text('Erkek')),
-            DropdownMenuItem(value: 'female', child: Text('Kadın')),
+            const SizedBox(width: AppSpacing.m),
+            Expanded(
+              child: GenderButton(
+                label: AppStrings.female,
+                icon: LucideIcons.venus,
+                isSelected: state.editGender == 'female',
+                onTap: () =>
+                    context.read<ProfileCubit>().updateGender('female'),
+              ),
+            ),
           ],
-          onChanged: (value) {
-            if (value != null) context.read<ProfileCubit>().updateGender(value);
-          },
         ),
         const SizedBox(height: AppSpacing.l),
 
