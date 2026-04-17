@@ -3,7 +3,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
-import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:shakr/features/settings/presentation/cubit/settings_state.dart';
 
@@ -14,8 +13,9 @@ class SettingsBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsCubit, SettingsState>(
       builder: (context, state) {
-        final bool notificationsEnabled =
-            state is SettingsLoaded ? state.notificationsEnabled : true;
+        final bool notificationsEnabled = state is SettingsLoaded
+            ? state.notificationsEnabled
+            : true;
 
         return ListView(
           padding: const EdgeInsets.all(AppSpacing.l),

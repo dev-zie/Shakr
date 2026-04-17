@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_vibes.dart';
+import 'package:shakr/common/constants/app_constants.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/common/theme/app_shadows.dart';
 
@@ -36,12 +37,12 @@ class VibeCard extends StatelessWidget {
     }
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: AppConstants.animationDurationFast),
       decoration: BoxDecoration(
         color: isSelected
             ? vibeColor.withValues(alpha: 0.08)
             : Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppConstants.borderRadiusL),
         border: Border.all(
           color: isSelected
               ? vibeColor.withValues(alpha: 0.5)
@@ -58,10 +59,10 @@ class VibeCard extends StatelessWidget {
           Text(
             vibe,
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: vibeColor,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.5,
-            ),
+                  color: vibeColor,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
+                ),
             textAlign: TextAlign.center,
           ),
         ],

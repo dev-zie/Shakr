@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/common/getit/injection.dart';
+import 'package:shakr/core/services/vibration_service.dart';
 import 'package:shakr/features/match/domain/entities/match_entity.dart';
 import 'package:shakr/features/match/domain/usecases/accept_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/delete_match_usecase.dart';
@@ -58,6 +60,7 @@ class MatchCubit extends Cubit<MatchState> {
         emit(MatchDeleted());
       } else if (match.status == MatchStatus.expired) {
         _cancelAcceptTimer();
+        sl<VibrationService>().endFeedback();
         final isUser1 = match.user1Id == uid;
         final myKeep = isUser1
             ? match.user1KeepConnection
@@ -80,6 +83,7 @@ class MatchCubit extends Cubit<MatchState> {
 
         if (match.user1Accepted && match.user2Accepted) {
           _cancelAcceptTimer();
+          sl<VibrationService>().matchAcceptedFeedback();
           emit(MatchAccepted(match));
         } else if (myAccepted) {
           // Zamanlayıcı hâlâ çalışıyor — karşı taraf kabul edene kadar devam eder
@@ -90,6 +94,7 @@ class MatchCubit extends Cubit<MatchState> {
         }
       } else {
         _startAcceptTimer(match.matchId, match.createdAt);
+        sl<VibrationService>().matchFeedback();
         emit(MatchFound(match));
       }
     });

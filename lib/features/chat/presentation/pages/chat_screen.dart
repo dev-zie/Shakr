@@ -42,11 +42,18 @@ class ChatScreen extends StatelessWidget {
       value: chatCubit,
       child: Scaffold(
         appBar: AppBar(
-          leading: GoBackButton(
-            onPressed: () {
-              context.replace('/main/chats');
-            },
-          ),
+          automaticallyImplyLeading: false,
+          leading: isPermanent
+              ? GoBackButton(
+                  onPressed: () {
+                    if (context.canPop()) {
+                      context.pop();
+                    } else {
+                      context.go('/main/chats');
+                    }
+                  },
+                )
+              : null,
           title: _buildAppBarTitle(context),
           centerTitle: !isPermanent,
           actions: _buildAppBarActions(context),

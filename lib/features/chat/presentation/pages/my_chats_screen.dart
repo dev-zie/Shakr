@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shakr/common/constants/app_strings.dart';
-import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
-import 'package:shakr/features/chat/presentation/cubit/chat_state.dart';
 import 'package:shakr/common/getit/injection.dart';
 
 import 'package:shakr/features/chat/presentation/widgets/my_chats_body.dart';

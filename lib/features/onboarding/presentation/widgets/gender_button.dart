@@ -47,7 +47,7 @@ class GenderButton extends StatelessWidget {
             Text(
               label,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: isSelected ? Colors.white : AppColors.textPrimaryLight,
+                color: isSelected ? Colors.white : null,
                 fontWeight: FontWeight.w700,
               ),
             ),

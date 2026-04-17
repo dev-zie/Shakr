@@ -39,16 +39,39 @@ class AppTheme {
     ),
 
     textTheme: const TextTheme(
-      headlineLarge: TextStyle(fontWeight: FontWeight.w800, letterSpacing: -1),
+      headlineLarge: TextStyle(
+        fontWeight: FontWeight.w800,
+        letterSpacing: -1,
+        color: AppColors.textPrimaryLight,
+      ),
       headlineMedium: TextStyle(
         fontWeight: FontWeight.w700,
         letterSpacing: -0.5,
+        color: AppColors.textPrimaryLight,
       ),
-
-      headlineSmall: TextStyle(fontWeight: FontWeight.w700),
-      titleLarge: TextStyle(fontWeight: FontWeight.w700),
-      titleMedium: TextStyle(fontWeight: FontWeight.w600),
-      titleSmall: TextStyle(fontWeight: FontWeight.w600),
+      headlineSmall: TextStyle(
+        fontWeight: FontWeight.w700,
+        color: AppColors.textPrimaryLight,
+      ),
+      titleLarge: TextStyle(
+        fontWeight: FontWeight.w700,
+        color: AppColors.textPrimaryLight,
+      ),
+      titleMedium: TextStyle(
+        fontWeight: FontWeight.w600,
+        color: AppColors.textPrimaryLight,
+      ),
+      titleSmall: TextStyle(
+        fontWeight: FontWeight.w600,
+        color: AppColors.textPrimaryLight,
+      ),
+      bodyLarge: TextStyle(fontSize: 16, color: AppColors.textPrimaryLight),
+      bodyMedium: TextStyle(fontSize: 14, color: AppColors.textSecondaryLight),
+      bodySmall: TextStyle(fontSize: 12, color: AppColors.textSecondaryLight),
+      labelLarge: TextStyle(
+        fontWeight: FontWeight.w600,
+        color: AppColors.textPrimaryLight,
+      ),
     ),
 
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -142,23 +165,36 @@ class AppTheme {
       headlineLarge: TextStyle(
         fontWeight: FontWeight.w800,
         letterSpacing: -1,
-        color: Colors.white,
+        color: AppColors.textPrimaryDark,
       ),
-
       headlineMedium: TextStyle(
         fontWeight: FontWeight.w700,
         letterSpacing: -0.5,
-        color: Colors.white,
+        color: AppColors.textPrimaryDark,
       ),
-
       headlineSmall: TextStyle(
         fontWeight: FontWeight.w700,
-        color: Colors.white,
+        color: AppColors.textPrimaryDark,
       ),
-
-      titleLarge: TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
-      titleMedium: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
-      titleSmall: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+      titleLarge: TextStyle(
+        fontWeight: FontWeight.w700,
+        color: AppColors.textPrimaryDark,
+      ),
+      titleMedium: TextStyle(
+        fontWeight: FontWeight.w600,
+        color: AppColors.textPrimaryDark,
+      ),
+      titleSmall: TextStyle(
+        fontWeight: FontWeight.w600,
+        color: AppColors.textPrimaryDark,
+      ),
+      bodyLarge: TextStyle(fontSize: 16, color: AppColors.textPrimaryDark),
+      bodyMedium: TextStyle(fontSize: 14, color: AppColors.textSecondaryDark),
+      bodySmall: TextStyle(fontSize: 12, color: AppColors.textSecondaryDark),
+      labelLarge: TextStyle(
+        fontWeight: FontWeight.w600,
+        color: AppColors.textPrimaryDark,
+      ),
     ),
 
     elevatedButtonTheme: ElevatedButtonThemeData(

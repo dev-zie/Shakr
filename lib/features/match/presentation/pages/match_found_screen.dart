@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
@@ -16,15 +15,6 @@ class MatchFoundScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            icon: const Icon(LucideIcons.x),
-            onPressed: () => sl<MatchCubit>().deleteMatch(matchId),
-          ),
-        ],
-      ),
       body: BlocListener<MatchCubit, MatchState>(
         bloc: sl<MatchCubit>(),
         listener: (context, state) {
@@ -49,8 +39,8 @@ class MatchFoundScreen extends StatelessWidget {
               final match = state is MatchFound
                   ? state.match
                   : state is MatchAcceptancePending
-                      ? state.match
-                      : (state as MatchAccepted).match;
+                  ? state.match
+                  : (state as MatchAccepted).match;
 
               final otherUserVibes = match.user1Id == currentUid
                   ? match.user2Vibes

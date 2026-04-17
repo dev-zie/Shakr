@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/common/constants/app_constants.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/theme/app_colors.dart';
@@ -10,17 +11,15 @@ import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.da
 class AgeStep extends StatelessWidget {
   const AgeStep({super.key});
 
-  static const int _minAge = 18;
-  static const int _maxAge = 99;
-
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<OnboardingCubit>();
 
     return BlocBuilder<OnboardingCubit, OnboardingState>(
       builder: (context, state) {
-        final currentAge =
-            (state is OnboardingStepChanged) ? (state.age ?? 20) : 20;
+        final currentAge = (state is OnboardingStepChanged)
+            ? (state.age ?? 20)
+            : 20;
 
         return Padding(
           padding: const EdgeInsets.all(AppSpacing.l),
@@ -30,15 +29,13 @@ class AgeStep extends StatelessWidget {
               Text(
                 AppStrings.howOldAreYou,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               const SizedBox(height: AppSpacing.s),
               Text(
-                'Doğum yılın otomatik hesaplanacaktır.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textSecondaryLight,
-                    ),
+                AppStrings.birthYearNotice,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
               const Expanded(child: SizedBox()),
               SizedBox(
@@ -51,19 +48,21 @@ class AgeStep extends StatelessWidget {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: AppColors.primary.withValues(alpha: 0.05),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(
+                          AppConstants.borderRadiusM,
+                        ),
                       ),
                     ),
                     CupertinoPicker(
                       scrollController: cubit.ageScrollController,
                       itemExtent: 50,
                       onSelectedItemChanged: (index) {
-                        cubit.updateAge(_minAge + index);
+                        cubit.updateAge(AppConstants.minUserAge + index);
                       },
                       children: List.generate(
-                        _maxAge - _minAge + 1,
+                        AppConstants.maxUserAge - AppConstants.minUserAge + 1,
                         (index) {
-                          final age = _minAge + index;
+                          final age = AppConstants.minUserAge + index;
                           final isSelected = age == currentAge;
                           return Center(
                             child: Text(
@@ -75,9 +74,11 @@ class AgeStep extends StatelessWidget {
                                     : FontWeight.normal,
                                 color: isSelected
                                     ? AppColors.primary
-                                    : AppColors.textSecondaryLight.withValues(
-                                        alpha: 0.5,
-                                      ),
+                                    : Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.color
+                                          ?.withValues(alpha: 0.5),
                               ),
                             ),
                           );

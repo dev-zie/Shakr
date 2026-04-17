@@ -15,6 +15,6 @@ class LocalStorageService {
 
   Future<void> resetOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_onboardingKey);
+    await prefs.setBool(_onboardingKey, false);
   }
 }

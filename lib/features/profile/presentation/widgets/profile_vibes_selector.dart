@@ -4,7 +4,7 @@ import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/constants/app_vibes.dart';
 import 'package:shakr/common/theme/app_colors.dart';
-import 'package:shakr/features/onboarding/presentation/widgets/vibe_chip.dart';
+import 'package:shakr/common/widgets/vibe_chip.dart';
 import 'package:shakr/features/profile/presentation/cubit/profile_cubit.dart';
 
 class ProfileVibesSelector extends StatelessWidget {
@@ -19,7 +19,10 @@ class ProfileVibesSelector extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text(AppStrings.vibes, style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              AppStrings.vibes,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const Spacer(),
             _VibeCountBadge(count: selectedVibes.length),
           ],
@@ -48,19 +51,19 @@ class _VibeCountBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-      color: isComplete
-          ? AppColors.primary.withValues(alpha: .12)
-          : AppColors.warning.withValues(alpha: .12),
-      borderRadius: BorderRadius.circular(20),
-    ),
-    child: Text(
-      '$count/3',
-      style: TextStyle(
-        fontSize: 13,
-        fontWeight: FontWeight.w600,
-        color: isComplete ? AppColors.primary : AppColors.warning,
+        color: isComplete
+            ? AppColors.primary.withValues(alpha: .12)
+            : AppColors.warning.withValues(alpha: .12),
+        borderRadius: BorderRadius.circular(20),
       ),
-    ),
+      child: Text(
+        '$count/3',
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: isComplete ? AppColors.primary : AppColors.warning,
+        ),
+      ),
     );
   }
 }

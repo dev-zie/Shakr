@@ -31,15 +31,15 @@ class VibeChip extends StatelessWidget {
       selectedColor: activeColor,
       checkmarkColor: Colors.white,
       labelStyle: TextStyle(
-        color: isSelected ? Colors.white : Colors.black87,
+        color: isSelected ? Colors.white : activeColor,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         fontSize: 13,
       ),
-      backgroundColor: activeColor.withOpacity(0.05),
+      backgroundColor: activeColor.withValues(alpha: 0.05),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
-          color: isSelected ? activeColor : activeColor.withOpacity(0.2),
+          color: isSelected ? activeColor : activeColor.withValues(alpha: 0.2),
           width: 1,
         ),
       ),

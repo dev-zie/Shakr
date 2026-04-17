@@ -52,18 +52,18 @@ class ChatExpiredBody extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.l),
                 Text(
-                  isPending ? 'Bekleniyor...' : AppStrings.timesUp,
+                  isPending
+                      ? AppStrings.waitingOtherDecide
+                      : AppStrings.timesUp,
                   style: Theme.of(context).textTheme.headlineMedium,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: AppSpacing.s),
                 Text(
                   isPending
-                      ? 'Karşı tarafın kararını bekliyoruz.'
+                      ? AppStrings.waitingConnectionRequest
                       : AppStrings.otherUsersVibes,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.textSecondaryLight,
-                      ),
+                  style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: AppSpacing.m),
@@ -81,7 +81,9 @@ class ChatExpiredBody extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: AppColors.primary50,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+                          border: Border.all(
+                            color: AppColors.primary.withValues(alpha: 0.2),
+                          ),
                         ),
                         child: Text(
                           vibe,
@@ -111,7 +113,7 @@ class ChatExpiredBody extends StatelessWidget {
                   ),
                 ] else ...[
                   Text(
-                    'Bağlantı isteği gönderildi.',
+                    AppStrings.connectionRequestSent,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: AppColors.primary,
                         ),
@@ -121,8 +123,10 @@ class ChatExpiredBody extends StatelessWidget {
                 TextButton(
                   onPressed: () => sl<MatchCubit>().deleteMatch(matchId),
                   child: Text(
-                    isPending ? 'Vazgeç' : AppStrings.deleteConnect,
-                    style: const TextStyle(color: AppColors.textSecondaryLight),
+                    isPending
+                        ? AppStrings.cancel
+                        : AppStrings.deleteConnect,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
               ],

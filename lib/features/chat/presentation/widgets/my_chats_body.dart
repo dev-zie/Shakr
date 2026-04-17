@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/chat/domain/entities/conversation_entity.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_state.dart';
@@ -37,13 +36,11 @@ class MyChatsBody extends StatelessWidget {
               padding: const EdgeInsets.only(left: 72),
               child: Divider(
                 height: 1,
-                color: AppColors.textSecondaryLight.withValues(alpha: 0.1),
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
               ),
             ),
             itemBuilder: (context, index) {
-              return ConversationTile(
-                conversation: sortedConversations[index],
-              );
+              return ConversationTile(conversation: sortedConversations[index]);
             },
           );
         }

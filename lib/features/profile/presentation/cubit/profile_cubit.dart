@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/getit/injection.dart';
+import 'package:shakr/core/services/local_storage_service.dart';
 import 'package:shakr/core/services/media_service.dart';
 import 'package:shakr/features/auth/domain/entities/user_entity.dart';
 import 'package:shakr/features/auth/domain/usecases/get_profile_usecase.dart';
@@ -13,14 +14,15 @@ class ProfileCubit extends Cubit<ProfileState> {
   final SaveProfileUsecase saveProfileUsecase;
   final UploadPhotoUsecase uploadPhotoUsecase;
   final DeleteAccountUsecase deleteAccountUsecase;
+  final LocalStorageService lsc;
 
   String? _uid;
-
   ProfileCubit({
     required this.getProfileUsecase,
     required this.saveProfileUsecase,
     required this.uploadPhotoUsecase,
     required this.deleteAccountUsecase,
+    required this.lsc,
   }) : super(ProfileInitial());
 
   Future<void> loadProfile(String uid) async {
@@ -146,9 +148,12 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(ProfileLoading());
 
     final result = await deleteAccountUsecase.call();
+    lsc.resetOnboarding();
     result.fold(
       (failure) => emit(ProfileError(failure.message)),
-      (_) => emit(ProfileInitial()), // Emitting initial will trigger redirect in UI
+      (_) => emit(
+        ProfileInitial(),
+      ), // Emitting initial will trigger redirect in UI
     );
   }
 }

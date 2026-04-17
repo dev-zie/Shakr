@@ -53,9 +53,7 @@ class MatchFoundBody extends StatelessWidget {
             const SizedBox(height: AppSpacing.l),
             Text(
               AppStrings.otherUsersVibes,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: AppColors.textSecondaryLight,
-                  ),
+              style: Theme.of(context).textTheme.titleSmall,
             ),
             const SizedBox(height: AppSpacing.s),
             MatchVibeChips(vibes: otherUserVibes),
@@ -85,7 +83,6 @@ class MatchFoundBody extends StatelessWidget {
                 onPressed: () => sl<MatchCubit>().deleteMatch(matchId),
                 child: const Text(
                   AppStrings.cancel,
-                  style: TextStyle(color: AppColors.textSecondaryLight),
                 ),
               ),
             ],

@@ -3,10 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/constants/app_vibes.dart';
-import 'package:shakr/common/theme/app_colors.dart';
+import 'package:shakr/common/widgets/vibe_chip.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.dart';
-import 'package:shakr/features/onboarding/presentation/widgets/vibe_chip.dart';
 
 class VibeStep extends StatelessWidget {
   const VibeStep({super.key});
@@ -32,10 +31,8 @@ class VibeStep extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.s),
                   Text(
-                    'Seni en iyi anlatan 3-5 vibe seç.',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.textSecondaryLight,
-                        ),
+                    AppStrings.onboardingSubtitle,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   ...AppVibes.categories.entries.map((categoryEntry) {
@@ -43,7 +40,8 @@ class VibeStep extends StatelessWidget {
                     final categoryData = categoryEntry.value;
                     final List vibesList = categoryData['vibes'];
                     final Color categoryColor = categoryData['color'] as Color;
-                    final IconData categoryIcon = categoryData['icon'] as IconData;
+                    final IconData categoryIcon =
+                        categoryData['icon'] as IconData;
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +52,8 @@ class VibeStep extends StatelessWidget {
                             const SizedBox(width: AppSpacing.s),
                             Text(
                               categoryName,
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: categoryColor,
                                   ),
@@ -68,7 +67,9 @@ class VibeStep extends StatelessWidget {
                           children: vibesList.map((vibeData) {
                             final vibeLabel = vibeData['label'] as String;
                             final vibeIcon = vibeData['icon'] as IconData;
-                            final isSelected = selectedVibes.contains(vibeLabel);
+                            final isSelected = selectedVibes.contains(
+                              vibeLabel,
+                            );
 
                             return VibeChip(
                               label: vibeLabel,
@@ -88,7 +89,7 @@ class VibeStep extends StatelessWidget {
                         const SizedBox(height: AppSpacing.xl),
                       ],
                     );
-                  }).toList(),
+                  }),
                 ],
               ),
             ),

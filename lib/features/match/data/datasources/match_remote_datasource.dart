@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shakr/features/match/data/models/match_model.dart';
 import 'package:shakr/features/match/domain/entities/match_entity.dart';
 
@@ -147,7 +148,7 @@ class MatchRemoteDatasource {
 
       await deleteMatch(matchId);
     } catch (e) {
-      print('Sohbet taşıma hatası: $e');
+      debugPrint('Sohbet taşıma hatası: $e');
       rethrow;
     }
   }

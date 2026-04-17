@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/constants/app_enums.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
-import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.dart';
 import 'package:shakr/features/onboarding/presentation/widgets/gender_button.dart';
@@ -12,6 +11,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class GenderStep extends StatelessWidget {
   const GenderStep({super.key});
+
+  static const String _subtitle = 'Seni en iyi tanımlayan seçeneği seç.';
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +32,8 @@ class GenderStep extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.s),
               Text(
-                'Seni en iyi tanımlayan seçeneği seç.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textSecondaryLight,
-                ),
+                _subtitle,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
               const Spacer(),
               Row(
@@ -45,8 +44,8 @@ class GenderStep extends StatelessWidget {
                       icon: LucideIcons.mars,
                       isSelected: gender == Gender.male.name,
                       onTap: () => context.read<OnboardingCubit>().updateGender(
-                        Gender.male,
-                      ),
+                            Gender.male,
+                          ),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.m),
@@ -56,8 +55,8 @@ class GenderStep extends StatelessWidget {
                       icon: LucideIcons.venus,
                       isSelected: gender == Gender.female.name,
                       onTap: () => context.read<OnboardingCubit>().updateGender(
-                        Gender.female,
-                      ),
+                            Gender.female,
+                          ),
                     ),
                   ),
                 ],

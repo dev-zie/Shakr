@@ -13,9 +13,12 @@ class AppStrings {
   static const tabChats = 'Mesajlar';
   static const tabProfile = 'Profil';
   static const chatsPlaceholder = 'Henüz sohbet yok';
+  static const unknownUser = 'Kullanıcı';
+  static const yesterday = 'Dün';
 
   // Shake / Ana sayfa
   static const shakeString = 'Salla ve Keşfet';
+  static const shakeSubtitle = 'Eşleşmek için telefonunu salla!';
   static const searchingText = 'Sinyal aranıyor... \nLütfen bekle 😎';
 
   // Eşleşme
@@ -35,7 +38,10 @@ class AppStrings {
   static const connectFailed = 'Maalesef bağınız koptu 💔';
   static const waitingOtherDecide =
       'Seçimini yaptık! Şimdi karşı tarafı bekliyoruz 👀';
+  static const waitingConnectionRequest = 'Karşı tarafın kararını bekliyoruz.';
+  static const connectionRequestSent = 'Bağlantı isteği gönderildi.';
   static const writeMessage = 'Bir şeyler yaz...';
+  static const sendFirstMessage = 'İlk mesajı sen gönder!';
 
   // Profil
   static const myProfile = 'Benim Profilim';
@@ -84,10 +90,31 @@ class AppStrings {
   static const rateus = 'Bizi Değerlendir';
   static const logout = 'Çıkış Yap';
   static const deleteAccount = 'Hesabı Sil';
+  static const deleteAccountConfirm =
+      'Hesabını ve tüm geçmişini silmek istediğinden emin misin? Bu işlem geri alınamaz.';
+  static const deleteAccountAction = 'Hesabımı Sil';
 
   // Yeni Akış
   static const endMatch = 'Eşleşmeyi Bitir';
   static const waitDecision = 'Onay bekleniyor...';
   static const matchCanceled = 'Eşleşme iptal edildi.';
   static const connectionSaved = 'Bağlantı kalıcı hale getirildi! 🎉';
+
+  // Giriş / Intro
+  static const introLetCreateAccount = 'Hadi hesap oluşturalım';
+  static const introSlide1Title = 'Shakr';
+  static const introSlide1Desc =
+      'Shakr ile yeni insanlarla tanışmanın en eğlenceli yolunu keşfet!';
+  static const introSlide2Title = 'Salla';
+  static const introSlide2Desc =
+      'Bu sayfada telefonunu salla ve etrafındaki kişilerle anında eşleş.';
+  static const introSlide3Title = 'Profil';
+  static const introSlide3Desc =
+      'Bu sayfada kendini ifade eden bir profil oluştur ve tarzını yansıt.';
+  static const introSlide4Title = 'Sohbet';
+  static const introSlide4Desc =
+      'Bu sayfada eşleştiğin kişilerle güvenle ve keyifle sohbet et.';
+
+  // Yaş
+  static const birthYearNotice = 'Doğum yılın otomatik hesaplanacaktır.';
 }

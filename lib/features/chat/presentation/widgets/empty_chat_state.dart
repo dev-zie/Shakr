@@ -16,7 +16,7 @@ class EmptyChatState extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(AppSpacing.xl),
             decoration: BoxDecoration(
-              color: AppColors.primary50,
+              color: AppColors.primary100,
               shape: BoxShape.circle,
             ),
             child: const Icon(
@@ -28,9 +28,7 @@ class EmptyChatState extends StatelessWidget {
           const SizedBox(height: AppSpacing.l),
           Text(
             AppStrings.chatsPlaceholder,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: AppColors.textSecondaryLight,
-                ),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ],
       ),

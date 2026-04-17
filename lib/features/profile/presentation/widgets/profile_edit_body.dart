@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/common/constants/app_enums.dart';
 import 'package:shakr/common/constants/app_radius.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
-import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/onboarding/presentation/widgets/gender_button.dart';
 import 'package:shakr/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:shakr/features/profile/presentation/cubit/profile_state.dart';
@@ -36,7 +36,7 @@ class ProfileEditBody extends StatelessWidget {
               borderSide: BorderSide(
                 color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
               ),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadius.m),
             ),
           ),
           onChanged: (value) => context.read<ProfileCubit>().updateName(value),
@@ -52,7 +52,7 @@ class ProfileEditBody extends StatelessWidget {
                   AgeWheelPickerDialog(initialAge: state.editAge),
             );
 
-            if (selectedAge != null) {
+            if (selectedAge != null && context.mounted) {
               context.read<ProfileCubit>().updateAge(selectedAge);
             }
           },
@@ -72,12 +72,7 @@ class ProfileEditBody extends StatelessWidget {
         const SizedBox(height: AppSpacing.l),
 
         // Cinsiyet Düzenleme
-        Text(
-          AppStrings.gender,
-          style: Theme.of(
-            context,
-          ).textTheme.titleSmall?.copyWith(color: AppColors.textSecondaryLight),
-        ),
+        Text(AppStrings.gender, style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: AppSpacing.m),
         Row(
           children: [
@@ -85,8 +80,8 @@ class ProfileEditBody extends StatelessWidget {
               child: GenderButton(
                 label: AppStrings.male,
                 icon: LucideIcons.mars,
-                isSelected: state.editGender == 'male',
-                onTap: () => context.read<ProfileCubit>().updateGender('male'),
+                isSelected: state.editGender == Gender.male.name,
+                onTap: () => context.read<ProfileCubit>().updateGender(Gender.male.name),
               ),
             ),
             const SizedBox(width: AppSpacing.m),
@@ -94,9 +89,9 @@ class ProfileEditBody extends StatelessWidget {
               child: GenderButton(
                 label: AppStrings.female,
                 icon: LucideIcons.venus,
-                isSelected: state.editGender == 'female',
+                isSelected: state.editGender == Gender.female.name,
                 onTap: () =>
-                    context.read<ProfileCubit>().updateGender('female'),
+                    context.read<ProfileCubit>().updateGender(Gender.female.name),
               ),
             ),
           ],

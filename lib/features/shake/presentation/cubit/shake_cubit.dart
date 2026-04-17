@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/core/services/location_service.dart';
 import 'package:shakr/core/services/shake_service.dart';
+import 'package:shakr/core/services/vibration_service.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/shake/domain/entities/shake_entity.dart';
@@ -70,14 +71,14 @@ class ShakeCubit extends Cubit<ShakeState> {
 
   Future<void> recordShake(ShakeEntity shake) async {
     emit(ShakeDetected());
+
     final result = await recordShakeUsecase.call(shake);
-    result.fold(
-      (l) => emit(ShakeError(l.message)),
-      (r) {
-        emit(ShakeRecorded());
-        startMatchTimer();
-      },
-    );
+
+    result.fold((l) => emit(ShakeError(l.message)), (r) {
+      emit(ShakeRecorded());
+      startMatchTimer();
+      sl<VibrationService>().shakeRecordedFeedback();
+    });
   }
 
   Future<void> deleteShake(String uid) async {

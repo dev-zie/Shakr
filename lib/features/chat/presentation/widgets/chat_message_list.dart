@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
+import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/common/theme/app_shadows.dart';
 import 'package:shakr/features/chat/domain/entities/message_entity.dart';
@@ -36,10 +37,8 @@ class ChatMessageList extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.m),
             Text(
-              'İlk mesajı sen gönder!',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: AppColors.textSecondaryLight,
-              ),
+              AppStrings.sendFirstMessage,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
         ),
@@ -79,15 +78,17 @@ class ChatMessageList extends StatelessWidget {
                 boxShadow: AppShadows.soft,
                 border: isMe
                     ? null
-                    : Border.all(color: AppColors.primary.withOpacity(0.05)),
+                    : Border.all(
+                        color: AppColors.primary.withValues(alpha: 0.05),
+                      ),
               ),
               child: Text(
                 message.text,
-                style: TextStyle(
-                  color: isMe ? Colors.white : AppColors.textPrimaryLight,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: isMe ? Colors.white : null,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
               ),
             ),
           ),

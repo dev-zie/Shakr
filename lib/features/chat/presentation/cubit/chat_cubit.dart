@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/core/services/vibration_service.dart';
 import 'package:shakr/features/chat/domain/entities/message_entity.dart';
 import 'package:shakr/features/chat/domain/usecases/delete_conversation_usecase.dart';
 import 'package:shakr/features/chat/domain/usecases/send_message_usecase.dart';
@@ -34,6 +35,7 @@ class ChatCubit extends Cubit<ChatState> {
     DateTime fallbackCreatedAt, {
     bool isPermanent = false,
   }) {
+    sl<VibrationService>().chatStartedFeedback();
     watchMessages(id, isPermanent: isPermanent);
     if (!isPermanent) {
       _startTimer(id, fallbackCreatedAt);
@@ -66,6 +68,7 @@ class ChatCubit extends Cubit<ChatState> {
         if (remaining <= 0) {
           timer.cancel();
           sl<MatchCubit>().expireMatch(matchId);
+          sl<VibrationService>().endFeedback();
           if (!isClosed) emit(ChatTimeExpiredState());
         } else {
           List<MessageEntity> currentMessages = [];
@@ -78,8 +81,9 @@ class ChatCubit extends Cubit<ChatState> {
           // chatStartedAt null olduğu sürece süre 300 (veya tam süre) olarak kalmalı.
           final displayRemaining = isWaiting ? 300 : remaining;
 
-          if (!isClosed)
+          if (!isClosed) {
             emit(ChatTimerTickState(displayRemaining, currentMessages));
+          }
         }
       });
     });
@@ -152,9 +156,9 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future<void> deleteConversation(String conversationId) async {
     final result = await deleteConversationUsecase.call(conversationId);
-    result.fold(
-      (l) => emit(ChatError(l.message)),
-      (l) => emit(ChatConversationDeleted()),
-    );
+    result.fold((l) => emit(ChatError(l.message)), (l) {
+      sl<VibrationService>().endFeedback();
+      emit(ChatConversationDeleted());
+    });
   }
 }

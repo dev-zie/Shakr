@@ -42,15 +42,20 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     emit(OnboardingStepChanged(step: 0));
   }
 
+  void finishIntro() {
+    final current = _currentStep();
+    emit(current.copyWith(step: 1));
+  }
+
   void setName(String name) {
     final current = _currentStep();
-    emit(current.copyWith(name: name, step: 1));
+    emit(current.copyWith(name: name, step: 2));
   }
 
   Future<void> setPhoto() async {
     final current = _currentStep();
     if (current.photoUrl == null || current.photoUrl!.isEmpty) {
-      emit(current.copyWith(step: 2));
+      emit(current.copyWith(step: 3));
       return;
     }
 
@@ -58,18 +63,18 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     final result = await uploadPhotoUsecase.call(uid, current.photoUrl!);
     result.fold(
       (failure) => emit(OnboardingError(message: failure.message)),
-      (url) => emit(current.copyWith(photoUrl: url, step: 2)),
+      (url) => emit(current.copyWith(photoUrl: url, step: 3)),
     );
   }
 
   void setAge(int age) {
     final current = _currentStep();
-    emit(current.copyWith(age: age, step: 3));
+    emit(current.copyWith(age: age, step: 4));
   }
 
   void setGender(String gender) {
     final current = _currentStep();
-    emit(current.copyWith(gender: gender, step: 4));
+    emit(current.copyWith(gender: gender, step: 5));
   }
 
   void selectVibe(String vibe) {

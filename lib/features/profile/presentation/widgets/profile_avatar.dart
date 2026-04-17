@@ -21,7 +21,7 @@ class ProfileAvatar extends StatelessWidget {
             ? DecorationImage(image: NetworkImage(photoUrl!), fit: BoxFit.cover)
             : null,
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.15),
+          color: AppColors.primary.withValues(alpha: 0.15),
           width: 3,
         ),
       ),

@@ -5,6 +5,7 @@ import 'package:shakr/core/services/local_storage_service.dart';
 import 'package:shakr/core/services/location_service.dart';
 import 'package:shakr/core/services/media_service.dart';
 import 'package:shakr/core/services/shake_service.dart';
+import 'package:shakr/core/services/vibration_service.dart';
 import 'package:shakr/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:shakr/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:shakr/features/auth/domain/repositories/auth_repository.dart';
@@ -50,6 +51,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
   sl.registerLazySingleton(() => LocalStorageService());
+  sl.registerLazySingleton(() => VibrationService());
 
   //auth
   sl.registerLazySingleton(
@@ -147,6 +149,7 @@ Future<void> initDependencies() async {
   //profile
   sl.registerFactory(
     () => ProfileCubit(
+      lsc: sl(),
       getProfileUsecase: sl(),
       saveProfileUsecase: sl(),
       uploadPhotoUsecase: sl(),

@@ -11,6 +11,9 @@ import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.da
 class PhotoStep extends StatelessWidget {
   const PhotoStep({super.key});
 
+  static const double _avatarSize = 120.0;
+  static const double _cameraIconSize = 18.0;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,30 +29,27 @@ class PhotoStep extends StatelessWidget {
           const SizedBox(height: AppSpacing.s),
           Text(
             AppStrings.peopleSee,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textSecondaryLight,
-                ),
+            style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSpacing.xxl),
           BlocBuilder<OnboardingCubit, OnboardingState>(
             builder: (context, state) {
-              final photoUrl = state is OnboardingStepChanged
-                  ? state.photoUrl
-                  : null;
+              final photoUrl =
+                  state is OnboardingStepChanged ? state.photoUrl : null;
               return GestureDetector(
                 onTap: () => context.read<OnboardingCubit>().pickPhoto(),
                 child: Stack(
                   alignment: Alignment.bottomRight,
                   children: [
                     Container(
-                      width: 120,
-                      height: 120,
+                      width: _avatarSize,
+                      height: _avatarSize,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: AppColors.primary50,
                         border: Border.all(
-                          color: AppColors.primary.withOpacity(0.2),
+                          color: AppColors.primary.withValues(alpha: 0.2),
                           width: 2,
                         ),
                         image: photoUrl != null
@@ -77,7 +77,7 @@ class PhotoStep extends StatelessWidget {
                       ),
                       child: const Icon(
                         LucideIcons.camera,
-                        size: 18,
+                        size: _cameraIconSize,
                         color: Colors.white,
                       ),
                     ),
@@ -96,7 +96,7 @@ class PhotoStep extends StatelessWidget {
             onPressed: () => context.read<OnboardingCubit>().setPhoto(),
             child: Text(
               AppStrings.skipForNow,
-              style: const TextStyle(color: AppColors.textSecondaryLight),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
         ],
@@ -104,4 +104,3 @@ class PhotoStep extends StatelessWidget {
     );
   }
 }
-

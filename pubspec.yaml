@@ -54,6 +54,7 @@ dependencies:
   http: ^1.2.0
   intl: ^0.19.0
   lucide_icons_flutter: ^1.1.0
+  vibration: ^3.1.8
 
 dev_dependencies:
   flutter_test:
@@ -65,6 +66,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+
+dependency_overrides:
+  device_info_plus: 11.1.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -4,10 +4,10 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/theme/app_colors.dart';
+import 'package:shakr/common/widgets/vibe_card.dart';
 import 'package:shakr/features/auth/domain/entities/user_entity.dart';
 import 'package:shakr/features/profile/presentation/cubit/profile_cubit.dart';
 import 'profile_avatar.dart';
-import 'vibe_card.dart';
 
 class ProfileViewBody extends StatelessWidget {
   const ProfileViewBody({super.key, required this.user});
@@ -31,9 +31,7 @@ class ProfileViewBody extends StatelessWidget {
         Center(
           child: Text(
             '${user.age} ${AppStrings.yearsOld} • ${user.gender}',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: AppColors.textSecondaryLight,
-            ),
+            style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
         const SizedBox(height: AppSpacing.xxl),
@@ -57,12 +55,11 @@ class ProfileViewBody extends StatelessWidget {
         const Divider(),
         const SizedBox(height: AppSpacing.l),
 
-        // Hesabı Sil Butonu
         ListTile(
           leading: const Icon(LucideIcons.trash2, color: AppColors.error),
-          title: const Text(
-            'Hesabı Sil',
-            style: TextStyle(color: AppColors.error),
+          title: Text(
+            AppStrings.deleteAccount,
+            style: const TextStyle(color: AppColors.error),
           ),
           trailing: const Icon(
             LucideIcons.chevronRight,
@@ -80,17 +77,17 @@ class ProfileViewBody extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text(
-          'Hesabı Sil',
-          style: TextStyle(color: AppColors.error),
+        title: Text(
+          AppStrings.deleteAccount,
+          style: const TextStyle(color: AppColors.error),
         ),
         content: const Text(
-          'Hesabını ve tüm geçmişini silmek istediğinden emin misin? Bu işlem geri alınamaz.',
+          AppStrings.deleteAccountConfirm,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('İptal'),
+            child: const Text(AppStrings.cancel),
           ),
           ElevatedButton(
             onPressed: () {
@@ -98,7 +95,7 @@ class ProfileViewBody extends StatelessWidget {
               context.read<ProfileCubit>().deleteAccount();
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-            child: const Text('Hesabımı Sil'),
+            child: const Text(AppStrings.deleteAccountAction),
           ),
         ],
       ),
