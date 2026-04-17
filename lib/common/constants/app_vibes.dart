@@ -5,6 +5,15 @@ import 'package:shakr/common/theme/app_colors.dart';
 class AppVibes {
   AppVibes._();
 
+  static Color colorForVibe(String label) {
+    for (final cat in categories.values) {
+      for (final v in cat['vibes'] as List) {
+        if (v['label'] == label) return cat['color'] as Color;
+      }
+    }
+    return AppColors.primary;
+  }
+
   static const Map<String, Map<String, dynamic>> categories = {
     'Kültür': {
       'icon': LucideIcons.bookOpen,

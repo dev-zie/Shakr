@@ -102,7 +102,7 @@ class ProfileEditBody extends StatelessWidget {
         const SizedBox(height: AppSpacing.l),
 
         ElevatedButton(
-          onPressed: state.editVibes.length == 3
+          onPressed: state.editVibes.length == 3 && state.hasChanges
               ? () => context.read<ProfileCubit>().saveProfile()
               : null,
           child: Text(

@@ -20,6 +20,7 @@ class ProfilePhotoEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
           ProfileAvatar(photoUrl: photoUrl),
           Positioned(

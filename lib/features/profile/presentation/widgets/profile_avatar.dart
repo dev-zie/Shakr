@@ -14,9 +14,10 @@ class ProfileAvatar extends StatelessWidget {
     return Container(
       width: radius * 2,
       height: radius * 2,
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: AppColors.primary50,
+        color: AppColors.primary.withValues(alpha: 0.1),
         image: photoUrl != null
             ? DecorationImage(image: NetworkImage(photoUrl!), fit: BoxFit.cover)
             : null,

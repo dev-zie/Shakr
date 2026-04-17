@@ -24,7 +24,7 @@ class GenderButton extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.m, horizontal: AppSpacing.s),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(AppRadius.xl),
@@ -40,7 +40,7 @@ class GenderButton extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 40,
+              size: 26,
               color: isSelected ? Colors.white : AppColors.primary,
             ),
             const SizedBox(height: AppSpacing.xs),

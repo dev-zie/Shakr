@@ -8,6 +8,7 @@ import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/shake/domain/entities/shake_entity.dart';
 import 'package:shakr/features/shake/domain/usecases/delete_shake_usecase.dart';
+import 'package:shakr/features/shake/domain/usecases/has_active_match_usecase.dart';
 import 'package:shakr/features/shake/domain/usecases/record_shake_usecase.dart';
 import 'package:shakr/features/shake/presentation/cubit/shake_state.dart';
 import 'package:shakr/common/getit/injection.dart';
@@ -15,15 +16,17 @@ import 'package:shakr/common/getit/injection.dart';
 class ShakeCubit extends Cubit<ShakeState> {
   final DeleteShakeUsecase deleteShakeUsecase;
   final RecordShakeUsecase recordShakeUsecase;
+  final HasActiveMatchUsecase hasActiveMatchUsecase;
+
   Timer? _matchTimer;
 
-  /// Radar animasyonu için (ShakeBody StatelessWidget — vsync yerine ValueNotifier kullanır)
   final ValueNotifier<double> radarProgress = ValueNotifier(0.0);
   Timer? _radarTimer;
 
   ShakeCubit({
     required this.deleteShakeUsecase,
     required this.recordShakeUsecase,
+    required this.hasActiveMatchUsecase,
   }) : super(ShakeInitial());
 
   void init() {
@@ -33,14 +36,21 @@ class ShakeCubit extends Cubit<ShakeState> {
     final uid = sl<AuthCubit>().currentUid;
     sl<ShakeService>().startListening(() async {
       if (uid == null) return;
-      final location = await sl<LocationService>().getCurrentLocation();
+
+      // Aktif eşleşme varsa yeni shake kaydedilmez — aynı çift tekrar eşleşemez.
+      final hasMatch = await hasActiveMatchUsecase.call(uid);
+      if (hasMatch) return;
+
+      final locationResult = await sl<LocationService>().getCurrentLocation();
+
       recordShake(
         ShakeEntity(
           uid: uid,
-          location: location,
+          location: locationResult.location,
           status: ShakeStatus.waiting,
           timestamp: DateTime.now(),
         ),
+        isFallback: locationResult.isFallback,
       );
     });
     if (uid != null) {
@@ -69,13 +79,13 @@ class ShakeCubit extends Cubit<ShakeState> {
     radarProgress.value = 0.0;
   }
 
-  Future<void> recordShake(ShakeEntity shake) async {
+  Future<void> recordShake(ShakeEntity shake, {bool isFallback = false}) async {
     emit(ShakeDetected());
 
     final result = await recordShakeUsecase.call(shake);
 
     result.fold((l) => emit(ShakeError(l.message)), (r) {
-      emit(ShakeRecorded());
+      emit(ShakeRecorded(isFallbackLocation: isFallback));
       startMatchTimer();
       sl<VibrationService>().shakeRecordedFeedback();
     });
@@ -94,7 +104,7 @@ class ShakeCubit extends Cubit<ShakeState> {
   void startMatchTimer() {
     _matchTimer?.cancel();
     _matchTimer = Timer(const Duration(seconds: 15), () {
-      emit(ShakeNoMatch());
+      if (!isClosed) emit(ShakeNoMatch());
     });
   }
 

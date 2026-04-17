@@ -6,6 +6,7 @@ class ConversationEntity {
   final String otherUserName;
   final String? otherUserPhoto;
   final List<String> otherUserVibes;
+  final List<String> readBy;
 
   ConversationEntity({
     required this.id,
@@ -15,5 +16,6 @@ class ConversationEntity {
     required this.otherUserName,
     this.otherUserPhoto,
     this.otherUserVibes = const [],
+    this.readBy = const [],
   });
 }

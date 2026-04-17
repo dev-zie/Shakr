@@ -154,6 +154,13 @@ class ChatCubit extends Cubit<ChatState> {
     });
   }
 
+  Future<void> markAsRead(String conversationId, String uid) async {
+    try {
+      await watchConversationsUsecase.repo
+          .markConversationRead(conversationId, uid);
+    } catch (_) {}
+  }
+
   Future<void> deleteConversation(String conversationId) async {
     final result = await deleteConversationUsecase.call(conversationId);
     result.fold((l) => emit(ChatError(l.message)), (l) {

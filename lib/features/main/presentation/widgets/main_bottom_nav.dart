@@ -29,27 +29,27 @@ class MainBottomNav extends StatelessWidget {
                   cubit.goToProfile();
               }
             },
-            iconSize: 18,
-            selectedFontSize: 12,
-            unselectedFontSize: 8,
+            iconSize: 22,
+            selectedFontSize: 14,
+            unselectedFontSize: 14,
             items: [
               BottomNavigationBarItem(
                 icon: Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.m),
+                  padding: const EdgeInsets.only(top: AppSpacing.s, bottom: AppSpacing.xs),
                   child: Icon(LucideIcons.radar),
                 ),
                 label: AppStrings.tabShake,
               ),
               BottomNavigationBarItem(
                 icon: Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.m),
+                  padding: const EdgeInsets.only(top: AppSpacing.s, bottom: AppSpacing.xs),
                   child: Icon(LucideIcons.messageCircle),
                 ),
                 label: AppStrings.tabChats,
               ),
               BottomNavigationBarItem(
                 icon: Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.m),
+                  padding: const EdgeInsets.only(top: AppSpacing.s, bottom: AppSpacing.xs),
                   child: Icon(LucideIcons.user),
                 ),
                 label: AppStrings.tabProfile,

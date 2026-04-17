@@ -15,9 +15,7 @@ class MatchLoading extends MatchState with EquatableMixin {
 
 class MatchFound extends MatchState with EquatableMixin {
   final MatchEntity match;
-
   MatchFound(this.match);
-
   @override
   List<Object?> get props => [match];
 }
@@ -29,9 +27,7 @@ class MatchNotFound extends MatchState with EquatableMixin {
 
 class MatchError extends MatchState with EquatableMixin {
   final String message;
-
   MatchError(this.message);
-
   @override
   List<Object?> get props => [message];
 }
@@ -55,7 +51,6 @@ class MatchBothKept extends MatchState with EquatableMixin {
   List<Object?> get props => [match];
 }
 
-/// Kullanıcı bağlantıyı korumak istedi ama karşı taraf henüz karar vermedi.
 class MatchConnectionPending extends MatchState with EquatableMixin {
   final MatchEntity match;
   MatchConnectionPending(this.match);
@@ -63,7 +58,6 @@ class MatchConnectionPending extends MatchState with EquatableMixin {
   List<Object?> get props => [match];
 }
 
-/// Kullanıcı sohbete başlamayı kabul etti ama karşı taraf henüz karar vermedi.
 class MatchAcceptancePending extends MatchState with EquatableMixin {
   final MatchEntity match;
   MatchAcceptancePending(this.match);
@@ -71,10 +65,15 @@ class MatchAcceptancePending extends MatchState with EquatableMixin {
   List<Object?> get props => [match];
 }
 
-/// Her iki taraf da sohbete başlamayı kabul etti.
 class MatchAccepted extends MatchState with EquatableMixin {
   final MatchEntity match;
   MatchAccepted(this.match);
   @override
   List<Object?> get props => [match];
+}
+
+/// Bu iki kullanıcı son 24 saat içinde zaten eşleşmiş — cooldown aktif.
+class MatchCooldownActive extends MatchState with EquatableMixin {
+  @override
+  List<Object?> get props => [];
 }

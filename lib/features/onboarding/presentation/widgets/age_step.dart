@@ -32,11 +32,6 @@ class AgeStep extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: AppSpacing.s),
-              Text(
-                AppStrings.birthYearNotice,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
               const Expanded(child: SizedBox()),
               SizedBox(
                 height: 250,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
-import 'package:shakr/common/theme/app_colors.dart';
+import 'package:shakr/common/constants/app_vibes.dart';
+
 
 class MatchVibeChips extends StatelessWidget {
   final List<String> vibes;
@@ -17,22 +18,24 @@ class MatchVibeChips extends StatelessWidget {
       runSpacing: AppSpacing.s,
       alignment: WrapAlignment.center,
       children: vibes.map((vibe) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        final vibeColor = AppVibes.colorForVibe(vibe);
         return Container(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.m,
             vertical: AppSpacing.xs,
           ),
           decoration: BoxDecoration(
-            color: AppColors.primary50,
+            color: vibeColor.withValues(alpha: isDark ? 0.15 : 0.08),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: AppColors.primary.withValues(alpha: 0.2),
+              color: vibeColor.withValues(alpha: 0.4),
             ),
           ),
           child: Text(
             vibe,
-            style: const TextStyle(
-              color: AppColors.primary,
+            style: TextStyle(
+              color: vibeColor,
               fontWeight: FontWeight.w600,
               fontSize: 13,
             ),

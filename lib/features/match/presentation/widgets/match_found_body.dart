@@ -37,7 +37,7 @@ class MatchFoundBody extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(AppSpacing.m),
               decoration: BoxDecoration(
-                color: AppColors.primary50,
+                color: AppColors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(LucideIcons.zap, size: 40, color: AppColors.primary),
@@ -55,7 +55,7 @@ class MatchFoundBody extends StatelessWidget {
               AppStrings.otherUsersVibes,
               style: Theme.of(context).textTheme.titleSmall,
             ),
-            const SizedBox(height: AppSpacing.s),
+            const SizedBox(height: AppSpacing.l),
             MatchVibeChips(vibes: otherUserVibes),
             const SizedBox(height: AppSpacing.xxl),
             MatchTimerDisplay(remainingSeconds: remaining),

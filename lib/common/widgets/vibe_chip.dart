@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shakr/common/constants/app_radius.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 
 class VibeChip extends StatelessWidget {
@@ -23,7 +24,7 @@ class VibeChip extends StatelessWidget {
       label: Text(label),
       avatar: Icon(
         icon,
-        size: 16,
+        size: 18,
         color: isSelected ? Colors.white : activeColor,
       ),
       selected: isSelected,
@@ -33,15 +34,15 @@ class VibeChip extends StatelessWidget {
       labelStyle: TextStyle(
         color: isSelected ? Colors.white : activeColor,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        fontSize: 13,
+        fontSize: 14,
       ),
       backgroundColor: activeColor.withValues(alpha: 0.05),
+      side: BorderSide(
+        color: isSelected ? activeColor : activeColor.withValues(alpha: 0.3),
+        width: isSelected ? 2 : 1,
+      ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(
-          color: isSelected ? activeColor : activeColor.withValues(alpha: 0.2),
-          width: 1,
-        ),
+        borderRadius: BorderRadius.circular(AppRadius.full),
       ),
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.s,

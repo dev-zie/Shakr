@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_state.dart';
 import 'package:shakr/features/shake/presentation/cubit/shake_cubit.dart';
@@ -15,9 +16,6 @@ class ShakingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (sl<ShakeCubit>().state is ShakeInitial) {
-      sl<ShakeCubit>().init();
-    }
     return Scaffold(
       body: BlocListener<MatchCubit, MatchState>(
         bloc: sl<MatchCubit>(),
@@ -34,6 +32,11 @@ class ShakingScreen extends StatelessWidget {
               showCupertinoDialog(
                 context: context,
                 builder: (context) => const MatchNotFoundDialog(),
+              );
+            }
+            if (state is ShakeRecorded && state.isFallbackLocation) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(AppStrings.locationFallbackWarning)),
               );
             }
           },

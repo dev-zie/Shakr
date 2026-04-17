@@ -42,6 +42,7 @@ import 'package:shakr/features/shake/data/datasources/shake_remote_datasource.da
 import 'package:shakr/features/shake/data/repositories/shake_repository_impl.dart';
 import 'package:shakr/features/shake/domain/repositories/shake_repository.dart';
 import 'package:shakr/features/shake/domain/usecases/delete_shake_usecase.dart';
+import 'package:shakr/features/shake/domain/usecases/has_active_match_usecase.dart';
 import 'package:shakr/features/shake/domain/usecases/record_shake_usecase.dart';
 import 'package:shakr/features/shake/presentation/cubit/shake_cubit.dart';
 
@@ -92,8 +93,13 @@ Future<void> initDependencies() async {
   );
   sl.registerLazySingleton(() => RecordShakeUsecase(repo: sl()));
   sl.registerLazySingleton(() => DeleteShakeUsecase(repo: sl()));
+  sl.registerLazySingleton(() => HasActiveMatchUsecase(repo: sl()));
   sl.registerLazySingleton(
-    () => ShakeCubit(recordShakeUsecase: sl(), deleteShakeUsecase: sl()),
+    () => ShakeCubit(
+      recordShakeUsecase: sl(),
+      deleteShakeUsecase: sl(),
+      hasActiveMatchUsecase: sl(),
+    ),
   );
   sl.registerLazySingleton(() => ShakeService());
 

@@ -34,4 +34,8 @@ class ShakeRepositoryImpl implements ShakeRepository {
       return Left(UnexpectedFailure());
     }
   }
+
+  @override
+  Future<bool> hasActiveMatch(String uid) =>
+      remoteDatasource.hasActiveMatch(uid);
 }

@@ -61,15 +61,18 @@ class ShakeBody extends StatelessWidget {
                 onPressed: () async {
                   final uid = FirebaseAuth.instance.currentUser?.uid;
                   if (uid == null) return;
-                  final location =
+                  final locationResult =
                       await sl<LocationService>().getCurrentLocation();
                   final shake = ShakeEntity(
                     uid: uid,
-                    location: location,
+                    location: locationResult.location,
                     status: ShakeStatus.waiting,
                     timestamp: DateTime.now(),
                   );
-                  sl<ShakeCubit>().recordShake(shake);
+                  sl<ShakeCubit>().recordShake(
+                    shake,
+                    isFallback: locationResult.isFallback,
+                  );
                 },
                 icon: const Icon(LucideIcons.mousePointer2, size: 16),
                 label: const Text(_emulatorButtonLabel),

@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
-import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/common/widgets/vibe_card.dart';
 import 'package:shakr/features/auth/domain/entities/user_entity.dart';
-import 'package:shakr/features/profile/presentation/cubit/profile_cubit.dart';
 import 'profile_avatar.dart';
 
 class ProfileViewBody extends StatelessWidget {
@@ -52,53 +48,7 @@ class ProfileViewBody extends StatelessWidget {
           },
         ),
         const SizedBox(height: AppSpacing.xxl),
-        const Divider(),
-        const SizedBox(height: AppSpacing.l),
-
-        ListTile(
-          leading: const Icon(LucideIcons.trash2, color: AppColors.error),
-          title: Text(
-            AppStrings.deleteAccount,
-            style: const TextStyle(color: AppColors.error),
-          ),
-          trailing: const Icon(
-            LucideIcons.chevronRight,
-            size: 20,
-            color: AppColors.error,
-          ),
-          onTap: () => _showDeleteAccountDialog(context),
-        ),
-        const SizedBox(height: AppSpacing.xxl),
       ],
-    );
-  }
-
-  void _showDeleteAccountDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(
-          AppStrings.deleteAccount,
-          style: const TextStyle(color: AppColors.error),
-        ),
-        content: const Text(
-          AppStrings.deleteAccountConfirm,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text(AppStrings.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              context.read<ProfileCubit>().deleteAccount();
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-            child: const Text(AppStrings.deleteAccountAction),
-          ),
-        ],
-      ),
     );
   }
 }

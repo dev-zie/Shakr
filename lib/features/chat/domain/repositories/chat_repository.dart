@@ -19,5 +19,7 @@ abstract class ChatRepository {
     String uid,
   );
 
+  Future<Either<Failure, void>> markConversationRead(String id, String uid);
+
   Future<Either<Failure, void>> deleteConversation(String conversationId);
 }

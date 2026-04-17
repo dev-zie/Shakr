@@ -39,6 +39,19 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
+  Future<Either<Failure, void>> markConversationRead(
+    String id,
+    String uid,
+  ) async {
+    try {
+      await remoteDatasource.markConversationRead(id, uid);
+      return Right(unit);
+    } catch (e) {
+      return Left(UnexpectedFailure());
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> deleteConversation(
     String conversationId,
   ) async {
@@ -76,6 +89,7 @@ class ChatRepositoryImpl implements ChatRepository {
             otherUserName: otherName,
             otherUserPhoto: otherPhoto,
             otherUserVibes: otherVibes,
+            readBy: List<String>.from(m['readBy'] ?? []),
           );
         }).toList();
         return Right(conversations);

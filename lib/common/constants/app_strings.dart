@@ -115,6 +115,11 @@ class AppStrings {
   static const introSlide4Desc =
       'Bu sayfada eşleştiğin kişilerle güvenle ve keyifle sohbet et.';
 
+  // Konum & Cooldown
+  static const locationFallbackWarning =
+      'Eşleşme hassas olmayabilir.';
+
+
   // Yaş
   static const birthYearNotice = 'Doğum yılın otomatik hesaplanacaktır.';
 }

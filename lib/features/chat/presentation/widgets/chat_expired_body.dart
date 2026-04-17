@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/constants/app_vibes.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/match/domain/entities/match_entity.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
@@ -41,7 +42,7 @@ class ChatExpiredBody extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(AppSpacing.l),
                   decoration: BoxDecoration(
-                    color: isPending ? AppColors.primary50 : AppColors.primary50,
+                    color: AppColors.primary.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -73,22 +74,24 @@ class ChatExpiredBody extends StatelessWidget {
                     runSpacing: AppSpacing.s,
                     alignment: WrapAlignment.center,
                     children: otherUserVibes.map((vibe) {
+                      final isDark = Theme.of(context).brightness == Brightness.dark;
+                      final vibeColor = AppVibes.colorForVibe(vibe);
                       return Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: AppSpacing.m,
                           vertical: AppSpacing.xs,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.primary50,
+                          color: vibeColor.withValues(alpha: isDark ? 0.15 : 0.08),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: AppColors.primary.withValues(alpha: 0.2),
+                            color: vibeColor.withValues(alpha: 0.4),
                           ),
                         ),
                         child: Text(
                           vibe,
-                          style: const TextStyle(
-                            color: AppColors.primary,
+                          style: TextStyle(
+                            color: vibeColor,
                             fontWeight: FontWeight.w600,
                             fontSize: 13,
                           ),
@@ -126,7 +129,7 @@ class ChatExpiredBody extends StatelessWidget {
                     isPending
                         ? AppStrings.cancel
                         : AppStrings.deleteConnect,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                 ),
               ],

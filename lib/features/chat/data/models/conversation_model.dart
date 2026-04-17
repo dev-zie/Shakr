@@ -10,6 +10,7 @@ class ConversationModel extends ConversationEntity {
     required super.otherUserName,
     super.otherUserPhoto,
     super.otherUserVibes = const [],
+    super.readBy = const [],
   });
 
   factory ConversationModel.fromMap(Map<String, dynamic> map, String id) {
@@ -21,6 +22,7 @@ class ConversationModel extends ConversationEntity {
       otherUserName: map['otherUserName'] ?? '',
       otherUserPhoto: map['otherUserPhoto'],
       otherUserVibes: List<String>.from(map['otherUserVibes'] ?? []),
+      readBy: List<String>.from(map['readBy'] ?? []),
     );
   }
 
@@ -32,6 +34,7 @@ class ConversationModel extends ConversationEntity {
       'otherUserName': otherUserName,
       'otherUserPhoto': otherUserPhoto,
       'otherUserVibes': otherUserVibes,
+      'readBy': readBy,
     };
   }
 }

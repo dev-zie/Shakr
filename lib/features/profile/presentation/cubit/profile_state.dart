@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shakr/features/auth/domain/entities/user_entity.dart';
 
 abstract class ProfileState {}
@@ -38,6 +39,13 @@ class ProfileLoaded extends ProfileState with EquatableMixin {
     this.isEditing = false,
     this.isUploadingPhoto = false,
   });
+
+  bool get hasChanges =>
+      editName.trim() != user.name ||
+      editAge != user.age ||
+      editGender != user.gender ||
+      !listEquals(List<String>.from(editVibes)..sort(),
+          List<String>.from(user.vibes)..sort());
 
   ProfileLoaded copyWith({
     UserEntity? user,

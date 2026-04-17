@@ -36,13 +36,19 @@ class ChatRemoteDatasource {
         .collection('messages')
         .add(messageModel.toMap());
 
-    // Kalıcı sohbet ise lastMessage güncelle
     if (isPermanent) {
       await db.collection('conversations').doc(id).update({
         'lastMessage': message.text,
         'lastMessageAt': Timestamp.fromDate(message.createdAt),
+        'readBy': [message.senderId],
       });
     }
+  }
+
+  Future<void> markConversationRead(String id, String uid) async {
+    await db.collection('conversations').doc(id).update({
+      'readBy': FieldValue.arrayUnion([uid]),
+    });
   }
 
   Stream<List<Map<String, dynamic>>> watchConversations(String uid) {
