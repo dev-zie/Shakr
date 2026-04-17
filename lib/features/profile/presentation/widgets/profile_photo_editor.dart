@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/profile/presentation/cubit/profile_cubit.dart';
@@ -43,7 +44,7 @@ class ProfilePhotoEditor extends StatelessWidget {
                     )
                   : IconButton(
                       icon: const Icon(
-                        Icons.camera_alt,
+                        LucideIcons.camera,
                         color: Colors.white,
                         size: 20,
                       ),

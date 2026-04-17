@@ -13,4 +13,5 @@ abstract class AuthRepository {
 
   Future<Either<Failure, String>> uploadPhoto(String uid, String filePath);
 
+  Future<Either<Failure, void>> deleteAccount();
 }

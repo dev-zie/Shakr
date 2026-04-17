@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/features/main/presentation/cubit/navigation_cubit.dart';
 import 'package:shakr/common/theme/app_shadows.dart';
@@ -13,6 +14,7 @@ class MainBottomNav extends StatelessWidget {
     return BlocBuilder<NavigationCubit, int>(
       builder: (context, currentIndex) {
         return Container(
+          height: 100,
           decoration: BoxDecoration(boxShadow: AppShadows.upward),
           child: BottomNavigationBar(
             currentIndex: currentIndex,
@@ -27,27 +29,27 @@ class MainBottomNav extends StatelessWidget {
                   cubit.goToProfile();
               }
             },
-            iconSize: 24,
+            iconSize: 18,
             selectedFontSize: 12,
-            unselectedFontSize: 12,
-            items: const [
+            unselectedFontSize: 8,
+            items: [
               BottomNavigationBarItem(
                 icon: Padding(
-                  padding: EdgeInsets.only(bottom: 4),
+                  padding: const EdgeInsets.only(top: AppSpacing.m),
                   child: Icon(LucideIcons.radar),
                 ),
                 label: AppStrings.tabShake,
               ),
               BottomNavigationBarItem(
                 icon: Padding(
-                  padding: EdgeInsets.only(bottom: 4),
+                  padding: const EdgeInsets.only(top: AppSpacing.m),
                   child: Icon(LucideIcons.messageCircle),
                 ),
                 label: AppStrings.tabChats,
               ),
               BottomNavigationBarItem(
                 icon: Padding(
-                  padding: EdgeInsets.only(bottom: 4),
+                  padding: const EdgeInsets.only(top: AppSpacing.m),
                   child: Icon(LucideIcons.user),
                 ),
                 label: AppStrings.tabProfile,

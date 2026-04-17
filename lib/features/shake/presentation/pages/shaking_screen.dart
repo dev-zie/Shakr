@@ -8,8 +8,7 @@ import 'package:shakr/features/match/presentation/cubit/match_state.dart';
 import 'package:shakr/features/shake/presentation/cubit/shake_cubit.dart';
 import 'package:shakr/features/shake/presentation/cubit/shake_state.dart';
 import 'package:shakr/features/shake/presentation/widgets/match_not_found_dialog.dart';
-import 'package:shakr/features/shake/presentation/widgets/searching_body.dart';
-import 'package:shakr/features/shake/presentation/widgets/shake_body.dart';
+import 'package:shakr/features/shake/presentation/widgets/shaking_body.dart';
 import 'package:shakr/common/getit/injection.dart';
 
 class ShakingScreen extends StatelessWidget {
@@ -21,39 +20,27 @@ class ShakingScreen extends StatelessWidget {
       sl<ShakeCubit>().init();
     }
     return Scaffold(
-      body: SafeArea(
-        child: BlocListener<MatchCubit, MatchState>(
-          bloc: sl<MatchCubit>(),
+      body: BlocListener<MatchCubit, MatchState>(
+        bloc: sl<MatchCubit>(),
+        listener: (context, state) {
+          if (state is MatchFound) {
+            sl<ShakeCubit>().disposeScreen();
+            context.go('/match/${state.match.matchId}');
+          }
+        },
+        child: BlocConsumer<ShakeCubit, ShakeState>(
+          bloc: sl<ShakeCubit>(),
           listener: (context, state) {
-            if (state is MatchFound) {
-              sl<ShakeCubit>().disposeScreen();
-              context.go('/match/${state.match.matchId}');
+            if (state is ShakeNoMatch) {
+              showCupertinoDialog(
+                context: context,
+                builder: (context) => const MatchNotFoundDialog(),
+              );
             }
           },
-          child: BlocConsumer<ShakeCubit, ShakeState>(
-            bloc: sl<ShakeCubit>(),
-            listener: (context, state) {
-              if (state is ShakeNoMatch) {
-                showCupertinoDialog(
-                  context: context,
-                  builder: (context) => const MatchNotFoundDialog(),
-                );
-              }
-            },
-            builder: (context, state) {
-              if (state is ShakeInitial) return const ShakeBody();
-              if (state is ShakeDetected || state is ShakeRecorded) {
-                return const SearchingBody();
-              }
-              if (state is ShakeError) {
-                return Center(child: Text(state.message));
-              }
-              if (state is ShakeNoMatch) {
-                return const Center(child: Text(AppStrings.matchNotFound));
-              }
-              return const SizedBox();
-            },
-          ),
+          builder: (context, state) {
+            return ShakingBody(state: state);
+          },
         ),
       ),
     );

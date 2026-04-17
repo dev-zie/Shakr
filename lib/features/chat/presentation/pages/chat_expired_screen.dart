@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shakr/common/constants/app_strings.dart';
@@ -24,7 +25,7 @@ class ChatExpiredScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.close),
+            icon: const Icon(LucideIcons.x),
             onPressed: () => sl<MatchCubit>().deleteMatch(matchId),
           ),
         ],

@@ -12,8 +12,8 @@ import 'package:shakr/features/profile/presentation/widgets/age_wheel_picker_dia
 import 'profile_photo_editor.dart';
 import 'profile_vibes_selector.dart';
 
-class ProfileEditForm extends StatelessWidget {
-  const ProfileEditForm({super.key, required this.state});
+class ProfileEditBody extends StatelessWidget {
+  const ProfileEditBody({super.key, required this.state});
 
   final ProfileLoaded state;
 

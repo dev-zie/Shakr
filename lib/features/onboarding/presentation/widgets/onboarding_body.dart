@@ -1,58 +1,25 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:shakr/common/widgets/save_button.dart';
-// import 'package:shakr/common/constants/app_strings.dart';
-// import 'package:shakr/common/constants/app_vibes.dart';
-// import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
-// import 'package:shakr/features/onboarding/presentation/widgets/vibes_item.dart';
+import 'package:flutter/material.dart';
+import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.dart';
+import 'package:shakr/features/onboarding/presentation/widgets/age_step.dart';
+import 'package:shakr/features/onboarding/presentation/widgets/gender_step.dart';
+import 'package:shakr/features/onboarding/presentation/widgets/name_step.dart';
+import 'package:shakr/features/onboarding/presentation/widgets/photo_step.dart';
+import 'package:shakr/features/onboarding/presentation/widgets/vibe_step.dart';
 
-// class OnboardingBody extends StatelessWidget {
-//   const OnboardingBody({super.key, required this.selectedVibes});
-//   final List<String> selectedVibes;
+class OnboardingBody extends StatelessWidget {
+  final OnboardingStepChanged state;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         Text(
-//           AppStrings.onboardingTitle,
-//           style: Theme.of(context).textTheme.headlineMedium,
-//         ),
-//         const SizedBox(height: 8),
-//         Text(
-//           AppStrings.onboardingSubtitle,
-//           style: Theme.of(context).textTheme.bodyMedium,
-//         ),
-//         const SizedBox(height: 24),
+  const OnboardingBody({super.key, required this.state});
 
-//         Expanded(
-//           child: ListView.builder(
-//             itemCount: AppVibes.categories.length,
-//             itemBuilder: (context, index) {
-//               final entry = AppVibes.categories.entries.elementAt(index);
-//               final category = entry.key;
-//               final vibes = entry.value;
-//               return VibesItem(
-//                 category: category,
-//                 vibes: vibes,
-//                 selectedVibes: selectedVibes,
-//               );
-//             },
-//           ),
-//         ),
-//         const SizedBox(height: 16),
-
-//         SaveButton(
-//           onPressed: selectedVibes.length == 3
-//               ? () {
-//                   // context.read<OnboardingCubit>().();
-//                 //test  context.read<OnboardingCubit>().resetOnboarding();
-//                 }
-//               : null,
-//           text: AppStrings.continueButton,
-//         ),
-//       ],
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return switch (state.step) {
+      0 => const NameStep(),
+      1 => const PhotoStep(),
+      2 => const AgeStep(),
+      3 => const GenderStep(),
+      4 => const VibeStep(),
+      _ => const SizedBox(),
+    };
+  }
+}

@@ -9,8 +9,7 @@ import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_state.dart';
-import 'package:shakr/features/chat/presentation/widgets/chat_input_bar.dart';
-import 'package:shakr/features/chat/presentation/widgets/chat_message_list.dart';
+import 'package:shakr/features/chat/presentation/widgets/chat_body.dart';
 import 'package:shakr/features/chat/presentation/widgets/chat_timer_title.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_state.dart';
@@ -76,30 +75,10 @@ class ChatScreen extends StatelessWidget {
               },
             ),
           ],
-          child: Column(
-            children: [
-              Expanded(
-                child: BlocBuilder<ChatCubit, ChatState>(
-                  builder: (context, state) {
-                    if (state is ChatLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    if (state is ChatTimerTickState) {
-                      return ChatMessageList(
-                        messages: state.messages,
-                        currentUid: currentUid,
-                      );
-                    }
-                    return const SizedBox();
-                  },
-                ),
-              ),
-              ChatInputBar(
-                id: matchId,
-                currentUid: currentUid!,
-                isPermanent: isPermanent,
-              ),
-            ],
+          child: ChatBody(
+            matchId: matchId,
+            currentUid: currentUid!,
+            isPermanent: isPermanent,
           ),
         ),
       ),

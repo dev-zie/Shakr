@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
@@ -29,38 +30,19 @@ class SettingsBody extends StatelessWidget {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.description),
+              leading: const Icon(LucideIcons.fileText),
               title: const Text(AppStrings.termsofservice),
               onTap: () {},
             ),
             ListTile(
-              leading: const Icon(Icons.privacy_tip),
+              leading: const Icon(LucideIcons.shieldCheck),
               title: const Text(AppStrings.privacypolicy),
               onTap: () {},
             ),
             ListTile(
-              leading: const Icon(Icons.star),
+              leading: const Icon(LucideIcons.star),
               title: const Text(AppStrings.rateus),
               onTap: () {},
-            ),
-            const SizedBox(height: AppSpacing.xxl),
-            ListTile(
-              iconColor: AppColors.error,
-              textColor: AppColors.error,
-              leading: const Icon(Icons.logout),
-              title: const Text(AppStrings.logout),
-              onTap: () {
-                // Logout logic
-              },
-            ),
-            ListTile(
-              iconColor: AppColors.error,
-              textColor: AppColors.error,
-              leading: const Icon(Icons.delete_forever),
-              title: const Text(AppStrings.deleteAccount),
-              onTap: () {
-                // Delete account logic
-              },
             ),
           ],
         );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/getit/injection.dart';
 import 'package:shakr/features/settings/presentation/cubit/settings_cubit.dart';
@@ -17,7 +18,7 @@ class SettingsScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text(AppStrings.settings),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: const Icon(LucideIcons.arrowLeft),
             onPressed: () => context.pop(),
           ),
         ),

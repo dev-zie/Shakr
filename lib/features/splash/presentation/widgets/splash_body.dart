@@ -19,7 +19,8 @@ class SplashBody extends StatelessWidget {
           const SizedBox(height: AppSpacing.m),
           // Lottie Animation for a modern look
           Lottie.network(
-            'https://assets9.lottiefiles.com/packages/lf20_x62chJ.json',
+            'https://lottie.host/9ae8f98c-7510-4eae-91ac-23d394b417b3/S42GI5y7yS.json',
+            //  'https://assets9.lottiefiles.com/packages/lf20_x62chJ.json',
             width: 150,
             height: 150,
             fit: BoxFit.fill,

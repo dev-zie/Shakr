@@ -3,10 +3,10 @@ import 'package:shakr/core/error/failures.dart';
 import 'package:shakr/features/match/domain/repositories/match_repository.dart';
 
 class AcceptMatchUsecase {
-  final MatchRepository repository;
-  AcceptMatchUsecase({required this.repository});
+  final MatchRepository repo;
+  AcceptMatchUsecase({required this.repo});
 
   Future<Either<Failure, void>> call(String matchId, String uid) {
-    return repository.acceptMatch(matchId, uid);
+    return repo.acceptMatch(matchId, uid);
   }
 }

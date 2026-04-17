@@ -7,7 +7,7 @@ import 'package:shakr/common/getit/injection.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:shakr/features/profile/presentation/cubit/profile_state.dart';
-import 'package:shakr/features/profile/presentation/widgets/profile_edit_form.dart';
+import 'package:shakr/features/profile/presentation/widgets/profile_edit_body.dart';
 import 'package:shakr/features/profile/presentation/widgets/profile_view_body.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -21,6 +21,11 @@ class ProfileScreen extends StatelessWidget {
       create: (context) => sl<ProfileCubit>()..loadProfile(uid ?? ''),
       child: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
+          if (state is ProfileInitial) {
+            // Account deleted or logged out -> restart app flow
+            context.go('/');
+            return;
+          }
           if (state is ProfileUpdatedSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text(AppStrings.profileUpdated)),
@@ -73,7 +78,7 @@ class ProfileScreen extends StatelessWidget {
     }
     if (state is ProfileLoaded) {
       return state.isEditing
-          ? ProfileEditForm(state: state)
+          ? ProfileEditBody(state: state)
           : ProfileViewBody(user: state.user);
     }
     return const Center(child: Text(AppStrings.profileNotFound));

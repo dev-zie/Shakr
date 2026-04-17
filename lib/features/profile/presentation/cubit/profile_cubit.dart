@@ -5,12 +5,14 @@ import 'package:shakr/features/auth/domain/entities/user_entity.dart';
 import 'package:shakr/features/auth/domain/usecases/get_profile_usecase.dart';
 import 'package:shakr/features/auth/domain/usecases/save_profile_usecase.dart';
 import 'package:shakr/features/auth/domain/usecases/upload_photo_usecase.dart';
+import 'package:shakr/features/auth/domain/usecases/delete_account_usecase.dart';
 import 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   final GetProfileUsecase getProfileUsecase;
   final SaveProfileUsecase saveProfileUsecase;
   final UploadPhotoUsecase uploadPhotoUsecase;
+  final DeleteAccountUsecase deleteAccountUsecase;
 
   String? _uid;
 
@@ -18,6 +20,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     required this.getProfileUsecase,
     required this.saveProfileUsecase,
     required this.uploadPhotoUsecase,
+    required this.deleteAccountUsecase,
   }) : super(ProfileInitial());
 
   Future<void> loadProfile(String uid) async {
@@ -136,5 +139,16 @@ class ProfileCubit extends Cubit<ProfileState> {
         ),
       );
     });
+  }
+
+  Future<void> deleteAccount() async {
+    if (state is! ProfileLoaded) return;
+    emit(ProfileLoading());
+
+    final result = await deleteAccountUsecase.call();
+    result.fold(
+      (failure) => emit(ProfileError(failure.message)),
+      (_) => emit(ProfileInitial()), // Emitting initial will trigger redirect in UI
+    );
   }
 }

@@ -64,4 +64,58 @@ class AuthRemoteDatasource {
     await ref.putFile(File(filePath));
     return await ref.getDownloadURL();
   }
+
+  Future<void> deleteAccount() async {
+    final user = firebaseAuth.currentUser;
+    if (user == null) return;
+    final uid = user.uid;
+
+    final batch = firestore.batch();
+
+    // 1. Delete user matches
+    final matches = await firestore
+        .collection('matches')
+        .where('users', arrayContains: uid)
+        .get();
+
+    for (var doc in matches.docs) {
+      // Delete temporary messages
+      final messages = await doc.reference.collection('messages').get();
+      for (var msg in messages.docs) {
+        batch.delete(msg.reference);
+      }
+      batch.delete(doc.reference);
+      
+      // Also delete from chats collection (used for temporary messaging)
+      final chatRef = firestore.collection('chats').doc(doc.id);
+      final chatMessages = await chatRef.collection('messages').get();
+      for (var msg in chatMessages.docs) {
+        batch.delete(msg.reference);
+      }
+      batch.delete(chatRef);
+    }
+
+    // 2. Delete user conversations
+    final conversations = await firestore
+        .collection('conversations')
+        .where('participants', arrayContains: uid)
+        .get();
+
+    for (var doc in conversations.docs) {
+      final messages = await doc.reference.collection('messages').get();
+      for (var msg in messages.docs) {
+        batch.delete(msg.reference);
+      }
+      batch.delete(doc.reference);
+    }
+
+    // 3. Delete user document
+    batch.delete(firestore.collection('users').doc(uid));
+
+    // Commit all firestore deletions
+    await batch.commit();
+
+    // 4. Delete Auth record
+    await user.delete();
+  }
 }

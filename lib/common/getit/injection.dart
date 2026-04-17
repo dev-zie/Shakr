@@ -8,6 +8,7 @@ import 'package:shakr/core/services/shake_service.dart';
 import 'package:shakr/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:shakr/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:shakr/features/auth/domain/repositories/auth_repository.dart';
+import 'package:shakr/features/auth/domain/usecases/delete_account_usecase.dart';
 import 'package:shakr/features/auth/domain/usecases/get_current_user_usecase.dart';
 import 'package:shakr/features/auth/domain/usecases/get_profile_usecase.dart';
 import 'package:shakr/features/auth/domain/usecases/save_profile_usecase.dart';
@@ -62,6 +63,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => SignInAnonymouslyUsecase(repo: sl()));
   sl.registerLazySingleton(() => SaveProfileUsecase(repo: sl()));
   sl.registerLazySingleton(() => UploadPhotoUsecase(repo: sl()));
+  sl.registerLazySingleton(() => DeleteAccountUsecase(repo: sl()));
   sl.registerLazySingleton(() => GetProfileUsecase(repo: sl()));
   sl.registerLazySingleton(
     () => AuthCubit(
@@ -105,8 +107,8 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => KeepConnectionUsecase(repo: sl()));
   sl.registerLazySingleton(() => ExpireMatchUsecase(repo: sl()));
   sl.registerLazySingleton(() => DeleteMatchUsecase(repo: sl()));
-  sl.registerLazySingleton(() => AcceptMatchUsecase(repository: sl()));
-  sl.registerLazySingleton(() => MoveToPermanentChatUsecase(repository: sl()));
+  sl.registerLazySingleton(() => AcceptMatchUsecase(repo: sl()));
+  sl.registerLazySingleton(() => MoveToPermanentChatUsecase(repo: sl()));
 
   sl.registerLazySingleton(
     () => MatchCubit(
@@ -148,6 +150,7 @@ Future<void> initDependencies() async {
       getProfileUsecase: sl(),
       saveProfileUsecase: sl(),
       uploadPhotoUsecase: sl(),
+      deleteAccountUsecase: sl(),
     ),
   );
 }

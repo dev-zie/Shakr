@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
@@ -19,7 +20,7 @@ class MatchFoundScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.close),
+            icon: const Icon(LucideIcons.x),
             onPressed: () => sl<MatchCubit>().deleteMatch(matchId),
           ),
         ],

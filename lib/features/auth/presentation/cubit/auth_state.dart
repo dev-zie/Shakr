@@ -8,17 +8,9 @@ class AuthState extends Equatable {
   final UserEntity? user;
   final String? message;
 
-  const AuthState({
-    this.status = AuthStatus.initial,
-    this.user,
-    this.message,
-  });
+  const AuthState({this.status = AuthStatus.initial, this.user, this.message});
 
-  AuthState copyWith({
-    AuthStatus? status,
-    UserEntity? user,
-    String? message,
-  }) {
+  AuthState copyWith({AuthStatus? status, UserEntity? user, String? message}) {
     return AuthState(
       status: status ?? this.status,
       user: user ?? this.user,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_vibes.dart';
 import 'package:shakr/common/theme/app_colors.dart';
@@ -18,7 +19,7 @@ class VibeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    IconData iconData = Icons.star_border_outlined;
+    IconData iconData = LucideIcons.star;
     Color vibeColor = AppColors.primary;
 
     // Map vibe string to icon and color

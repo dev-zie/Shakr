@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class GoBackButton extends StatelessWidget {
   const GoBackButton({super.key, required this.onPressed});
@@ -6,6 +7,6 @@ class GoBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(icon: const Icon(Icons.arrow_back), onPressed: onPressed);
+    return IconButton(icon: const Icon(LucideIcons.arrowLeft), onPressed: onPressed);
   }
 }
