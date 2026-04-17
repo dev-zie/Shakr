@@ -94,6 +94,17 @@ class AppStrings {
       'Hesabını ve tüm geçmişini silmek istediğinden emin misin? Bu işlem geri alınamaz.';
   static const deleteAccountAction = 'Hesabımı Sil';
 
+  // Sohbet
+  static const chatDefaultTitle = 'Sohbet';
+  static const deleteConversation = 'Sohbeti Sil';
+  static const deleteConversationConfirm =
+      'Bu sohbeti ve tüm mesajları silmek istediğinize emin misiniz?';
+  static const endMatchConfirm =
+      'Eşleşmeyi sonlandırmak istediğinize emin misiniz?';
+
+  // Auth
+  static const loginRequired = 'Giriş yapmanız gerekiyor.';
+
   // Yeni Akış
   static const endMatch = 'Eşleşmeyi Bitir';
   static const waitDecision = 'Onay bekleniyor...';

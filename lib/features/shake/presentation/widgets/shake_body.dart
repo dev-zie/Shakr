@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shakr/common/constants/app_assets.dart';
@@ -6,6 +5,7 @@ import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/getit/injection.dart';
 import 'package:shakr/core/services/location_service.dart';
+import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/shake/domain/entities/shake_entity.dart';
 import 'package:shakr/features/shake/presentation/cubit/shake_cubit.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -59,10 +59,10 @@ class ShakeBody extends StatelessWidget {
               const SizedBox(height: AppSpacing.xxl),
               TextButton.icon(
                 onPressed: () async {
-                  final uid = FirebaseAuth.instance.currentUser?.uid;
+                  final uid = sl<AuthCubit>().currentUid;
                   if (uid == null) return;
-                  final locationResult =
-                      await sl<LocationService>().getCurrentLocation();
+                  final locationResult = await sl<LocationService>()
+                      .getCurrentLocation();
                   final shake = ShakeEntity(
                     uid: uid,
                     location: locationResult.location,

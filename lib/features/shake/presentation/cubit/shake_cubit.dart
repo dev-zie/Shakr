@@ -32,10 +32,12 @@ class ShakeCubit extends Cubit<ShakeState> {
   void init() {
     reset();
     sl<MatchCubit>().reset();
-    _startRadar();
     final uid = sl<AuthCubit>().currentUid;
     sl<ShakeService>().startListening(() async {
       if (uid == null) return;
+
+      // Sadece başlangıç durumundayken yeni sarsıntı işlemlerine izin ver
+      if (state is! ShakeInitial) return;
 
       // Aktif eşleşme varsa yeni shake kaydedilmez — aynı çift tekrar eşleşemez.
       final hasMatch = await hasActiveMatchUsecase.call(uid);
@@ -59,27 +61,15 @@ class ShakeCubit extends Cubit<ShakeState> {
   }
 
   void disposeScreen() {
-    _stopRadar();
     sl<ShakeService>().stopListening();
     _matchTimer?.cancel();
     final uid = sl<AuthCubit>().currentUid;
     if (uid != null) deleteShake(uid);
   }
 
-  void _startRadar() {
-    _radarTimer?.cancel();
-    _radarTimer = Timer.periodic(const Duration(milliseconds: 16), (_) {
-      radarProgress.value = (radarProgress.value + 16 / 3000) % 1.0;
-    });
-  }
-
-  void _stopRadar() {
-    _radarTimer?.cancel();
-    _radarTimer = null;
-    radarProgress.value = 0.0;
-  }
-
   Future<void> recordShake(ShakeEntity shake, {bool isFallback = false}) async {
+    if (state is! ShakeInitial) return;
+    sl<ShakeService>().stopListening();
     emit(ShakeDetected());
 
     final result = await recordShakeUsecase.call(shake);

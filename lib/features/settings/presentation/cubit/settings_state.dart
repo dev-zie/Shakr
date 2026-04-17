@@ -46,3 +46,8 @@ class SettingsSaved extends SettingsState with EquatableMixin {
   @override
   List<Object?> get props => [];
 }
+
+class SettingsAccountDeleted extends SettingsState with EquatableMixin {
+  @override
+  List<Object?> get props => [];
+}

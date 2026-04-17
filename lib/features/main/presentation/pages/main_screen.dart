@@ -13,7 +13,13 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => NavigationCubit()..goTo(initialIndex),
+      lazy: false,
+      create: (context) {
+        if (initialIndex == 0) {
+          sl<ShakeCubit>().init();
+        }
+        return NavigationCubit()..goTo(initialIndex);
+      },
       child: BlocListener<NavigationCubit, int>(
         listener: (context, index) {
           if (index == 0) {

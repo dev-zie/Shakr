@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/common/constants/app_constants.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
+import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 
 class IntroStep extends StatefulWidget {
@@ -17,27 +19,23 @@ class _IntroStepState extends State<IntroStep> {
 
   final List<Map<String, String>> _slides = [
     {
-      'title': 'Shakr',
-      'description':
-          'Shakr ile yeni insanlarla tanışmanın en eğlenceli yolunu keşfet!',
+      'title': AppStrings.introSlide1Title,
+      'description': AppStrings.introSlide1Desc,
       'image': 'assets/images/newmap.png',
     },
     {
-      'title': 'Salla',
-      'description':
-          'Bu sayfada telefonunu salla ve etrafındaki kişilerle anında eşleş.',
+      'title': AppStrings.introSlide2Title,
+      'description': AppStrings.introSlide2Desc,
       'image': 'assets/images/shake_review.png',
     },
     {
-      'title': 'Profil',
-      'description':
-          'Bu sayfada kendini ifade eden bir profil oluştur ve tarzını yansıt.',
+      'title': AppStrings.introSlide3Title,
+      'description': AppStrings.introSlide3Desc,
       'image': 'assets/images/profile_review.png',
     },
     {
-      'title': 'Sohbet',
-      'description':
-          'Bu sayfada eşleştiğin kişilerle güvenle ve keyifle sohbet et.',
+      'title': AppStrings.introSlide4Title,
+      'description': AppStrings.introSlide4Desc,
       'image': 'assets/images/chat_review.png',
     },
   ];
@@ -87,7 +85,9 @@ class _IntroStepState extends State<IntroStep> {
                       flex: 10,
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.borderRadiusXL,
+                          ),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withValues(alpha: 0.1),
@@ -132,7 +132,7 @@ class _IntroStepState extends State<IntroStep> {
                 context,
               ).colorScheme.primary.withValues(alpha: 0.3),
             ),
-            child: const Text('Hadi hesap oluşturalım'),
+            child: const Text(AppStrings.introLetCreateAccount),
           ),
         ),
         const SizedBox(height: AppSpacing.xl),

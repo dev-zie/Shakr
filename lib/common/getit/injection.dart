@@ -150,7 +150,12 @@ Future<void> initDependencies() async {
   );
 
   //settings
-  sl.registerFactory(() => SettingsCubit());
+  sl.registerFactory(
+    () => SettingsCubit(
+      deleteAccountUsecase: sl(),
+      localStorageService: sl(),
+    ),
+  );
 
   //profile
   sl.registerFactory(

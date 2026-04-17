@@ -104,7 +104,7 @@ class ChatScreen extends StatelessWidget {
           width: 36,
           height: 36,
           decoration: BoxDecoration(
-            color: AppColors.primary50,
+            color: AppColors.primary.withValues(alpha: 0.1),
             shape: BoxShape.circle,
             image: otherUserPhoto != null
                 ? DecorationImage(
@@ -120,7 +120,7 @@ class ChatScreen extends StatelessWidget {
         const SizedBox(width: AppSpacing.s),
         Expanded(
           child: Text(
-            otherUserName ?? 'Sohbet',
+            otherUserName ?? AppStrings.chatDefaultTitle,
             overflow: TextOverflow.ellipsis,
           ),
         ),
@@ -148,10 +148,8 @@ class ChatScreen extends StatelessWidget {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Sohbeti Sil'),
-        content: const Text(
-          'Bu sohbeti ve tüm mesajları silmek istediğinize emin misiniz?',
-        ),
+        title: const Text(AppStrings.deleteConversation),
+        content: const Text(AppStrings.deleteConversationConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -174,9 +172,7 @@ class ChatScreen extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text(AppStrings.endMatch),
-        content: const Text(
-          'Eşleşmeyi sonlandırmak istediğinize emin misiniz?',
-        ),
+        content: const Text(AppStrings.endMatchConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),

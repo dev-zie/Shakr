@@ -12,7 +12,7 @@ class MyChatsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final uid = sl<AuthCubit>().currentUid;
     if (uid == null) {
-      return const Center(child: Text('Giriş yapmanız gerekiyor.'));
+      return const Center(child: Text(AppStrings.loginRequired));
     }
 
     return Scaffold(
