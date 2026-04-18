@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shakr/common/constants/app_constants.dart';
+import 'package:shakr/common/constants/app_dimensions.dart';
 import 'package:shakr/common/constants/app_radius.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/theme/app_colors.dart';
@@ -23,8 +25,13 @@ class GenderButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.m, horizontal: AppSpacing.s),
+        duration: const Duration(
+          milliseconds: AppConstants.animationDurationFast,
+        ),
+        padding: const EdgeInsets.symmetric(
+          vertical: AppSpacing.m,
+          horizontal: AppSpacing.s,
+        ),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(AppRadius.xl),
@@ -40,16 +47,16 @@ class GenderButton extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 26,
+              size: AppDimensions.genderButtonIconSize,
               color: isSelected ? Colors.white : AppColors.primary,
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
               label,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: isSelected ? Colors.white : null,
-                fontWeight: FontWeight.w700,
-              ),
+                    color: isSelected ? Colors.white : null,
+                    fontWeight: FontWeight.w700,
+                  ),
             ),
           ],
         ),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/common/constants/app_dimensions.dart';
+import 'package:shakr/common/constants/app_radius.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/constants/app_text_sizes.dart';
 import 'package:shakr/common/constants/app_vibes.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/common/widgets/vibe_chip.dart';
@@ -49,17 +52,20 @@ class _VibeCountBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final isComplete = count == 3;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.m,
+        vertical: AppSpacing.xs,
+      ),
       decoration: BoxDecoration(
         color: isComplete
             ? AppColors.primary.withValues(alpha: .12)
             : AppColors.warning.withValues(alpha: .12),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.chip),
       ),
       child: Text(
         '$count/3',
         style: TextStyle(
-          fontSize: 13,
+          fontSize: AppTextSizes.vibeChip,
           fontWeight: FontWeight.w600,
           color: isComplete ? AppColors.primary : AppColors.warning,
         ),
@@ -90,7 +96,7 @@ class _VibeCategorySection extends StatelessWidget {
           children: [
             Icon(
               categoryData['icon'] as IconData,
-              size: 20,
+              size: AppDimensions.vibeCardIconSize,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: AppSpacing.s),

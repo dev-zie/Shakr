@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:shakr/common/constants/app_dimensions.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/theme/app_colors.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class EmptyChatState extends StatelessWidget {
   const EmptyChatState({super.key});
@@ -16,12 +17,12 @@ class EmptyChatState extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(AppSpacing.xl),
             decoration: BoxDecoration(
-              color: AppColors.primary100,
+              color: AppColors.primary.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: const Icon(
               LucideIcons.messageSquare,
-              size: 64,
+              size: AppDimensions.emptyChatsIconSize,
               color: AppColors.primary,
             ),
           ),

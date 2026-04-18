@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shakr/common/constants/app_dimensions.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 
 class MatchTimerDisplay extends StatelessWidget {
@@ -21,11 +22,11 @@ class MatchTimerDisplay extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             SizedBox(
-              width: 120,
-              height: 120,
+              width: AppDimensions.matchTimerSize,
+              height: AppDimensions.matchTimerSize,
               child: CircularProgressIndicator(
                 value: value / totalSeconds,
-                strokeWidth: 8,
+                strokeWidth: AppDimensions.matchTimerStrokeWidth,
                 color: AppColors.primary,
                 backgroundColor: AppColors.primary100,
               ),

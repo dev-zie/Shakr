@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/constants/app_constants.dart';
+import 'package:shakr/common/constants/app_dimensions.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/constants/app_text_sizes.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.dart';
@@ -34,12 +36,12 @@ class AgeStep extends StatelessWidget {
               ),
               const Expanded(child: SizedBox()),
               SizedBox(
-                height: 250,
+                height: AppDimensions.agePickerHeight,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
                     Container(
-                      height: 50,
+                      height: AppDimensions.agePickerItemExtent,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: AppColors.primary.withValues(alpha: 0.05),
@@ -50,7 +52,7 @@ class AgeStep extends StatelessWidget {
                     ),
                     CupertinoPicker(
                       scrollController: cubit.ageScrollController,
-                      itemExtent: 50,
+                      itemExtent: AppDimensions.agePickerItemExtent,
                       onSelectedItemChanged: (index) {
                         cubit.updateAge(AppConstants.minUserAge + index);
                       },
@@ -63,7 +65,9 @@ class AgeStep extends StatelessWidget {
                             child: Text(
                               age.toString(),
                               style: TextStyle(
-                                fontSize: isSelected ? 32 : 24,
+                                fontSize: isSelected
+                                    ? AppTextSizes.agePickerSelected
+                                    : AppTextSizes.agePickerUnselected,
                                 fontWeight: isSelected
                                     ? FontWeight.bold
                                     : FontWeight.normal,

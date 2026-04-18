@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shakr/common/constants/app_constants.dart';
+import 'package:shakr/common/constants/app_dimensions.dart';
+import 'package:shakr/common/constants/app_radius.dart';
+import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/constants/app_text_sizes.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 
 class AgeWheelPickerDialog extends StatefulWidget {
@@ -14,16 +19,17 @@ class AgeWheelPickerDialog extends StatefulWidget {
 
 class _AgeWheelPickerDialogState extends State<AgeWheelPickerDialog> {
   late int _selectedAge;
-  static const int _minAge = 18;
-  static const int _maxAge = 99;
   late final FixedExtentScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
-    _selectedAge = widget.initialAge.clamp(_minAge, _maxAge);
+    _selectedAge = widget.initialAge.clamp(
+      AppConstants.minUserAge,
+      AppConstants.maxUserAge,
+    );
     _scrollController = FixedExtentScrollController(
-      initialItem: _selectedAge - _minAge,
+      initialItem: _selectedAge - AppConstants.minUserAge,
     );
   }
 
@@ -37,43 +43,54 @@ class _AgeWheelPickerDialogState extends State<AgeWheelPickerDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text(AppStrings.howOldAreYou),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+      contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       content: SizedBox(
-        height: 200,
+        height: AppDimensions.ageWheelPickerHeight,
         child: Stack(
           alignment: Alignment.center,
           children: [
             Container(
-              height: 40,
+              height: AppDimensions.ageWheelPickerItemExtent,
               decoration: BoxDecoration(
                 color: AppColors.primary.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppRadius.s),
               ),
             ),
             CupertinoPicker(
               scrollController: _scrollController,
-              itemExtent: 40,
+              itemExtent: AppDimensions.ageWheelPickerItemExtent,
               onSelectedItemChanged: (index) {
                 setState(() {
-                  _selectedAge = _minAge + index;
+                  _selectedAge = AppConstants.minUserAge + index;
                 });
               },
-              children: List.generate(_maxAge - _minAge + 1, (index) {
-                final age = _minAge + index;
-                final isSelected = age == _selectedAge;
-                return Center(
-                  child: Text(
-                    age.toString(),
-                    style: TextStyle(
-                      fontSize: isSelected ? 24 : 18,
-                      fontWeight: isSelected
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                      color: isSelected ? AppColors.primary : Colors.grey,
+              children: List.generate(
+                AppConstants.maxUserAge - AppConstants.minUserAge + 1,
+                (index) {
+                  final age = AppConstants.minUserAge + index;
+                  final isSelected = age == _selectedAge;
+                  return Center(
+                    child: Text(
+                      age.toString(),
+                      style: TextStyle(
+                        fontSize: isSelected
+                            ? AppTextSizes.ageWheelSelected
+                            : AppTextSizes.ageWheelUnselected,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                        color: isSelected
+                            ? AppColors.primary
+                            : Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.color
+                                  ?.withValues(alpha: 0.5),
+                      ),
                     ),
-                  ),
-                );
-              }),
+                  );
+                },
+              ),
             ),
           ],
         ),

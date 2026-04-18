@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:shakr/common/constants/app_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/core/services/location_service.dart';
 import 'package:shakr/core/services/shake_service.dart';
@@ -93,9 +94,12 @@ class ShakeCubit extends Cubit<ShakeState> {
 
   void startMatchTimer() {
     _matchTimer?.cancel();
-    _matchTimer = Timer(const Duration(seconds: 15), () {
-      if (!isClosed) emit(ShakeNoMatch());
-    });
+    _matchTimer = Timer(
+      const Duration(seconds: AppConstants.matchAcceptanceWindowSeconds),
+      () {
+        if (!isClosed) emit(ShakeNoMatch());
+      },
+    );
   }
 
   void cancelMatchTimer() => _matchTimer?.cancel();

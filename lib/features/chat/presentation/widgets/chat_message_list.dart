@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:shakr/common/constants/app_dimensions.dart';
+import 'package:shakr/common/constants/app_radius.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/constants/app_text_sizes.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/common/theme/app_shadows.dart';
 import 'package:shakr/features/chat/domain/entities/message_entity.dart';
@@ -26,12 +29,12 @@ class ChatMessageList extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(AppSpacing.xl),
               decoration: BoxDecoration(
-                color: AppColors.primary50,
+                color: AppColors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 LucideIcons.messageSquare,
-                size: 48,
+                size: AppDimensions.emptyChatIconSize,
                 color: AppColors.primary,
               ),
             ),
@@ -45,7 +48,6 @@ class ChatMessageList extends StatelessWidget {
       );
     }
     return ListView.builder(
-      reverse: false, // Keeping initial order for now, check if needed
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.m,
         vertical: AppSpacing.l,
@@ -70,10 +72,10 @@ class ChatMessageList extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isMe ? AppColors.primary : Theme.of(context).cardColor,
                 borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(20),
-                  topRight: const Radius.circular(20),
-                  bottomLeft: Radius.circular(isMe ? 20 : 4),
-                  bottomRight: Radius.circular(isMe ? 4 : 20),
+                  topLeft: const Radius.circular(AppRadius.chip),
+                  topRight: const Radius.circular(AppRadius.chip),
+                  bottomLeft: Radius.circular(isMe ? AppRadius.chip : AppRadius.xs),
+                  bottomRight: Radius.circular(isMe ? AppRadius.xs : AppRadius.chip),
                 ),
                 boxShadow: AppShadows.soft,
                 border: isMe
@@ -86,7 +88,7 @@ class ChatMessageList extends StatelessWidget {
                 message.text,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: isMe ? Colors.white : null,
-                      fontSize: 15,
+                      fontSize: AppTextSizes.chatMessage,
                       fontWeight: FontWeight.w500,
                     ),
               ),

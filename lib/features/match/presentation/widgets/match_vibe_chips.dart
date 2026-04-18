@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shakr/common/constants/app_radius.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
+import 'package:shakr/common/constants/app_text_sizes.dart';
 import 'package:shakr/common/constants/app_vibes.dart';
-
 
 class MatchVibeChips extends StatelessWidget {
   final List<String> vibes;
@@ -27,7 +28,7 @@ class MatchVibeChips extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: vibeColor.withValues(alpha: isDark ? 0.15 : 0.08),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppRadius.chip),
             border: Border.all(
               color: vibeColor.withValues(alpha: 0.4),
             ),
@@ -37,7 +38,7 @@ class MatchVibeChips extends StatelessWidget {
             style: TextStyle(
               color: vibeColor,
               fontWeight: FontWeight.w600,
-              fontSize: 13,
+              fontSize: AppTextSizes.vibeChip,
             ),
           ),
         );

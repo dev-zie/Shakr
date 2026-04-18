@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:shakr/common/constants/app_dimensions.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/theme/app_colors.dart';
@@ -10,9 +11,6 @@ import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.da
 
 class PhotoStep extends StatelessWidget {
   const PhotoStep({super.key});
-
-  static const double _avatarSize = 120.0;
-  static const double _cameraIconSize = 18.0;
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +41,11 @@ class PhotoStep extends StatelessWidget {
                   alignment: Alignment.bottomRight,
                   children: [
                     Container(
-                      width: _avatarSize,
-                      height: _avatarSize,
+                      width: AppDimensions.photoAvatarSize,
+                      height: AppDimensions.photoAvatarSize,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.primary50,
+                        color: AppColors.primary.withValues(alpha: 0.1),
                         border: Border.all(
                           color: AppColors.primary.withValues(alpha: 0.2),
                           width: 2,
@@ -64,7 +62,7 @@ class PhotoStep extends StatelessWidget {
                       child: photoUrl == null
                           ? const Icon(
                               LucideIcons.user,
-                              size: 50,
+                              size: AppDimensions.photoAvatarPlaceholderIconSize,
                               color: AppColors.primary,
                             )
                           : null,
@@ -77,7 +75,7 @@ class PhotoStep extends StatelessWidget {
                       ),
                       child: const Icon(
                         LucideIcons.camera,
-                        size: _cameraIconSize,
+                        size: AppDimensions.cameraIconSize,
                         color: Colors.white,
                       ),
                     ),

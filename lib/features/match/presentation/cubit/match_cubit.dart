@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/common/constants/app_constants.dart';
 import 'package:shakr/common/getit/injection.dart';
 import 'package:shakr/core/services/vibration_service.dart';
 import 'package:shakr/features/match/domain/entities/match_entity.dart';
@@ -105,7 +106,8 @@ class MatchCubit extends Cubit<MatchState> {
   void _startAcceptTimer(String matchId, DateTime createdAt) {
     if (_acceptTimer?.isActive == true) return;
     final elapsed = DateTime.now().difference(createdAt).inSeconds;
-    final remaining = (15 - elapsed).clamp(0, 15);
+    final remaining = (AppConstants.matchAcceptanceWindowSeconds - elapsed)
+        .clamp(0, AppConstants.matchAcceptanceWindowSeconds);
     if (remaining <= 0) {
       deleteMatch(matchId);
       return;

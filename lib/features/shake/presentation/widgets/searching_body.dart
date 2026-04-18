@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shakr/common/constants/app_assets.dart';
-import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/constants/app_dimensions.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
+import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 
 class SearchingBody extends StatelessWidget {
   const SearchingBody({super.key});
-
-  static const String _lottieUrl =
-      'https://lottie.host/07fe1e8a-82b7-43d2-8fb9-97c946a5a34b/2k0o3AGNz7.json';
 
   @override
   Widget build(BuildContext context) {
@@ -26,17 +24,17 @@ class SearchingBody extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: AppSpacing.l),
+              const SizedBox(height: AppSpacing.l),
               SizedBox(
-                height: 250,
-                width: 250,
+                height: AppDimensions.searchingLottieSize,
+                width: AppDimensions.searchingLottieSize,
                 child: ColorFiltered(
                   colorFilter: ColorFilter.mode(
                     AppColors.primary,
                     BlendMode.srcIn,
                   ),
                   child: Lottie.network(
-                    _lottieUrl,
+                    AppAssets.searchingLottieUrl,
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stackTrace) {
                       return const Center(

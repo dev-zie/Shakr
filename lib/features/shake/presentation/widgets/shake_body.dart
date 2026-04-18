@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shakr/common/constants/app_assets.dart';
+import 'package:shakr/common/constants/app_dimensions.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/getit/injection.dart';
@@ -12,10 +13,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ShakeBody extends StatelessWidget {
   const ShakeBody({super.key});
-
-  static const String _lottieUrl =
-      'https://lottie.host/91e88218-dc91-494b-9bcf-86b843d1103c/KSGJz5mHcS.json';
-  static const String _emulatorButtonLabel = 'Emülätör: Sallanmayı Simüle Et';
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +30,9 @@ class ShakeBody extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Lottie.network(
-                _lottieUrl,
-                width: 300,
-                height: 300,
+                AppAssets.shakeLottieUrl,
+                width: AppDimensions.shakeLottieSize,
+                height: AppDimensions.shakeLottieSize,
                 frameRate: FrameRate(120),
               ),
               const SizedBox(height: AppSpacing.m),
@@ -75,7 +72,7 @@ class ShakeBody extends StatelessWidget {
                   );
                 },
                 icon: const Icon(LucideIcons.mousePointer2, size: 16),
-                label: const Text(_emulatorButtonLabel),
+                label: const Text(AppStrings.emulatorSimulateShake),
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.white.withValues(alpha: 0.5),
                 ),

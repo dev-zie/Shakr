@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:shakr/common/constants/app_dimensions.dart';
+import 'package:shakr/common/constants/app_radius.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/constants/app_text_sizes.dart';
 import 'package:shakr/common/constants/app_vibes.dart';
 import 'package:shakr/common/getit/injection.dart';
 import 'package:shakr/common/theme/app_colors.dart';
@@ -27,7 +30,7 @@ class ConversationTile extends StatelessWidget {
       conversation.lastMessageAt.day,
     );
 
-    String timeStr;
+    final String timeStr;
     if (msgDate == today) {
       timeStr = DateFormat('HH:mm').format(conversation.lastMessageAt);
     } else if (msgDate == yesterday) {
@@ -47,40 +50,24 @@ class ConversationTile extends StatelessWidget {
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: AppSpacing.xxl),
         color: AppColors.error,
-        child: const Icon(LucideIcons.trash2, color: Colors.white, size: 28),
+        child: const Icon(
+          LucideIcons.trash2,
+          color: Colors.white,
+          size: AppDimensions.conversationIconSize,
+        ),
       ),
-      onDismissed: (_) {
-        sl<ChatCubit>().deleteConversation(conversation.id);
-      },
+      onDismissed: (_) => sl<ChatCubit>().deleteConversation(conversation.id),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.m,
           vertical: AppSpacing.s,
         ),
         leading: GestureDetector(
-          onTap: () => _showUserProfile(context),
-          child: Container(
-            width: 56,
-            height: 56,
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-              image: conversation.otherUserPhoto != null
-                  ? DecorationImage(
-                      image: NetworkImage(conversation.otherUserPhoto!),
-                      fit: BoxFit.cover,
-                    )
-                  : null,
-            ),
-            child: conversation.otherUserPhoto == null
-                ? const Icon(
-                    LucideIcons.user,
-                    color: AppColors.primary,
-                    size: 28,
-                  )
-                : null,
+          onTap: () => showDialog(
+            context: context,
+            builder: (_) => _UserProfileDialog(conversation: conversation),
           ),
+          child: _ConversationAvatar(photoUrl: conversation.otherUserPhoto),
         ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -107,7 +94,7 @@ class ConversationTile extends StatelessWidget {
           ],
         ),
         subtitle: Padding(
-          padding: const EdgeInsets.only(top: 4),
+          padding: const EdgeInsets.only(top: AppSpacing.xs),
           child: Text(
             conversation.lastMessage,
             maxLines: 1,
@@ -129,97 +116,135 @@ class ConversationTile extends StatelessWidget {
               ? Uri.encodeComponent(conversation.otherUserPhoto!)
               : null;
           context.push(
-            '/chat/${conversation.id}?permanent=true&name=$encodedName${encodedPhoto != null ? '&photo=$encodedPhoto' : ''}',
+            '/chat/${conversation.id}?permanent=true&name=$encodedName'
+            '${encodedPhoto != null ? '&photo=$encodedPhoto' : ''}',
             extra: conversation.lastMessageAt,
           );
         },
       ),
     );
   }
+}
 
-  void _showUserProfile(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
+class _ConversationAvatar extends StatelessWidget {
+  const _ConversationAvatar({required this.photoUrl});
+
+  final String? photoUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: AppDimensions.conversationAvatarSize,
+      height: AppDimensions.conversationAvatarSize,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.1),
+        shape: BoxShape.circle,
+        image: photoUrl != null
+            ? DecorationImage(image: NetworkImage(photoUrl!), fit: BoxFit.cover)
+            : null,
+      ),
+      child: photoUrl == null
+          ? const Icon(
+              LucideIcons.user,
+              color: AppColors.primary,
+              size: AppDimensions.conversationIconSize,
+            )
+          : null,
+    );
+  }
+}
+
+class _UserProfileDialog extends StatelessWidget {
+  const _UserProfileDialog({required this.conversation});
+
+  final ConversationEntity conversation;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xxl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: AppDimensions.profileDialogAvatarSize,
+              height: AppDimensions.profileDialogAvatarSize,
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.primary.withValues(alpha: 0.1),
+                image: conversation.otherUserPhoto != null
+                    ? DecorationImage(
+                        image: NetworkImage(conversation.otherUserPhoto!),
+                        fit: BoxFit.cover,
+                      )
+                    : null,
+              ),
+              child: conversation.otherUserPhoto == null
+                  ? const Icon(
+                      LucideIcons.user,
+                      size: AppDimensions.profileDialogIconSize,
+                      color: AppColors.primary,
+                    )
+                  : null,
+            ),
+            const SizedBox(height: AppSpacing.m),
+            Text(
+              conversation.otherUserName.isEmpty
+                  ? AppStrings.unknownUser
+                  : conversation.otherUserName,
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            if (conversation.otherUserVibes.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.l),
+              _VibeChipWrap(vibes: conversation.otherUserVibes),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _VibeChipWrap extends StatelessWidget {
+  const _VibeChipWrap({required this.vibes});
+
+  final List<String> vibes;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Wrap(
+      spacing: AppSpacing.s,
+      runSpacing: AppSpacing.s,
+      alignment: WrapAlignment.center,
+      children: vibes.map((vibe) {
+        final vibeColor = AppVibes.colorForVibe(vibe);
+        return Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.m,
+            vertical: AppSpacing.xs,
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.xxl),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 100,
-                  height: 100,
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.primary.withValues(alpha: 0.1),
-                    image: conversation.otherUserPhoto != null
-                        ? DecorationImage(
-                            image: NetworkImage(conversation.otherUserPhoto!),
-                            fit: BoxFit.cover,
-                          )
-                        : null,
-                  ),
-                  child: conversation.otherUserPhoto == null
-                      ? const Icon(
-                          LucideIcons.user,
-                          size: 44,
-                          color: AppColors.primary,
-                        )
-                      : null,
-                ),
-                const SizedBox(height: AppSpacing.m),
-                Text(
-                  conversation.otherUserName.isEmpty
-                      ? AppStrings.unknownUser
-                      : conversation.otherUserName,
-                  style: Theme.of(ctx).textTheme.headlineSmall,
-                ),
-                if (conversation.otherUserVibes.isNotEmpty) ...[
-                  const SizedBox(height: AppSpacing.l),
-                  Wrap(
-                    spacing: AppSpacing.s,
-                    runSpacing: AppSpacing.s,
-                    alignment: WrapAlignment.center,
-                    children: conversation.otherUserVibes.map((vibe) {
-                      final isDark =
-                          Theme.of(ctx).brightness == Brightness.dark;
-                      final vibeColor = AppVibes.colorForVibe(vibe);
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.m,
-                          vertical: AppSpacing.xs,
-                        ),
-                        decoration: BoxDecoration(
-                          color: vibeColor.withValues(
-                            alpha: isDark ? 0.15 : 0.08,
-                          ),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: vibeColor.withValues(alpha: 0.4),
-                          ),
-                        ),
-                        child: Text(
-                          vibe,
-                          style: TextStyle(
-                            color: vibeColor,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13,
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ],
+          decoration: BoxDecoration(
+            color: vibeColor.withValues(alpha: isDark ? 0.15 : 0.08),
+            borderRadius: BorderRadius.circular(AppRadius.chip),
+            border: Border.all(color: vibeColor.withValues(alpha: 0.4)),
+          ),
+          child: Text(
+            vibe,
+            style: TextStyle(
+              color: vibeColor,
+              fontWeight: FontWeight.w600,
+              fontSize: AppTextSizes.vibeChip,
             ),
           ),
         );
-      },
+      }).toList(),
     );
   }
 }

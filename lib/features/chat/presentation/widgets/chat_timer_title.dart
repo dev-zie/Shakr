@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/common/constants/app_constants.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_state.dart';
@@ -17,12 +18,13 @@ class ChatTimerTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ChatCubit, ChatState>(
       builder: (context, state) {
-        final secondsLeft =
-            state is ChatTimerTickState ? state.secondsLeft : 300;
+        final secondsLeft = state is ChatTimerTickState
+            ? state.secondsLeft
+            : AppConstants.chatWaitingDisplaySeconds;
         return Text(
           _formatTime(secondsLeft),
           style: TextStyle(
-            color: secondsLeft < 10
+            color: secondsLeft < AppConstants.chatTimerUrgentThresholdSeconds
                 ? AppColors.error
                 : Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.bold,

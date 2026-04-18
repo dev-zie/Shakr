@@ -80,6 +80,7 @@ class AppStrings {
   static const gender = 'Cinsiyet';
   static const male = 'Erkek';
   static const female = 'Kadın';
+  static const genderStepSubtitle = 'Seni en iyi tanımlayan seçeneği seç.';
 
   // Ayarlar
   static const settings = 'Ayarlar';
@@ -133,4 +134,7 @@ class AppStrings {
 
   // Yaş
   static const birthYearNotice = 'Doğum yılın otomatik hesaplanacaktır.';
+
+  // Geliştirici
+  static const emulatorSimulateShake = 'Emülatör: Sallanmayı Simüle Et';
 }

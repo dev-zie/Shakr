@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shakr/common/constants/app_dimensions.dart';
 import 'package:shakr/common/constants/app_radius.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
+import 'package:shakr/common/constants/app_text_sizes.dart';
 
 class VibeChip extends StatelessWidget {
   final String label;
@@ -24,7 +26,7 @@ class VibeChip extends StatelessWidget {
       label: Text(label),
       avatar: Icon(
         icon,
-        size: 18,
+        size: AppDimensions.vibeChipAvatarIconSize,
         color: isSelected ? Colors.white : activeColor,
       ),
       selected: isSelected,
@@ -34,7 +36,7 @@ class VibeChip extends StatelessWidget {
       labelStyle: TextStyle(
         color: isSelected ? Colors.white : activeColor,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        fontSize: 14,
+        fontSize: AppTextSizes.vibeChipLabel,
       ),
       backgroundColor: activeColor.withValues(alpha: 0.05),
       side: BorderSide(

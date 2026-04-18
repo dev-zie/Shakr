@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/common/constants/app_dimensions.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/profile/presentation/cubit/profile_cubit.dart';
 import 'profile_avatar.dart';
 
-/// Edit modunda: fotoğraf + sağ altta kamera / yükleme göstergesi.
 class ProfilePhotoEditor extends StatelessWidget {
   const ProfilePhotoEditor({
     super.key,
@@ -32,12 +32,14 @@ class ProfilePhotoEditor extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: isUploading
-                  ? const Padding(
-                      padding: EdgeInsets.all(12),
+                  ? Padding(
+                      padding: const EdgeInsets.all(
+                        AppDimensions.uploadingIndicatorPadding,
+                      ),
                       child: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
+                        width: AppDimensions.uploadingIndicatorSize,
+                        height: AppDimensions.uploadingIndicatorSize,
+                        child: const CircularProgressIndicator(
                           strokeWidth: 2,
                           color: Colors.white,
                         ),
@@ -47,7 +49,7 @@ class ProfilePhotoEditor extends StatelessWidget {
                       icon: const Icon(
                         LucideIcons.camera,
                         color: Colors.white,
-                        size: 20,
+                        size: AppDimensions.cameraIconSize,
                       ),
                       onPressed: () =>
                           context.read<ProfileCubit>().pickAndUploadPhoto(),

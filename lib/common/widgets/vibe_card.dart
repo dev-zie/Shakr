@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:shakr/common/constants/app_constants.dart';
+import 'package:shakr/common/constants/app_dimensions.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_vibes.dart';
-import 'package:shakr/common/constants/app_constants.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/common/theme/app_shadows.dart';
 
@@ -23,7 +24,6 @@ class VibeCard extends StatelessWidget {
     IconData iconData = LucideIcons.star;
     Color vibeColor = AppColors.primary;
 
-    // Map vibe string to icon and color
     loop:
     for (var category in AppVibes.categories.values) {
       final List vibesList = category['vibes'];
@@ -54,7 +54,7 @@ class VibeCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(iconData, color: vibeColor, size: 24),
+          Icon(iconData, color: vibeColor, size: AppDimensions.vibeCardIconSize),
           const SizedBox(height: AppSpacing.xs),
           Text(
             vibe,

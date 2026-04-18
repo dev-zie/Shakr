@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/common/constants/app_constants.dart';
 import 'package:shakr/core/services/vibration_service.dart';
 import 'package:shakr/features/chat/domain/entities/message_entity.dart';
 import 'package:shakr/features/chat/domain/usecases/delete_conversation_usecase.dart';
@@ -62,7 +63,9 @@ class ChatCubit extends Cubit<ChatState> {
         final startTime = match.chatStartedAt ?? fallbackCreatedAt;
         final isWaiting = match.chatStartedAt == null;
 
-        final expireTime = startTime.add(const Duration(seconds: 30));
+        final expireTime = startTime.add(
+          const Duration(seconds: AppConstants.chatExpirationSeconds),
+        );
         final remaining = expireTime.difference(DateTime.now()).inSeconds;
 
         if (remaining <= 0) {
@@ -79,7 +82,9 @@ class ChatCubit extends Cubit<ChatState> {
           // Eğer henüz her iki taraf da girmemişse (waiting), timer'ı donduralım veya bekleme durumunu gösterelim.
           // Ama kullanıcı "sohbete git dediginde sure baslayacak" dediği için
           // chatStartedAt null olduğu sürece süre 300 (veya tam süre) olarak kalmalı.
-          final displayRemaining = isWaiting ? 300 : remaining;
+          final displayRemaining = isWaiting
+              ? AppConstants.chatWaitingDisplaySeconds
+              : remaining;
 
           if (!isClosed) {
             emit(ChatTimerTickState(displayRemaining, currentMessages));
@@ -135,7 +140,7 @@ class ChatCubit extends Cubit<ChatState> {
           (messages) {
             final currentSeconds = (state is ChatTimerTickState)
                 ? (state as ChatTimerTickState).secondsLeft
-                : (isPermanent ? -1 : 300);
+                : (isPermanent ? -1 : AppConstants.chatWaitingDisplaySeconds);
 
             if (!isClosed) emit(ChatTimerTickState(currentSeconds, messages));
           },

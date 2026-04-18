@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shakr/common/constants/app_radius.dart';
+import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 
 class CustomSnackBar {
@@ -20,9 +22,9 @@ class CustomSnackBar {
         backgroundColor: isError ? AppColors.error : AppColors.success,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.m),
         ),
-        margin: const EdgeInsets.all(16),
+        margin: const EdgeInsets.all(AppSpacing.m),
         duration: const Duration(seconds: 3),
       ),
     );

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/common/constants/app_assets.dart';
 import 'package:shakr/common/constants/app_constants.dart';
+import 'package:shakr/common/constants/app_dimensions.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/constants/app_text_sizes.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 
 class IntroStep extends StatefulWidget {
@@ -21,22 +24,22 @@ class _IntroStepState extends State<IntroStep> {
     {
       'title': AppStrings.introSlide1Title,
       'description': AppStrings.introSlide1Desc,
-      'image': 'assets/images/newmap.png',
+      'image': AppAssets.mapBackground,
     },
     {
       'title': AppStrings.introSlide2Title,
       'description': AppStrings.introSlide2Desc,
-      'image': 'assets/images/shake_review.png',
+      'image': AppAssets.shakeReview,
     },
     {
       'title': AppStrings.introSlide3Title,
       'description': AppStrings.introSlide3Desc,
-      'image': 'assets/images/profile_review.png',
+      'image': AppAssets.profileReview,
     },
     {
       'title': AppStrings.introSlide4Title,
       'description': AppStrings.introSlide4Desc,
-      'image': 'assets/images/chat_review.png',
+      'image': AppAssets.chatReview,
     },
   ];
 
@@ -75,7 +78,7 @@ class _IntroStepState extends State<IntroStep> {
                         style: Theme.of(context).textTheme.headlineLarge
                             ?.copyWith(
                               color: Theme.of(context).colorScheme.primary,
-                              fontSize: 48,
+                              fontSize: AppTextSizes.introTitle,
                               fontWeight: FontWeight.w900,
                             ),
                       ),
@@ -146,15 +149,21 @@ class _IntroStepState extends State<IntroStep> {
       children: List.generate(
         _slides.length,
         (index) => AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          margin: const EdgeInsets.symmetric(horizontal: 4),
-          height: 8,
-          width: _currentPage == index ? 24 : 8,
+          duration: const Duration(
+            milliseconds: AppConstants.animationDurationMedium,
+          ),
+          margin: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.xs / 2,
+          ),
+          height: AppDimensions.indicatorHeight,
+          width: _currentPage == index
+              ? AppDimensions.indicatorActiveWidth
+              : AppDimensions.indicatorInactiveWidth,
           decoration: BoxDecoration(
             color: _currentPage == index
                 ? Theme.of(context).colorScheme.primary
                 : Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(AppDimensions.indicatorHeight),
           ),
         ),
       ),

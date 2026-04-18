@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:shakr/common/constants/app_constants.dart';
+import 'package:shakr/common/constants/app_dimensions.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/theme/app_colors.dart';
@@ -26,7 +28,9 @@ class MatchFoundBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final elapsed = DateTime.now().difference(createdAt).inSeconds;
-    final remaining = (15 - elapsed).clamp(0, 15).toDouble();
+    final remaining = (AppConstants.matchAcceptanceWindowSeconds - elapsed)
+        .clamp(0, AppConstants.matchAcceptanceWindowSeconds)
+        .toDouble();
 
     return Center(
       child: Padding(
@@ -40,7 +44,11 @@ class MatchFoundBody extends StatelessWidget {
                 color: AppColors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(LucideIcons.zap, size: 40, color: AppColors.primary),
+              child: const Icon(
+                LucideIcons.zap,
+                size: AppDimensions.matchFoundIconSize,
+                color: AppColors.primary,
+              ),
             ),
             const SizedBox(height: AppSpacing.l),
             Text(
@@ -58,7 +66,10 @@ class MatchFoundBody extends StatelessWidget {
             const SizedBox(height: AppSpacing.l),
             MatchVibeChips(vibes: otherUserVibes),
             const SizedBox(height: AppSpacing.xxl),
-            MatchTimerDisplay(remainingSeconds: remaining),
+            MatchTimerDisplay(
+              remainingSeconds: remaining,
+              totalSeconds: AppConstants.matchAcceptanceWindowSeconds.toDouble(),
+            ),
             const SizedBox(height: AppSpacing.xxl),
             if (isPending) ...[
               const CircularProgressIndicator(),
@@ -81,9 +92,7 @@ class MatchFoundBody extends StatelessWidget {
               const SizedBox(height: AppSpacing.m),
               TextButton(
                 onPressed: () => sl<MatchCubit>().deleteMatch(matchId),
-                child: const Text(
-                  AppStrings.cancel,
-                ),
+                child: const Text(AppStrings.cancel),
               ),
             ],
           ],
@@ -92,4 +101,3 @@ class MatchFoundBody extends StatelessWidget {
     );
   }
 }
-
