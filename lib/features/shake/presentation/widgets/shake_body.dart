@@ -66,10 +66,7 @@ class ShakeBody extends StatelessWidget {
                     status: ShakeStatus.waiting,
                     timestamp: DateTime.now(),
                   );
-                  sl<ShakeCubit>().recordShake(
-                    shake,
-                    isFallback: locationResult.isFallback,
-                  );
+                  sl<ShakeCubit>().recordShake(shake);
                 },
                 icon: const Icon(LucideIcons.mousePointer2, size: 16),
                 label: const Text(AppStrings.emulatorSimulateShake),

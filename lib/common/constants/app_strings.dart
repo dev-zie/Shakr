@@ -55,7 +55,7 @@ class AppStrings {
   // Vibe
   static const vibes = 'Vibe\'lar';
   static const selectThree = 'Tam 3 adet vibe seçmelisin';
-  static const selectVibes = 'Şu anki modun ne?';
+  static const selectVibes = 'Seni yansıttığını düşündüğün "Vibe"ları seç?';
   static const selectThreeVibes = 'Seni anlatan 3 kelime nedir?';
   static const maxThreeVibes = 'Sadece 3 tane seçebilirsin.';
   static const mustSelectThreeVibes = 'Lütfen 3 vibe seç 😇';

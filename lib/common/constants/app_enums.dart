@@ -1,5 +1,5 @@
 // common/constants/app_enums.dart
-enum Gender { male, female, other }
+enum Gender { male, female, other}
 
 enum ShakeStatus { waiting, matched, expired }
 

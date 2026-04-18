@@ -62,7 +62,7 @@ class VibeStep extends StatelessWidget {
                         ),
                         const SizedBox(height: AppSpacing.m),
                         Wrap(
-                          spacing: AppSpacing.s,
+                          spacing: AppSpacing.xs,
                           runSpacing: AppSpacing.xs,
                           children: vibesList.map((vibeData) {
                             final vibeLabel = vibeData['label'] as String;

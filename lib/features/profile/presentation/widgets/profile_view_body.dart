@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/extensions/gender_extension.dart';
 import 'package:shakr/common/widgets/vibe_card.dart';
 import 'package:shakr/features/auth/domain/entities/user_entity.dart';
 import 'profile_avatar.dart';
@@ -26,7 +27,7 @@ class ProfileViewBody extends StatelessWidget {
         const SizedBox(height: AppSpacing.s),
         Center(
           child: Text(
-            '${user.age} ${AppStrings.yearsOld} • ${user.gender}',
+            '${user.age} ${AppStrings.yearsOld} • ${user.gender.toGenderLabel()}',
             style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
@@ -47,7 +48,6 @@ class ProfileViewBody extends StatelessWidget {
             return VibeCard(vibe: user.vibes[index], isSelected: true);
           },
         ),
-        const SizedBox(height: AppSpacing.xxl),
       ],
     );
   }

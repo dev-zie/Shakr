@@ -12,15 +12,9 @@ class ShakeDetected extends ShakeState with EquatableMixin {
   List<Object?> get props => [];
 }
 
-/// GPS izni reddedildi; IP bazlı şehir düzeyinde konum kullanıldı.
-/// UI bu state'te kullanıcıyı uyarır, sallama akışı yine de devam eder.
 class ShakeRecorded extends ShakeState with EquatableMixin {
-  final bool isFallbackLocation;
-
-  ShakeRecorded({this.isFallbackLocation = false});
-
   @override
-  List<Object?> get props => [isFallbackLocation];
+  List<Object?> get props => [];
 }
 
 class ShakeNoMatch extends ShakeState with EquatableMixin {

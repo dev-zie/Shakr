@@ -81,7 +81,9 @@ class ProfileEditBody extends StatelessWidget {
                 label: AppStrings.male,
                 icon: LucideIcons.mars,
                 isSelected: state.editGender == Gender.male.name,
-                onTap: () => context.read<ProfileCubit>().updateGender(Gender.male.name),
+                onTap: () => context.read<ProfileCubit>().updateGender(
+                  Gender.male.name,
+                ),
               ),
             ),
             const SizedBox(width: AppSpacing.m),
@@ -90,8 +92,9 @@ class ProfileEditBody extends StatelessWidget {
                 label: AppStrings.female,
                 icon: LucideIcons.venus,
                 isSelected: state.editGender == Gender.female.name,
-                onTap: () =>
-                    context.read<ProfileCubit>().updateGender(Gender.female.name),
+                onTap: () => context.read<ProfileCubit>().updateGender(
+                  Gender.female.name,
+                ),
               ),
             ),
           ],

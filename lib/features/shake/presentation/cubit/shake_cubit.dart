@@ -53,7 +53,6 @@ class ShakeCubit extends Cubit<ShakeState> {
           status: ShakeStatus.waiting,
           timestamp: DateTime.now(),
         ),
-        isFallback: locationResult.isFallback,
       );
     });
     if (uid != null) {
@@ -68,7 +67,7 @@ class ShakeCubit extends Cubit<ShakeState> {
     if (uid != null) deleteShake(uid);
   }
 
-  Future<void> recordShake(ShakeEntity shake, {bool isFallback = false}) async {
+  Future<void> recordShake(ShakeEntity shake) async {
     if (state is! ShakeInitial) return;
     sl<ShakeService>().stopListening();
     emit(ShakeDetected());
@@ -76,7 +75,7 @@ class ShakeCubit extends Cubit<ShakeState> {
     final result = await recordShakeUsecase.call(shake);
 
     result.fold((l) => emit(ShakeError(l.message)), (r) {
-      emit(ShakeRecorded(isFallbackLocation: isFallback));
+      emit(ShakeRecorded());
       startMatchTimer();
       sl<VibrationService>().shakeRecordedFeedback();
     });

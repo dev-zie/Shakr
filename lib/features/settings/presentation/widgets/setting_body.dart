@@ -18,9 +18,9 @@ class SettingsBody extends StatelessWidget {
         if (state is SettingsAccountDeleted) {
           context.go('/');
         } else if (state is SettingsError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       child: BlocBuilder<SettingsCubit, SettingsState>(
@@ -80,21 +80,39 @@ class SettingsBody extends StatelessWidget {
           AppStrings.deleteAccount,
           style: TextStyle(color: AppColors.error),
         ),
-        content: const Text(AppStrings.deleteAccountConfirm),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text(AppStrings.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              context.read<SettingsCubit>().deleteAccount();
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-            child: const Text(AppStrings.deleteAccountAction),
-          ),
-        ],
+        content: Column(
+          mainAxisSize: .min,
+          children: [
+            Text(AppStrings.deleteAccountConfirm),
+            SizedBox(height: AppSpacing.m),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.textSecondaryDark,
+                    ),
+                    child: const Text(AppStrings.cancel),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.m),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(dialogContext);
+                      context.read<SettingsCubit>().deleteAccount();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.error,
+                    ),
+                    child: const Text(AppStrings.deleteAccountAction, textAlign: .center,),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
