@@ -11,15 +11,15 @@ class ShakingBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (state is ShakeInitial) return const ShakeBody();
-    if (state is ShakeDetected || state is ShakeRecorded) {
+    if (state.status == ShakeCubitStatus.initial) return const ShakeBody();
+    if (state.status == ShakeCubitStatus.detected ||
+        state.status == ShakeCubitStatus.recorded) {
       return const SearchingBody();
     }
-    if (state is ShakeError) {
-      final msg = (state as ShakeError).message;
-      return Center(child: Text(msg));
+    if (state.status == ShakeCubitStatus.error) {
+      return Center(child: Text(state.errorMessage ?? ''));
     }
-    if (state is ShakeNoMatch) {
+    if (state.status == ShakeCubitStatus.noMatch) {
       return const Center(child: Text(AppStrings.matchNotFound));
     }
     return const SizedBox();

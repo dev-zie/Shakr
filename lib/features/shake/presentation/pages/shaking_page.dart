@@ -10,8 +10,8 @@ import 'package:shakr/features/shake/presentation/widgets/match_not_found_dialog
 import 'package:shakr/features/shake/presentation/widgets/shaking_body.dart';
 import 'package:shakr/common/getit/injection.dart';
 
-class ShakingScreen extends StatelessWidget {
-  const ShakingScreen({super.key});
+class ShakingPage extends StatelessWidget {
+  const ShakingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +19,15 @@ class ShakingScreen extends StatelessWidget {
       body: BlocListener<MatchCubit, MatchState>(
         bloc: sl<MatchCubit>(),
         listener: (context, state) {
-          if (state is MatchFound) {
+          if (state.status == MatchCubitStatus.found) {
             sl<ShakeCubit>().disposeScreen();
-            context.go('/match/${state.match.matchId}');
+            context.go('/match/${state.match!.matchId}');
           }
         },
         child: BlocConsumer<ShakeCubit, ShakeState>(
           bloc: sl<ShakeCubit>(),
           listener: (context, state) {
-            if (state is ShakeNoMatch) {
+            if (state.status == ShakeCubitStatus.noMatch) {
               showCupertinoDialog(
                 context: context,
                 builder: (context) => const MatchNotFoundDialog(),

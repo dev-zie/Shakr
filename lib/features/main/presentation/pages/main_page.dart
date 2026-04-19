@@ -6,9 +6,9 @@ import 'package:shakr/features/main/presentation/widgets/main_body.dart';
 import 'package:shakr/features/main/presentation/widgets/main_bottom_nav.dart';
 import 'package:shakr/features/shake/presentation/cubit/shake_cubit.dart';
 
-class MainScreen extends StatelessWidget {
+class MainPage extends StatelessWidget {
   final int initialIndex;
-  const MainScreen({super.key, this.initialIndex = 0});
+  const MainPage({super.key, this.initialIndex = 0});
 
   @override
   Widget build(BuildContext context) {

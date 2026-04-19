@@ -28,7 +28,7 @@ class ShakeCubit extends Cubit<ShakeState> {
     required this.deleteShakeUsecase,
     required this.recordShakeUsecase,
     required this.hasActiveMatchUsecase,
-  }) : super(ShakeInitial());
+  }) : super(const ShakeState());
 
   void init() {
     reset();
@@ -38,7 +38,7 @@ class ShakeCubit extends Cubit<ShakeState> {
       if (uid == null) return;
 
       // Sadece başlangıç durumundayken yeni sarsıntı işlemlerine izin ver
-      if (state is! ShakeInitial) return;
+      if (state.status != ShakeCubitStatus.initial) return;
 
       // Aktif eşleşme varsa yeni shake kaydedilmez — aynı çift tekrar eşleşemez.
       final hasMatch = await hasActiveMatchUsecase.call(uid);
@@ -68,35 +68,38 @@ class ShakeCubit extends Cubit<ShakeState> {
   }
 
   Future<void> recordShake(ShakeEntity shake) async {
-    if (state is! ShakeInitial) return;
+    if (state.status != ShakeCubitStatus.initial) return;
     sl<ShakeService>().stopListening();
-    emit(ShakeDetected());
+    emit(state.copyWith(status: ShakeCubitStatus.detected));
 
     final result = await recordShakeUsecase.call(shake);
 
-    result.fold((l) => emit(ShakeError(l.message)), (r) {
-      emit(ShakeRecorded());
-      startMatchTimer();
-      sl<VibrationService>().shakeRecordedFeedback();
-    });
+    result.fold(
+      (l) => emit(state.copyWith(status: ShakeCubitStatus.error, errorMessage: l.message)),
+      (r) {
+        emit(state.copyWith(status: ShakeCubitStatus.recorded));
+        startMatchTimer();
+        sl<VibrationService>().shakeRecordedFeedback();
+      },
+    );
   }
 
   Future<void> deleteShake(String uid) async {
     final result = await deleteShakeUsecase.call(uid);
     result.fold(
-      (l) => emit(ShakeError(l.message)),
-      (r) => emit(ShakeInitial()),
+      (l) => emit(state.copyWith(status: ShakeCubitStatus.error, errorMessage: l.message)),
+      (r) => emit(const ShakeState()),
     );
   }
 
-  void reset() => emit(ShakeInitial());
+  void reset() => emit(const ShakeState());
 
   void startMatchTimer() {
     _matchTimer?.cancel();
     _matchTimer = Timer(
       const Duration(seconds: AppConstants.matchAcceptanceWindowSeconds),
       () {
-        if (!isClosed) emit(ShakeNoMatch());
+        if (!isClosed) emit(state.copyWith(status: ShakeCubitStatus.noMatch));
       },
     );
   }

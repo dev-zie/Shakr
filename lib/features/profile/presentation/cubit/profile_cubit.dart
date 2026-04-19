@@ -1,7 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shakr/common/getit/injection.dart';
 import 'package:shakr/core/services/local_storage_service.dart';
-import 'package:shakr/core/services/media_service.dart';
 import 'package:shakr/features/auth/domain/entities/user_entity.dart';
 import 'package:shakr/features/auth/domain/usecases/get_profile_usecase.dart';
 import 'package:shakr/features/auth/domain/usecases/save_profile_usecase.dart';
@@ -17,57 +15,47 @@ class ProfileCubit extends Cubit<ProfileState> {
   final LocalStorageService lsc;
 
   String? _uid;
+
   ProfileCubit({
     required this.getProfileUsecase,
     required this.saveProfileUsecase,
     required this.uploadPhotoUsecase,
     required this.deleteAccountUsecase,
     required this.lsc,
-  }) : super(ProfileInitial());
+  }) : super(const ProfileState());
 
   Future<void> loadProfile(String uid) async {
     _uid = uid;
-    emit(ProfileLoading());
+    emit(state.copyWith(status: ProfileStatus.loading));
     final result = await getProfileUsecase.call(uid);
     result.fold(
-      (failure) => emit(ProfileError(failure.message)),
-      (user) => emit(
-        ProfileLoaded(
-          user: user,
-          editName: user.name,
-          editAge: user.age,
-          editGender: user.gender,
-          editVibes: List<String>.from(user.vibes),
-        ),
-      ),
+      (failure) => emit(state.copyWith(status: ProfileStatus.error, errorMessage: failure.message)),
+      (user) => emit(ProfileState(
+        status: ProfileStatus.loaded,
+        user: user,
+        editName: user.name,
+        editAge: user.age,
+        editGender: user.gender,
+        editVibes: List<String>.from(user.vibes),
+      )),
     );
   }
 
-  // --- FORM DÜZENLEME METODLARI ---
-
   void updateName(String name) {
-    if (state is ProfileLoaded) {
-      emit((state as ProfileLoaded).copyWith(editName: name));
-    }
+    emit(state.copyWith(editName: name));
   }
 
   void updateAge(int age) {
-    if (state is ProfileLoaded) {
-      emit((state as ProfileLoaded).copyWith(editAge: age));
-    }
+    emit(state.copyWith(editAge: age));
   }
 
   void updateGender(String gender) {
-    if (state is ProfileLoaded) {
-      emit((state as ProfileLoaded).copyWith(editGender: gender));
-    }
+    emit(state.copyWith(editGender: gender));
   }
 
   void toggleVibe(String vibe) {
-    if (state is! ProfileLoaded) return;
-    final currentState = state as ProfileLoaded;
-    final currentVibes = List<String>.from(currentState.editVibes);
-
+    if (state.status != ProfileStatus.loaded) return;
+    final currentVibes = List<String>.from(state.editVibes);
     if (currentVibes.contains(vibe)) {
       currentVibes.remove(vibe);
     } else {
@@ -77,83 +65,74 @@ class ProfileCubit extends Cubit<ProfileState> {
         return;
       }
     }
-    emit(currentState.copyWith(editVibes: currentVibes));
+    emit(state.copyWith(editVibes: currentVibes));
   }
 
-  Future<void> pickAndUploadPhoto() async {
-    if (state is! ProfileLoaded) return;
-    final currentState = state as ProfileLoaded;
-
-    final path = await sl<MediaService>().pickPhoto();
-    if (path == null) return;
-
-    emit(currentState.copyWith(isUploadingPhoto: true));
+  Future<void> uploadPhoto(String path) async {
+    if (state.status != ProfileStatus.loaded) return;
+    emit(state.copyWith(isUploadingPhoto: true));
 
     final result = await uploadPhotoUsecase.call(_uid ?? '', path);
     result.fold(
       (failure) {
-        emit(ProfilePhotoUploadError(failure.message));
-        emit(currentState.copyWith(isUploadingPhoto: false));
-      },
-      (url) => emit(
-        currentState.copyWith(
-          user: currentState.user.copyWith(photoUrl: url),
+        emit(state.copyWith(
+          status: ProfileStatus.photoUploadError,
+          errorMessage: failure.message,
           isUploadingPhoto: false,
-        ),
-      ),
+        ));
+        emit(state.copyWith(status: ProfileStatus.loaded));
+      },
+      (url) => emit(state.copyWith(
+        user: state.user!.copyWith(photoUrl: url),
+        isUploadingPhoto: false,
+      )),
     );
   }
 
   void toggleEditMode() {
-    if (state is ProfileLoaded) {
-      final currentState = state as ProfileLoaded;
-      emit(currentState.copyWith(isEditing: !currentState.isEditing));
-    }
+    emit(state.copyWith(isEditing: !state.isEditing));
   }
 
-  // --- KAYDETME ---
-
   Future<void> saveProfile() async {
-    if (state is! ProfileLoaded) return;
-    final currentState = state as ProfileLoaded;
-    emit(ProfileLoading());
+    if (state.status != ProfileStatus.loaded) return;
+    emit(state.copyWith(status: ProfileStatus.loading));
 
     final updatedUser = UserEntity(
-      uid: currentState.user.uid,
-      name: currentState.editName.trim(),
-      age: currentState.editAge,
-      gender: currentState.editGender,
-      photoUrl: currentState.user.photoUrl,
-      vibes: currentState.editVibes,
+      uid: state.user!.uid,
+      name: state.editName.trim(),
+      age: state.editAge,
+      gender: state.editGender,
+      photoUrl: state.user!.photoUrl,
+      vibes: state.editVibes,
     );
 
     final result = await saveProfileUsecase.call(updatedUser);
-    result.fold((failure) => emit(ProfileError(failure.message)), (_) {
-      emit(ProfileUpdatedSuccess(updatedUser));
-      emit(
-        ProfileLoaded(
+    result.fold(
+      (failure) => emit(state.copyWith(status: ProfileStatus.error, errorMessage: failure.message)),
+      (_) {
+        emit(state.copyWith(status: ProfileStatus.updatedSuccess, user: updatedUser));
+        emit(state.copyWith(
+          status: ProfileStatus.loaded,
           user: updatedUser,
           editName: updatedUser.name,
           editAge: updatedUser.age,
           editGender: updatedUser.gender,
           editVibes: List<String>.from(updatedUser.vibes),
           isEditing: false,
-        ),
-      );
-    });
+        ));
+      },
+    );
   }
 
   Future<void> deleteAccount() async {
-    if (state is! ProfileLoaded) return;
-    emit(ProfileLoading());
+    if (state.status != ProfileStatus.loaded) return;
+    emit(state.copyWith(status: ProfileStatus.loading));
 
     final result = await deleteAccountUsecase.call();
     lsc.resetOnboarding();
     result.fold(
-      (failure) => emit(ProfileError(failure.message)),
-      (_) => emit(
-        ProfileInitial(),
-      ), // Emitting initial will trigger redirect in UI
+      (failure) => emit(state.copyWith(status: ProfileStatus.error, errorMessage: failure.message)),
+      (_) => emit(const ProfileState()),
     );
   }
 }

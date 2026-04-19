@@ -24,10 +24,10 @@ class ChatBody extends StatelessWidget {
         Expanded(
           child: BlocBuilder<ChatCubit, ChatState>(
             builder: (context, state) {
-              if (state is ChatLoading) {
+              if (state.status == ChatStatus.loading) {
                 return const Center(child: CircularProgressIndicator());
               }
-              if (state is ChatTimerTickState) {
+              if (state.status == ChatStatus.timerTick) {
                 return ChatMessageList(
                   messages: state.messages,
                   currentUid: currentUid,

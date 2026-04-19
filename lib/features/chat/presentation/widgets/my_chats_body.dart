@@ -22,7 +22,7 @@ class MyChatsBody extends StatelessWidget {
         }
         final state = snapshot.data;
 
-        if (state is ChatConversationsLoaded) {
+        if (state != null && state.status == ChatStatus.conversationsLoaded) {
           if (state.conversations.isEmpty) {
             return const EmptyChatState();
           }
@@ -34,24 +34,20 @@ class MyChatsBody extends StatelessWidget {
           return ListView.separated(
             itemCount: sortedConversations.length,
             separatorBuilder: (context, index) => Padding(
-              padding: const EdgeInsets.only(
-                left: AppDimensions.dividerIndent,
-              ),
+              padding: const EdgeInsets.only(left: AppDimensions.dividerIndent),
               child: Divider(
                 height: 1,
                 color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
               ),
             ),
             itemBuilder: (context, index) {
-              return ConversationTile(
-                conversation: sortedConversations[index],
-              );
+              return ConversationTile(conversation: sortedConversations[index]);
             },
           );
         }
 
-        if (state is ChatError) {
-          return Center(child: Text(state.message));
+        if (state != null && state.status == ChatStatus.error) {
+          return Center(child: Text(state.errorMessage ?? ''));
         }
 
         return const EmptyChatState();

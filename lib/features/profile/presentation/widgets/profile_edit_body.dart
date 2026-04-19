@@ -15,7 +15,7 @@ import 'profile_vibes_selector.dart';
 class ProfileEditBody extends StatelessWidget {
   const ProfileEditBody({super.key, required this.state});
 
-  final ProfileLoaded state;
+  final ProfileState state;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class ProfileEditBody extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.l),
       children: [
         ProfilePhotoEditor(
-          photoUrl: state.user.photoUrl,
+          photoUrl: state.user?.photoUrl,
           isUploading: state.isUploadingPhoto,
         ),
         const SizedBox(height: AppSpacing.xl),
@@ -43,7 +43,6 @@ class ProfileEditBody extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.l),
 
-        // Yaş Düzenleme
         InkWell(
           onTap: () async {
             final selectedAge = await showDialog<int>(
@@ -71,7 +70,6 @@ class ProfileEditBody extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.l),
 
-        // Cinsiyet Düzenleme
         Text(AppStrings.gender, style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: AppSpacing.m),
         Row(
@@ -105,7 +103,7 @@ class ProfileEditBody extends StatelessWidget {
         const SizedBox(height: AppSpacing.l),
 
         ElevatedButton(
-          onPressed: state.editVibes.length == 3 && state.hasChanges
+          onPressed: state.editVibes.length == 3 && state.hasChanges && state.editName.trim().isNotEmpty
               ? () => context.read<ProfileCubit>().saveProfile()
               : null,
           child: Text(

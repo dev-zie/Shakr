@@ -36,7 +36,7 @@ class ChatExpiredBody extends StatelessWidget {
         child: BlocBuilder<MatchCubit, MatchState>(
           bloc: sl<MatchCubit>(),
           builder: (context, state) {
-            final isPending = state is MatchConnectionPending;
+            final isPending = state.status == MatchCubitStatus.connectionPending;
 
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,

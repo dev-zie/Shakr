@@ -1,79 +1,42 @@
 import 'package:equatable/equatable.dart';
 import 'package:shakr/features/match/domain/entities/match_entity.dart';
 
-class MatchState {}
-
-class MatchInitial extends MatchState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
+enum MatchCubitStatus {
+  initial,
+  loading,
+  found,
+  notFound,
+  error,
+  expired,
+  deleted,
+  bothKept,
+  connectionPending,
+  acceptancePending,
+  accepted,
+  cooldownActive,
 }
 
-class MatchLoading extends MatchState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
-}
+class MatchState extends Equatable {
+  final MatchCubitStatus status;
+  final MatchEntity? match;
+  final String? errorMessage;
 
-class MatchFound extends MatchState with EquatableMixin {
-  final MatchEntity match;
-  MatchFound(this.match);
-  @override
-  List<Object?> get props => [match];
-}
+  const MatchState({
+    this.status = MatchCubitStatus.initial,
+    this.match,
+    this.errorMessage,
+  });
 
-class MatchNotFound extends MatchState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
-}
+  MatchState copyWith({
+    MatchCubitStatus? status,
+    MatchEntity? match,
+    String? errorMessage,
+  }) => MatchState(
+    status: status ?? this.status,
+    match: match ?? this.match,
+    errorMessage: errorMessage ?? this.errorMessage,
+  );
 
-class MatchError extends MatchState with EquatableMixin {
-  final String message;
-  MatchError(this.message);
   @override
-  List<Object?> get props => [message];
-}
-
-class MatchExpired extends MatchState with EquatableMixin {
-  final MatchEntity match;
-  MatchExpired(this.match);
-  @override
-  List<Object?> get props => [match];
-}
-
-class MatchDeleted extends MatchState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
-}
-
-class MatchBothKept extends MatchState with EquatableMixin {
-  final MatchEntity match;
-  MatchBothKept(this.match);
-  @override
-  List<Object?> get props => [match];
-}
-
-class MatchConnectionPending extends MatchState with EquatableMixin {
-  final MatchEntity match;
-  MatchConnectionPending(this.match);
-  @override
-  List<Object?> get props => [match];
-}
-
-class MatchAcceptancePending extends MatchState with EquatableMixin {
-  final MatchEntity match;
-  MatchAcceptancePending(this.match);
-  @override
-  List<Object?> get props => [match];
-}
-
-class MatchAccepted extends MatchState with EquatableMixin {
-  final MatchEntity match;
-  MatchAccepted(this.match);
-  @override
-  List<Object?> get props => [match];
-}
-
-/// Bu iki kullanıcı son 24 saat içinde zaten eşleşmiş — cooldown aktif.
-class MatchCooldownActive extends MatchState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
+  List<Object?> get props => [status, match, errorMessage];
 }

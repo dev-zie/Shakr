@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/constants/app_constants.dart';
-import 'package:shakr/common/getit/injection.dart';
-import 'package:shakr/core/services/vibration_service.dart';
 import 'package:shakr/features/match/domain/entities/match_entity.dart';
 import 'package:shakr/features/match/domain/usecases/accept_match_usecase.dart';
 import 'package:shakr/features/match/domain/usecases/delete_match_usecase.dart';
@@ -24,7 +22,7 @@ class MatchCubit extends Cubit<MatchState> {
 
   StreamSubscription? _subscription;
 
-  /// 15 saniyelik kabul penceresi için zamanlayıcı (StatelessWidget dönüşümü için cubitte)
+  /// 15 saniyelik kabul penceresi için zamanlayıcı
   Timer? _acceptTimer;
 
   MatchCubit({
@@ -35,22 +33,23 @@ class MatchCubit extends Cubit<MatchState> {
     required this.deleteMatchUsecase,
     required this.acceptMatchUsecase,
     required this.moveToPermanentChatUsecase,
-  }) : super(MatchInitial());
+  }) : super(const MatchState());
 
   /// Eşleşme verilerini bir kez çeker (stream olmadan).
   Future<void> init(String matchId) => getMatch(matchId);
 
   /// Maç verisi henüz yüklü değilse çeker; tekrar çağrılması güvenlidir.
   void ensureLoaded(String matchId) {
-    if (state is MatchLoading ||
-        state is MatchFound ||
-        state is MatchExpired ||
-        state is MatchConnectionPending ||
-        state is MatchBothKept ||
-        state is MatchAcceptancePending ||
-        state is MatchAccepted) {
-      return;
-    }
+    const loaded = {
+      MatchCubitStatus.loading,
+      MatchCubitStatus.found,
+      MatchCubitStatus.expired,
+      MatchCubitStatus.connectionPending,
+      MatchCubitStatus.bothKept,
+      MatchCubitStatus.acceptancePending,
+      MatchCubitStatus.accepted,
+    };
+    if (loaded.contains(state.status)) return;
     getMatch(matchId);
   }
 
@@ -58,25 +57,20 @@ class MatchCubit extends Cubit<MatchState> {
     _subscription = watchMatchUsecase.call(uid).listen((match) {
       if (match == null) {
         _cancelAcceptTimer();
-        emit(MatchDeleted());
+        emit(state.copyWith(status: MatchCubitStatus.deleted, match: null));
       } else if (match.status == MatchStatus.expired) {
         _cancelAcceptTimer();
-        sl<VibrationService>().endFeedback();
         final isUser1 = match.user1Id == uid;
-        final myKeep = isUser1
-            ? match.user1KeepConnection
-            : match.user2KeepConnection;
-        final otherKeep = isUser1
-            ? match.user2KeepConnection
-            : match.user1KeepConnection;
+        final myKeep = isUser1 ? match.user1KeepConnection : match.user2KeepConnection;
+        final otherKeep = isUser1 ? match.user2KeepConnection : match.user1KeepConnection;
 
         if (myKeep && otherKeep) {
-          emit(MatchBothKept(match));
+          emit(state.copyWith(status: MatchCubitStatus.bothKept, match: match));
           moveToPermanentChat(match.matchId);
         } else if (myKeep) {
-          emit(MatchConnectionPending(match));
+          emit(state.copyWith(status: MatchCubitStatus.connectionPending, match: match));
         } else {
-          emit(MatchExpired(match));
+          emit(state.copyWith(status: MatchCubitStatus.expired, match: match));
         }
       } else if (match.status == MatchStatus.active) {
         final isUser1 = match.user1Id == uid;
@@ -84,19 +78,16 @@ class MatchCubit extends Cubit<MatchState> {
 
         if (match.user1Accepted && match.user2Accepted) {
           _cancelAcceptTimer();
-          sl<VibrationService>().matchAcceptedFeedback();
-          emit(MatchAccepted(match));
+          emit(state.copyWith(status: MatchCubitStatus.accepted, match: match));
         } else if (myAccepted) {
-          // Zamanlayıcı hâlâ çalışıyor — karşı taraf kabul edene kadar devam eder
-          emit(MatchAcceptancePending(match));
+          emit(state.copyWith(status: MatchCubitStatus.acceptancePending, match: match));
         } else {
           _startAcceptTimer(match.matchId, match.createdAt);
-          emit(MatchFound(match));
+          emit(state.copyWith(status: MatchCubitStatus.found, match: match));
         }
       } else {
         _startAcceptTimer(match.matchId, match.createdAt);
-        sl<VibrationService>().matchFeedback();
-        emit(MatchFound(match));
+        emit(state.copyWith(status: MatchCubitStatus.found, match: match));
       }
     });
   }
@@ -123,42 +114,55 @@ class MatchCubit extends Cubit<MatchState> {
   }
 
   Future<void> getMatch(String matchId) async {
-    emit(MatchLoading());
+    emit(state.copyWith(status: MatchCubitStatus.loading));
     final result = await getMatchUsecase.call(matchId);
     result.fold(
-      (failure) => emit(MatchError(failure.message)),
-      (match) =>
-          match != null ? emit(MatchFound(match)) : emit(MatchNotFound()),
+      (failure) => emit(state.copyWith(status: MatchCubitStatus.error, errorMessage: failure.message)),
+      (match) => match != null
+          ? emit(state.copyWith(status: MatchCubitStatus.found, match: match))
+          : emit(state.copyWith(status: MatchCubitStatus.notFound)),
     );
   }
 
   Future<void> expireMatch(String matchId) async {
     final result = await expireMatchUsecase.call(matchId);
-    result.fold((l) => emit(MatchError(l.message)), (_) => null);
+    result.fold(
+      (l) => emit(state.copyWith(status: MatchCubitStatus.error, errorMessage: l.message)),
+      (_) => null,
+    );
   }
 
   Future<void> acceptMatch(String matchId, String uid) async {
     final result = await acceptMatchUsecase.call(matchId, uid);
-    result.fold((l) => emit(MatchError(l.message)), (_) => null);
+    result.fold(
+      (l) => emit(state.copyWith(status: MatchCubitStatus.error, errorMessage: l.message)),
+      (_) => null,
+    );
   }
 
   Future<void> endMatch(String matchId) async {
     final result = await deleteMatchUsecase.call(matchId);
     result.fold(
-      (l) => emit(MatchError(l.message)),
-      (_) => emit(MatchDeleted()),
+      (l) => emit(state.copyWith(status: MatchCubitStatus.error, errorMessage: l.message)),
+      (_) => emit(state.copyWith(status: MatchCubitStatus.deleted)),
     );
   }
 
   Future<void> moveToPermanentChat(String matchId) async {
     final result = await moveToPermanentChatUsecase.call(matchId);
-    result.fold((l) => emit(MatchError(l.message)), (_) => null);
+    result.fold(
+      (l) => emit(state.copyWith(status: MatchCubitStatus.error, errorMessage: l.message)),
+      (_) => null,
+    );
   }
 
   Future<void> deleteMatch(String matchId) async {
     final result = await deleteMatchUsecase.call(matchId);
-    result.fold((l) => emit(MatchError(l.message)), (_) => null);
-    emit(MatchInitial());
+    result.fold(
+      (l) => emit(state.copyWith(status: MatchCubitStatus.error, errorMessage: l.message)),
+      (_) => null,
+    );
+    emit(const MatchState());
   }
 
   /// Bağlantıyı koruma akışı: keepConnection kaydeder,
@@ -171,7 +175,7 @@ class MatchCubit extends Cubit<MatchState> {
     _cancelAcceptTimer();
     _subscription?.cancel();
     _subscription = null;
-    emit(MatchInitial());
+    emit(const MatchState());
   }
 
   @override

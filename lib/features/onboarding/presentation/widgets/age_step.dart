@@ -19,9 +19,7 @@ class AgeStep extends StatelessWidget {
 
     return BlocBuilder<OnboardingCubit, OnboardingState>(
       builder: (context, state) {
-        final currentAge = (state is OnboardingStepChanged)
-            ? (state.age ?? 20)
-            : 20;
+        final currentAge = state.age ?? 20;
 
         return Padding(
           padding: const EdgeInsets.all(AppSpacing.l),

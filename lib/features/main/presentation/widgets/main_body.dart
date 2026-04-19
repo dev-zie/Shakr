@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shakr/features/chat/presentation/pages/my_chats_screen.dart';
+import 'package:shakr/features/chat/presentation/pages/my_chats_page.dart';
 import 'package:shakr/features/main/presentation/cubit/navigation_cubit.dart';
-import 'package:shakr/features/profile/presentation/pages/profile_screen.dart';
-import 'package:shakr/features/shake/presentation/pages/shaking_screen.dart';
+import 'package:shakr/features/profile/presentation/pages/profile_page.dart';
+import 'package:shakr/features/shake/presentation/pages/shaking_page.dart';
 
 class MainBody extends StatelessWidget {
   const MainBody({super.key});
@@ -15,9 +15,9 @@ class MainBody extends StatelessWidget {
         return IndexedStack(
           index: index,
           children: const [
-            ShakingScreen(),
-            MyChatsScreen(),
-            ProfileScreen(),
+            ShakingPage(),
+            MyChatsPage(),
+            ProfilePage(),
           ],
         );
       },

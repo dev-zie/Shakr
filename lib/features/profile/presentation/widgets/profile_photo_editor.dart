@@ -3,6 +3,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/constants/app_dimensions.dart';
 import 'package:shakr/common/theme/app_colors.dart';
+import 'package:shakr/common/widgets/photo_source_sheet.dart';
 import 'package:shakr/features/profile/presentation/cubit/profile_cubit.dart';
 import 'profile_avatar.dart';
 
@@ -51,8 +52,12 @@ class ProfilePhotoEditor extends StatelessWidget {
                         color: Colors.white,
                         size: AppDimensions.cameraIconSize,
                       ),
-                      onPressed: () =>
-                          context.read<ProfileCubit>().pickAndUploadPhoto(),
+                      onPressed: () async {
+                        final path = await showPhotoSourceSheet(context);
+                        if (path != null && context.mounted) {
+                          context.read<ProfileCubit>().uploadPhoto(path);
+                        }
+                      },
                     ),
             ),
           ),

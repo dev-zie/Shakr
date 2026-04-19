@@ -15,8 +15,7 @@ class GenderStep extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<OnboardingCubit, OnboardingState>(
       builder: (context, state) {
-        final step = state is OnboardingStepChanged ? state : null;
-        final gender = step?.gender;
+        final gender = state.gender;
 
         return Padding(
           padding: const EdgeInsets.all(AppSpacing.l),

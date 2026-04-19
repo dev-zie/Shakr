@@ -6,6 +6,7 @@ import 'package:shakr/common/constants/app_dimensions.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/theme/app_colors.dart';
+import 'package:shakr/common/widgets/photo_source_sheet.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.dart';
 
@@ -33,10 +34,14 @@ class PhotoStep extends StatelessWidget {
           const SizedBox(height: AppSpacing.xxl),
           BlocBuilder<OnboardingCubit, OnboardingState>(
             builder: (context, state) {
-              final photoUrl =
-                  state is OnboardingStepChanged ? state.photoUrl : null;
+              final photoUrl = state.photoUrl;
               return GestureDetector(
-                onTap: () => context.read<OnboardingCubit>().pickPhoto(),
+                onTap: () async {
+                  final path = await showPhotoSourceSheet(context);
+                  if (path != null && context.mounted) {
+                    context.read<OnboardingCubit>().setPhotoPath(path);
+                  }
+                },
                 child: Stack(
                   alignment: Alignment.bottomRight,
                   children: [

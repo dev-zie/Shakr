@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shakr/core/utils/geohash_utils.dart';
+import 'package:shakr/common/utils/geohash_utils.dart';
 import 'package:shakr/features/shake/data/models/shake_model.dart';
 import 'package:shakr/features/shake/domain/entities/shake_entity.dart';
 

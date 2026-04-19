@@ -10,46 +10,31 @@ class SettingsCubit extends Cubit<SettingsState> {
   SettingsCubit({
     required this.deleteAccountUsecase,
     required this.localStorageService,
-  }) : super(SettingsLoaded(selectedVibes: [], notificationsEnabled: true));
+  }) : super(const SettingsState(status: SettingsStatus.loaded));
 
   void toggleNotifications(bool value) {
-    if (state is SettingsLoaded) {
-      final currentState = state as SettingsLoaded;
-      emit(currentState.copyWith(notificationsEnabled: value));
-    }
+    emit(state.copyWith(notificationsEnabled: value));
   }
 
   void selectVibe(String vibe) {
-    if (state is SettingsLoaded) {
-      final currentState = state as SettingsLoaded;
-      if (currentState.selectedVibes.length >= 3) return;
-      emit(
-        currentState.copyWith(
-          selectedVibes: [...currentState.selectedVibes, vibe],
-        ),
-      );
-    }
+    if (state.selectedVibes.length >= 3) return;
+    emit(state.copyWith(selectedVibes: [...state.selectedVibes, vibe]));
   }
 
   void deselectVibe(String vibe) {
-    if (state is SettingsLoaded) {
-      final currentState = state as SettingsLoaded;
-      emit(
-        currentState.copyWith(
-          selectedVibes: currentState.selectedVibes
-              .where((v) => v != vibe)
-              .toList(),
-        ),
-      );
-    }
+    emit(
+      state.copyWith(
+        selectedVibes: state.selectedVibes.where((v) => v != vibe).toList(),
+      ),
+    );
   }
 
   Future<void> deleteAccount() async {
     final result = await deleteAccountUsecase.call();
     localStorageService.resetOnboarding();
     result.fold(
-      (failure) => emit(SettingsError(failure.message)),
-      (_) => emit(SettingsAccountDeleted()),
+      (failure) => emit(state.copyWith(status: SettingsStatus.error, errorMessage: failure.message)),
+      (_) => emit(state.copyWith(status: SettingsStatus.accountDeleted)),
     );
   }
 }

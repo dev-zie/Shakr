@@ -15,9 +15,7 @@ class VibeStep extends StatelessWidget {
     return BlocBuilder<OnboardingCubit, OnboardingState>(
       builder: (context, state) {
         final cubit = context.read<OnboardingCubit>();
-        final selectedVibes = state is OnboardingStepChanged
-            ? state.vibes
-            : <String>[];
+        final selectedVibes = state.vibes;
 
         return Column(
           children: [

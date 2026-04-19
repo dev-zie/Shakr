@@ -60,6 +60,13 @@ class AppStrings {
   static const maxThreeVibes = 'Sadece 3 tane seçebilirsin.';
   static const mustSelectThreeVibes = 'Lütfen 3 vibe seç 😇';
 
+  // Fotoğraf seçimi
+  static const photoSourceTitle = 'Fotoğraf Ekle';
+  static const chooseFromGallery = 'Galeriden Seç';
+  static const openCamera = 'Kamerayı Aç';
+  static const useThisPhoto = 'Bu Fotoğrafı Kullan';
+  static const retakePhoto = 'Yeniden Çek';
+
   // Hata mesajları
   static const errorPrefix = 'Hay aksi!';
   static const photoUploadError = 'Fotoğraf yüklenirken bir pürüz çıktı';

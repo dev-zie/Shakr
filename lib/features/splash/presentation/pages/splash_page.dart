@@ -8,8 +8,8 @@ import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_state.dart';
 import 'package:shakr/features/splash/presentation/widgets/splash_body.dart';
 
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
+class SplashPage extends StatelessWidget {
+  const SplashPage({super.key});
 
   @override
   Widget build(BuildContext context) {

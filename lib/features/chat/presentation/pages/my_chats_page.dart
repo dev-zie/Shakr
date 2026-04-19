@@ -5,8 +5,8 @@ import 'package:shakr/common/getit/injection.dart';
 
 import 'package:shakr/features/chat/presentation/widgets/my_chats_body.dart';
 
-class MyChatsScreen extends StatelessWidget {
-  const MyChatsScreen({super.key});
+class MyChatsPage extends StatelessWidget {
+  const MyChatsPage({super.key});
 
   @override
   Widget build(BuildContext context) {

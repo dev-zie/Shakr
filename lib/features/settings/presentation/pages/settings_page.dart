@@ -7,8 +7,8 @@ import 'package:shakr/common/getit/injection.dart';
 import 'package:shakr/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:shakr/features/settings/presentation/widgets/setting_body.dart';
 
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {

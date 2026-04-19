@@ -2,52 +2,43 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shakr/features/auth/domain/entities/user_entity.dart';
 
-abstract class ProfileState {}
+enum ProfileStatus { initial, loading, loaded, error, photoUploadError, updatedSuccess }
 
-class ProfileInitial extends ProfileState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
-}
-
-class ProfileLoading extends ProfileState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
-}
-
-class ProfileError extends ProfileState with EquatableMixin {
-  final String message;
-  ProfileError(this.message);
-  @override
-  List<Object?> get props => [message];
-}
-
-class ProfileLoaded extends ProfileState with EquatableMixin {
-  final UserEntity user;
+class ProfileState extends Equatable {
+  final ProfileStatus status;
+  final UserEntity? user;
   final String editName;
   final int editAge;
   final String editGender;
   final List<String> editVibes;
   final bool isEditing;
   final bool isUploadingPhoto;
+  final String? errorMessage;
 
-  ProfileLoaded({
-    required this.user,
-    required this.editName,
-    required this.editAge,
-    required this.editGender,
-    required this.editVibes,
+  const ProfileState({
+    this.status = ProfileStatus.initial,
+    this.user,
+    this.editName = '',
+    this.editAge = 0,
+    this.editGender = '',
+    this.editVibes = const [],
     this.isEditing = false,
     this.isUploadingPhoto = false,
+    this.errorMessage,
   });
 
   bool get hasChanges =>
-      editName.trim() != user.name ||
-      editAge != user.age ||
-      editGender != user.gender ||
-      !listEquals(List<String>.from(editVibes)..sort(),
-          List<String>.from(user.vibes)..sort());
+      user != null &&
+      (editName.trim() != user!.name ||
+          editAge != user!.age ||
+          editGender != user!.gender ||
+          !listEquals(
+            List<String>.from(editVibes)..sort(),
+            List<String>.from(user!.vibes)..sort(),
+          ));
 
-  ProfileLoaded copyWith({
+  ProfileState copyWith({
+    ProfileStatus? status,
     UserEntity? user,
     String? editName,
     int? editAge,
@@ -55,20 +46,22 @@ class ProfileLoaded extends ProfileState with EquatableMixin {
     List<String>? editVibes,
     bool? isEditing,
     bool? isUploadingPhoto,
-  }) {
-    return ProfileLoaded(
-      user: user ?? this.user,
-      editName: editName ?? this.editName,
-      editAge: editAge ?? this.editAge,
-      editGender: editGender ?? this.editGender,
-      editVibes: editVibes ?? this.editVibes,
-      isEditing: isEditing ?? this.isEditing,
-      isUploadingPhoto: isUploadingPhoto ?? this.isUploadingPhoto,
-    );
-  }
+    String? errorMessage,
+  }) => ProfileState(
+    status: status ?? this.status,
+    user: user ?? this.user,
+    editName: editName ?? this.editName,
+    editAge: editAge ?? this.editAge,
+    editGender: editGender ?? this.editGender,
+    editVibes: editVibes ?? this.editVibes,
+    isEditing: isEditing ?? this.isEditing,
+    isUploadingPhoto: isUploadingPhoto ?? this.isUploadingPhoto,
+    errorMessage: errorMessage ?? this.errorMessage,
+  );
 
   @override
   List<Object?> get props => [
+    status,
     user,
     editName,
     editAge,
@@ -76,19 +69,6 @@ class ProfileLoaded extends ProfileState with EquatableMixin {
     editVibes,
     isEditing,
     isUploadingPhoto,
+    errorMessage,
   ];
-}
-
-class ProfilePhotoUploadError extends ProfileState with EquatableMixin {
-  final String message;
-  ProfilePhotoUploadError(this.message);
-  @override
-  List<Object?> get props => [message];
-}
-
-class ProfileUpdatedSuccess extends ProfileState with EquatableMixin {
-  final UserEntity user;
-  ProfileUpdatedSuccess(this.user);
-  @override
-  List<Object?> get props => [user];
 }

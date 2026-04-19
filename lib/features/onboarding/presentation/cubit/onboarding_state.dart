@@ -1,59 +1,48 @@
 import 'package:equatable/equatable.dart';
 
-class OnboardingState {}
+enum OnboardingStatus { initial, stepChanged, completed, error }
 
-class OnboardingInitial extends OnboardingState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
-}
-
-class OnboardingStepChanged extends OnboardingState with EquatableMixin {
+class OnboardingState extends Equatable {
+  final OnboardingStatus status;
   final int step;
   final String name;
   final int? age;
   final String? gender;
   final String? photoUrl;
   final List<String> vibes;
+  final String? errorMessage;
 
-  OnboardingStepChanged({
-    required this.step,
+  const OnboardingState({
+    this.status = OnboardingStatus.initial,
+    this.step = 0,
     this.name = '',
     this.age,
     this.gender,
     this.photoUrl,
     this.vibes = const [],
+    this.errorMessage,
   });
 
-  OnboardingStepChanged copyWith({
+  OnboardingState copyWith({
+    OnboardingStatus? status,
     int? step,
     String? name,
     int? age,
     String? gender,
     String? photoUrl,
     List<String>? vibes,
-  }) {
-    return OnboardingStepChanged(
-      step: step ?? this.step,
-      name: name ?? this.name,
-      age: age ?? this.age,
-      gender: gender ?? this.gender,
-      photoUrl: photoUrl ?? this.photoUrl,
-      vibes: vibes ?? this.vibes,
-    );
-  }
+    String? errorMessage,
+  }) => OnboardingState(
+    status: status ?? this.status,
+    step: step ?? this.step,
+    name: name ?? this.name,
+    age: age ?? this.age,
+    gender: gender ?? this.gender,
+    photoUrl: photoUrl ?? this.photoUrl,
+    vibes: vibes ?? this.vibes,
+    errorMessage: errorMessage ?? this.errorMessage,
+  );
 
   @override
-  List<Object?> get props => [step, name, age, gender, photoUrl, vibes];
-}
-
-class OnboardingCompleted extends OnboardingState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
-}
-
-class OnboardingError extends OnboardingState with EquatableMixin {
-  final String message;
-  OnboardingError({required this.message});
-  @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [status, step, name, age, gender, photoUrl, vibes, errorMessage];
 }

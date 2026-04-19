@@ -8,7 +8,7 @@ import 'package:shakr/features/onboarding/presentation/widgets/vibe_step.dart';
 import 'package:shakr/features/onboarding/presentation/widgets/intro_step.dart';
 
 class OnboardingBody extends StatelessWidget {
-  final OnboardingStepChanged state;
+  final OnboardingState state;
 
   const OnboardingBody({super.key, required this.state});
 

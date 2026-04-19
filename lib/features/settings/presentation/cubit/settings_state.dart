@@ -1,53 +1,32 @@
 import 'package:equatable/equatable.dart';
 
-class SettingsState {}
+enum SettingsStatus { initial, loading, loaded, error, saved, accountDeleted }
 
-class SettingsInitial extends SettingsState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
-}
-
-class SettingsLoading extends SettingsState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
-}
-
-class SettingsLoaded extends SettingsState with EquatableMixin {
+class SettingsState extends Equatable {
+  final SettingsStatus status;
   final List<String> selectedVibes;
   final bool notificationsEnabled;
-  
-  SettingsLoaded({
-    required this.selectedVibes,
-    required this.notificationsEnabled,
+  final String? errorMessage;
+
+  const SettingsState({
+    this.status = SettingsStatus.initial,
+    this.selectedVibes = const [],
+    this.notificationsEnabled = true,
+    this.errorMessage,
   });
 
-  SettingsLoaded copyWith({
+  SettingsState copyWith({
+    SettingsStatus? status,
     List<String>? selectedVibes,
     bool? notificationsEnabled,
-  }) {
-    return SettingsLoaded(
-      selectedVibes: selectedVibes ?? this.selectedVibes,
-      notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
-    );
-  }
+    String? errorMessage,
+  }) => SettingsState(
+    status: status ?? this.status,
+    selectedVibes: selectedVibes ?? this.selectedVibes,
+    notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
+    errorMessage: errorMessage ?? this.errorMessage,
+  );
 
   @override
-  List<Object?> get props => [selectedVibes, notificationsEnabled];
-}
-
-class SettingsError extends SettingsState with EquatableMixin {
-  final String message;
-  SettingsError(this.message);
-  @override
-  List<Object?> get props => [message];
-}
-
-class SettingsSaved extends SettingsState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
-}
-
-class SettingsAccountDeleted extends SettingsState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
+  List<Object?> get props => [status, selectedVibes, notificationsEnabled, errorMessage];
 }

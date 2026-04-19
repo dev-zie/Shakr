@@ -5,7 +5,6 @@ import 'package:shakr/common/constants/app_enums.dart';
 import 'package:shakr/common/getit/injection.dart';
 import 'package:shakr/core/services/local_storage_service.dart';
 import 'package:shakr/core/services/location_service.dart';
-import 'package:shakr/core/services/media_service.dart';
 import 'package:shakr/features/auth/domain/entities/user_entity.dart';
 import 'package:shakr/features/auth/domain/usecases/save_profile_usecase.dart';
 import 'package:shakr/features/auth/domain/usecases/upload_photo_usecase.dart';
@@ -26,119 +25,73 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     required this.lsc,
     required this.saveProfileUsecase,
     required this.uploadPhotoUsecase,
-  }) : super(OnboardingInitial());
+  }) : super(const OnboardingState());
 
-  void updateAge(int age) {
-    final current = _currentStep();
-    emit(current.copyWith(age: age));
-  }
+  void updateAge(int age) => emit(state.copyWith(age: age));
 
-  void updateGender(Gender gender) {
-    final current = _currentStep();
-    emit(current.copyWith(gender: gender.name));
-  }
+  void updateGender(Gender gender) => emit(state.copyWith(gender: gender.name));
 
-  void start() {
-    emit(OnboardingStepChanged(step: 0));
-  }
+  void start() => emit(state.copyWith(status: OnboardingStatus.stepChanged, step: 0));
 
-  void finishIntro() {
-    final current = _currentStep();
-    emit(current.copyWith(step: 1));
-  }
+  void finishIntro() => emit(state.copyWith(step: 1));
 
-  void setName(String name) {
-    final current = _currentStep();
-    emit(current.copyWith(name: name, step: 2));
-  }
+  void setName(String name) => emit(state.copyWith(name: name, step: 2));
 
   Future<void> setPhoto() async {
-    final current = _currentStep();
-    if (current.photoUrl == null || current.photoUrl!.isEmpty) {
-      emit(current.copyWith(step: 3));
+    if (state.photoUrl == null || state.photoUrl!.isEmpty) {
+      emit(state.copyWith(step: 3));
       return;
     }
 
     final uid = sl<AuthCubit>().currentUid ?? '';
-    final result = await uploadPhotoUsecase.call(uid, current.photoUrl!);
+    final result = await uploadPhotoUsecase.call(uid, state.photoUrl!);
     result.fold(
-      (failure) => emit(OnboardingError(message: failure.message)),
-      (url) => emit(current.copyWith(photoUrl: url, step: 3)),
+      (failure) => emit(state.copyWith(status: OnboardingStatus.error, errorMessage: failure.message)),
+      (url) => emit(state.copyWith(photoUrl: url, step: 3)),
     );
   }
 
-  void setAge(int age) {
-    final current = _currentStep();
-    emit(current.copyWith(age: age, step: 4));
-  }
+  void setAge(int age) => emit(state.copyWith(age: age, step: 4));
 
-  void setGender(String gender) {
-    final current = _currentStep();
-    emit(current.copyWith(gender: gender, step: 5));
-  }
+  void setGender(String gender) => emit(state.copyWith(gender: gender, step: 5));
 
   void selectVibe(String vibe) {
-    final current = _currentStep();
-    if (current.vibes.length >= 3) return;
-    emit(current.copyWith(vibes: [...current.vibes, vibe]));
+    if (state.vibes.length >= 3) return;
+    emit(state.copyWith(vibes: [...state.vibes, vibe]));
   }
 
   void deselectVibe(String vibe) {
-    final current = _currentStep();
-    emit(
-      current.copyWith(vibes: current.vibes.where((v) => v != vibe).toList()),
-    );
+    emit(state.copyWith(vibes: state.vibes.where((v) => v != vibe).toList()));
   }
 
   void goBack() {
-    final current = _currentStep();
-    if (current.step > 0) {
-      emit(current.copyWith(step: current.step - 1));
-    }
+    if (state.step > 0) emit(state.copyWith(step: state.step - 1));
   }
 
-  Future<void> pickPhoto() async {
-    final path = await sl<MediaService>().pickPhoto();
-    if (path != null) {
-      final current = _currentStep();
-      emit(current.copyWith(photoUrl: path));
-    }
-  }
+  void setPhotoPath(String path) => emit(state.copyWith(photoUrl: path));
 
   Future<void> saveProfile() async {
-    final current = _currentStep();
-
-    final hasPermission = await sl<LocationService>().requestPermission();
-    if (!hasPermission) {
-      emit(OnboardingError(message: 'Konum izni gerekli'));
-      return;
-    }
+    await sl<LocationService>().requestPermission();
 
     final uid = sl<AuthCubit>().currentUid ?? '';
 
     final user = UserEntity(
       uid: uid,
-      name: current.name,
-      age: current.age ?? 0,
-      gender: current.gender ?? '',
-      photoUrl: current.photoUrl,
-      vibes: current.vibes,
+      name: state.name,
+      age: state.age ?? 0,
+      gender: state.gender ?? '',
+      photoUrl: state.photoUrl,
+      vibes: state.vibes,
     );
 
     final result = await saveProfileUsecase.call(user);
-    result.fold((failure) => emit(OnboardingError(message: failure.message)), (
-      r,
-    ) async {
-      await lsc.setOnboardingCompleted();
-      emit(OnboardingCompleted());
-    });
-  }
-
-  OnboardingStepChanged _currentStep() {
-    if (state is OnboardingStepChanged) {
-      return state as OnboardingStepChanged;
-    }
-    return OnboardingStepChanged(step: 0);
+    result.fold(
+      (failure) => emit(state.copyWith(status: OnboardingStatus.error, errorMessage: failure.message)),
+      (r) async {
+        await lsc.setOnboardingCompleted();
+        emit(state.copyWith(status: OnboardingStatus.completed));
+      },
+    );
   }
 
   @override

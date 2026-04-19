@@ -7,8 +7,8 @@ import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.da
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.dart';
 import 'package:shakr/features/onboarding/presentation/widgets/onboarding_body.dart';
 
-class OnboardingScreen extends StatelessWidget {
-  const OnboardingScreen({super.key});
+class OnboardingPage extends StatelessWidget {
+  const OnboardingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,17 +16,17 @@ class OnboardingScreen extends StatelessWidget {
       create: (context) => sl<OnboardingCubit>()..start(),
       child: BlocConsumer<OnboardingCubit, OnboardingState>(
         listener: (context, state) {
-          if (state is OnboardingCompleted) {
+          if (state.status == OnboardingStatus.completed) {
             context.replace('/main/shake');
           }
-          if (state is OnboardingError) {
+          if (state.status == OnboardingStatus.error) {
             ScaffoldMessenger.of(
               context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
+            ).showSnackBar(SnackBar(content: Text(state.errorMessage ?? '')));
           }
         },
         builder: (context, state) {
-          if (state is! OnboardingStepChanged) {
+          if (state.status != OnboardingStatus.stepChanged) {
             return const Center(child: CircularProgressIndicator());
           }
 

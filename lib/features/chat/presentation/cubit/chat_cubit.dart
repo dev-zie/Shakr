@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/constants/app_constants.dart';
-import 'package:shakr/core/services/vibration_service.dart';
 import 'package:shakr/features/chat/domain/entities/message_entity.dart';
 import 'package:shakr/features/chat/domain/usecases/delete_conversation_usecase.dart';
 import 'package:shakr/features/chat/domain/usecases/send_message_usecase.dart';
@@ -29,19 +28,18 @@ class ChatCubit extends Cubit<ChatState> {
     required this.watchMessagesUsecase,
     required this.watchConversationsUsecase,
     required this.deleteConversationUsecase,
-  }) : super(ChatInitial());
+  }) : super(const ChatState());
 
   void initChat(
     String id,
     DateTime fallbackCreatedAt, {
     bool isPermanent = false,
   }) {
-    sl<VibrationService>().chatStartedFeedback();
     watchMessages(id, isPermanent: isPermanent);
     if (!isPermanent) {
       _startTimer(id, fallbackCreatedAt);
     } else {
-      emit(ChatTimerTickState(-1, []));
+      emit(state.copyWith(status: ChatStatus.timerTick, secondsLeft: -1));
     }
   }
 
@@ -71,23 +69,18 @@ class ChatCubit extends Cubit<ChatState> {
         if (remaining <= 0) {
           timer.cancel();
           sl<MatchCubit>().expireMatch(matchId);
-          sl<VibrationService>().endFeedback();
-          if (!isClosed) emit(ChatTimeExpiredState());
+          if (!isClosed) emit(state.copyWith(status: ChatStatus.timeExpired));
         } else {
-          List<MessageEntity> currentMessages = [];
-          if (state is ChatTimerTickState) {
-            currentMessages = (state as ChatTimerTickState).messages;
-          }
-
-          // Eğer henüz her iki taraf da girmemişse (waiting), timer'ı donduralım veya bekleme durumunu gösterelim.
-          // Ama kullanıcı "sohbete git dediginde sure baslayacak" dediği için
-          // chatStartedAt null olduğu sürece süre 300 (veya tam süre) olarak kalmalı.
+          // chatStartedAt null olduğu sürece süre beklemede görünür
           final displayRemaining = isWaiting
               ? AppConstants.chatWaitingDisplaySeconds
               : remaining;
 
           if (!isClosed) {
-            emit(ChatTimerTickState(displayRemaining, currentMessages));
+            emit(state.copyWith(
+              status: ChatStatus.timerTick,
+              secondsLeft: displayRemaining,
+            ));
           }
         }
       });
@@ -129,23 +122,32 @@ class ChatCubit extends Cubit<ChatState> {
       message,
       isPermanent: isPermanent,
     );
-    result.fold((l) => emit(ChatError(l.message)), (r) => null);
+    result.fold(
+      (l) => emit(state.copyWith(status: ChatStatus.error, errorMessage: l.message)),
+      (r) => null,
+    );
   }
 
   void watchMessages(String id, {bool isPermanent = false}) {
-    emit(ChatLoading());
+    emit(state.copyWith(status: ChatStatus.loading));
     _subscription = watchMessagesUsecase
         .call(id, isPermanent: isPermanent)
         .listen(
           (messages) {
-            final currentSeconds = (state is ChatTimerTickState)
-                ? (state as ChatTimerTickState).secondsLeft
+            final currentSeconds = state.status == ChatStatus.timerTick
+                ? state.secondsLeft
                 : (isPermanent ? -1 : AppConstants.chatWaitingDisplaySeconds);
 
-            if (!isClosed) emit(ChatTimerTickState(currentSeconds, messages));
+            if (!isClosed) {
+              emit(state.copyWith(
+                status: ChatStatus.timerTick,
+                secondsLeft: currentSeconds,
+                messages: messages,
+              ));
+            }
           },
           onError: (error) {
-            if (!isClosed) emit(ChatError(error.toString()));
+            if (!isClosed) emit(state.copyWith(status: ChatStatus.error, errorMessage: error.toString()));
           },
         );
   }
@@ -153,8 +155,8 @@ class ChatCubit extends Cubit<ChatState> {
   Stream<ChatState> watchConversations(String uid) {
     return watchConversationsUsecase.call(uid).map((result) {
       return result.fold(
-        (failure) => ChatError(failure.message),
-        (conversations) => ChatConversationsLoaded(conversations),
+        (failure) => ChatState(status: ChatStatus.error, errorMessage: failure.message),
+        (conversations) => ChatState(status: ChatStatus.conversationsLoaded, conversations: conversations),
       );
     });
   }
@@ -168,9 +170,9 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future<void> deleteConversation(String conversationId) async {
     final result = await deleteConversationUsecase.call(conversationId);
-    result.fold((l) => emit(ChatError(l.message)), (l) {
-      sl<VibrationService>().endFeedback();
-      emit(ChatConversationDeleted());
-    });
+    result.fold(
+      (l) => emit(state.copyWith(status: ChatStatus.error, errorMessage: l.message)),
+      (l) => emit(state.copyWith(status: ChatStatus.conversationDeleted)),
+    );
   }
 }

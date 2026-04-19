@@ -1,32 +1,19 @@
 import 'package:equatable/equatable.dart';
 
-class ShakeState {}
+enum ShakeCubitStatus { initial, detected, recorded, noMatch, error }
 
-class ShakeInitial extends ShakeState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
-}
+class ShakeState extends Equatable {
+  final ShakeCubitStatus status;
+  final String? errorMessage;
 
-class ShakeDetected extends ShakeState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
-}
+  const ShakeState({this.status = ShakeCubitStatus.initial, this.errorMessage});
 
-class ShakeRecorded extends ShakeState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
-}
-
-class ShakeNoMatch extends ShakeState with EquatableMixin {
-  @override
-  List<Object?> get props => [];
-}
-
-class ShakeError extends ShakeState with EquatableMixin {
-  final String message;
-
-  ShakeError(this.message);
+  ShakeState copyWith({ShakeCubitStatus? status, String? errorMessage}) =>
+      ShakeState(
+        status: status ?? this.status,
+        errorMessage: errorMessage ?? this.errorMessage,
+      );
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [status, errorMessage];
 }

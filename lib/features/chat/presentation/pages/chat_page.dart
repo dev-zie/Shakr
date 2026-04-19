@@ -6,6 +6,7 @@ import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/getit/injection.dart';
 import 'package:shakr/common/theme/app_colors.dart';
+import 'package:shakr/common/widgets/confirm_dialog.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_state.dart';
@@ -15,14 +16,14 @@ import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_state.dart';
 import 'package:shakr/features/shake/presentation/widgets/go_back_button.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatPage extends StatelessWidget {
   final String matchId;
   final DateTime chatStartTime;
   final bool isPermanent;
   final String? otherUserName;
   final String? otherUserPhoto;
 
-  const ChatScreen({
+  const ChatPage({
     super.key,
     required this.matchId,
     required this.chatStartTime,
@@ -63,7 +64,7 @@ class ChatScreen extends StatelessWidget {
             BlocListener<MatchCubit, MatchState>(
               bloc: sl<MatchCubit>(),
               listener: (context, state) {
-                if (state is MatchDeleted && !isPermanent) {
+                if (state.status == MatchCubitStatus.deleted && !isPermanent) {
                   if (Navigator.of(context).canPop()) {
                     context.pop();
                   } else {
@@ -74,9 +75,9 @@ class ChatScreen extends StatelessWidget {
             ),
             BlocListener<ChatCubit, ChatState>(
               listener: (context, state) {
-                if (state is ChatTimeExpiredState) {
+                if (state.status == ChatStatus.timeExpired) {
                   context.go('/chat-expired/$matchId');
-                } else if (state is ChatConversationDeleted) {
+                } else if (state.status == ChatStatus.conversationDeleted) {
                   context.go('/main/chats');
                 }
               },
@@ -145,48 +146,20 @@ class ChatScreen extends StatelessWidget {
   }
 
   Future<void> _showDeleteDialog(BuildContext context) async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(AppStrings.deleteConversation),
-        content: const Text(AppStrings.deleteConversationConfirm),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text(AppStrings.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text(AppStrings.okay),
-          ),
-        ],
-      ),
+    final confirm = await ConfirmDialog.show(
+      context,
+      title: AppStrings.deleteConversation,
+      content: AppStrings.deleteConversationConfirm,
     );
-    if (confirm == true) {
-      sl<ChatCubit>().deleteConversation(matchId);
-    }
+    if (confirm) sl<ChatCubit>().deleteConversation(matchId);
   }
 
   Future<void> _showEndMatchDialog(BuildContext context) async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(AppStrings.endMatch),
-        content: const Text(AppStrings.endMatchConfirm),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text(AppStrings.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text(AppStrings.okay),
-          ),
-        ],
-      ),
+    final confirm = await ConfirmDialog.show(
+      context,
+      title: AppStrings.endMatch,
+      content: AppStrings.endMatchConfirm,
     );
-    if (confirm == true) {
-      sl<MatchCubit>().endMatch(matchId);
-    }
+    if (confirm) sl<MatchCubit>().endMatch(matchId);
   }
 }

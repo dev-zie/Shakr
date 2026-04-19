@@ -18,7 +18,7 @@ class ChatTimerTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ChatCubit, ChatState>(
       builder: (context, state) {
-        final secondsLeft = state is ChatTimerTickState
+        final secondsLeft = state.status == ChatStatus.timerTick
             ? state.secondsLeft
             : AppConstants.chatWaitingDisplaySeconds;
         return Text(

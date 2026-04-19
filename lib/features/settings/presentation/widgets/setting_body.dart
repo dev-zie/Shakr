@@ -7,35 +7,35 @@ import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:shakr/features/settings/presentation/cubit/settings_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsBody extends StatelessWidget {
   const SettingsBody({super.key});
+
+  static const _appStoreUrl =
+      'https://apps.apple.com/'; // TODO: App Store ID
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<SettingsCubit, SettingsState>(
       listener: (context, state) {
-        if (state is SettingsAccountDeleted) {
+        if (state.status == SettingsStatus.accountDeleted) {
           context.go('/');
-        } else if (state is SettingsError) {
+        } else if (state.status == SettingsStatus.error) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+          ).showSnackBar(SnackBar(content: Text(state.errorMessage ?? '')));
         }
       },
       child: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, state) {
-          final bool notificationsEnabled = state is SettingsLoaded
-              ? state.notificationsEnabled
-              : true;
-
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.l),
             children: [
               SwitchListTile(
                 title: const Text(AppStrings.notifications),
                 subtitle: const Text(AppStrings.notificationsDesc),
-                value: notificationsEnabled,
+                value: state.notificationsEnabled,
                 onChanged: (val) {
                   context.read<SettingsCubit>().toggleNotifications(val);
                 },
@@ -44,17 +44,17 @@ class SettingsBody extends StatelessWidget {
               ListTile(
                 leading: const Icon(LucideIcons.fileText),
                 title: const Text(AppStrings.termsofservice),
-                onTap: () {},
+                onTap: () => _showTermsDialog(context),
               ),
               ListTile(
                 leading: const Icon(LucideIcons.shieldCheck),
                 title: const Text(AppStrings.privacypolicy),
-                onTap: () {},
+                onTap: () => _showPrivacyDialog(context),
               ),
               ListTile(
                 leading: const Icon(LucideIcons.star),
                 title: const Text(AppStrings.rateus),
-                onTap: () {},
+                onTap: _openAppStore,
               ),
               const Divider(),
               ListTile(
@@ -70,6 +70,89 @@ class SettingsBody extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void _showTermsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text(AppStrings.termsofservice),
+        content: const SingleChildScrollView(
+          child: Text(
+            'Son güncelleme: Nisan 2026\n\n'
+            '1. Kabul\n'
+            'Shakr uygulamasını kullanarak aşağıdaki kullanım şartlarını kabul etmiş sayılırsınız. '
+            'Bu şartları kabul etmiyorsanız uygulamayı kullanmayınız.\n\n'
+            '2. Hizmet\n'
+            'Shakr, kullanıcıların konum tabanlı shake (sallama) etkileşimi ile anonim olarak eşleşmesini sağlayan '
+            'bir sosyal uygulamadır. Hizmetimiz yalnızca 18 yaş ve üzeri bireyler içindir.\n\n'
+            '3. Kullanıcı Yükümlülükleri\n'
+            'Kullanıcılar, uygulama üzerinden yanıltıcı, zararlı veya yasadışı içerik paylaşamaz. '
+            'Diğer kullanıcılara yönelik taciz, hakaret veya tehdit içeren davranışlar yasaktır.\n\n'
+            '4. Fikri Mülkiyet\n'
+            'Uygulama içeriği, tasarımı ve markası Shakr\'a aittir. İzinsiz kopyalama ve dağıtım yasaktır.\n\n'
+            '5. Sorumluluk Sınırı\n'
+            'Shakr, kullanıcılar arasındaki etkileşimlerden doğan doğrudan veya dolaylı zararlardan sorumlu tutulamaz.\n\n'
+            '6. Değişiklikler\n'
+            'Bu şartlar önceden bildirim yapılmaksızın güncellenebilir. Güncel versiyona uygulama üzerinden ulaşabilirsiniz.\n\n'
+            '7. İletişim\n'
+            'Sorularınız için: destek@shakr.app',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Tamam'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPrivacyDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text(AppStrings.privacypolicy),
+        content: const SingleChildScrollView(
+          child: Text(
+            'Son güncelleme: Nisan 2026\n\n'
+            '1. Toplanan Veriler\n'
+            'Uygulamamız; kullanıcı adı, yaş, cinsiyet, fotoğraf ve konum bilgilerini toplar. '
+            'Sohbet geçmişi ve eşleşme verileri de işlenmektedir.\n\n'
+            '2. Verilerin Kullanımı\n'
+            'Toplanan veriler yalnızca hizmetin sunulması, güvenliğin sağlanması ve kullanıcı deneyiminin '
+            'iyileştirilmesi amacıyla kullanılır. Verileriniz üçüncü taraflarla satılmaz veya kiralanmaz.\n\n'
+            '3. Konum Verisi\n'
+            'Konum bilgisi yalnızca yakındaki kullanıcıları eşleştirmek amacıyla anlık olarak kullanılır. '
+            'Kesin konum bilgisi hiçbir zaman diğer kullanıcılarla paylaşılmaz.\n\n'
+            '4. Veri Güvenliği\n'
+            'Verileriniz endüstri standardı şifreleme yöntemleriyle korunmaktadır. '
+            'Firebase altyapısı kullanılmakta olup Google\'ın gizlilik politikaları geçerlidir.\n\n'
+            '5. Veri Saklama\n'
+            'Hesabınızı sildiğinizde tüm kişisel verileriniz 30 gün içinde kalıcı olarak silinir.\n\n'
+            '6. Haklarınız\n'
+            'KVKK kapsamında verilerinize erişme, düzeltme ve silme hakkına sahipsiniz. '
+            'Bu haklarınızı kullanmak için bizimle iletişime geçebilirsiniz.\n\n'
+            '7. İletişim\n'
+            'Gizlilik konularında: gizlilik@shakr.app',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Tamam'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _openAppStore() async {
+    final uri = Uri.parse(_appStoreUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   void _showDeleteDialog(BuildContext context) {
@@ -106,7 +189,10 @@ class SettingsBody extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.error,
                     ),
-                    child: const Text(AppStrings.deleteAccountAction, textAlign: .center,),
+                    child: const Text(
+                      AppStrings.deleteAccountAction,
+                      textAlign: .center,
+                    ),
                   ),
                 ),
               ],

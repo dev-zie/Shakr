@@ -10,8 +10,8 @@ import 'package:shakr/features/profile/presentation/cubit/profile_state.dart';
 import 'package:shakr/features/profile/presentation/widgets/profile_edit_body.dart';
 import 'package:shakr/features/profile/presentation/widgets/profile_view_body.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,26 +21,25 @@ class ProfileScreen extends StatelessWidget {
       create: (context) => sl<ProfileCubit>()..loadProfile(uid ?? ''),
       child: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
-          if (state is ProfileInitial) {
-            // Account deleted or logged out -> restart app flow
+          if (state.status == ProfileStatus.initial) {
             context.go('/');
             return;
           }
-          if (state is ProfileUpdatedSuccess) {
+          if (state.status == ProfileStatus.updatedSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text(AppStrings.profileUpdated)),
             );
-          } else if (state is ProfileError) {
+          } else if (state.status == ProfileStatus.error) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('${AppStrings.errorPrefix}: ${state.message}'),
+                content: Text('${AppStrings.errorPrefix}: ${state.errorMessage ?? ''}'),
               ),
             );
-          } else if (state is ProfilePhotoUploadError) {
+          } else if (state.status == ProfileStatus.photoUploadError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  '${AppStrings.photoUploadError}: ${state.message}',
+                  '${AppStrings.photoUploadError}: ${state.errorMessage ?? ''}',
                 ),
               ),
             );
@@ -51,7 +50,7 @@ class ProfileScreen extends StatelessWidget {
             appBar: AppBar(
               title: const Text(AppStrings.myProfile),
               actions: [
-                if (state is ProfileLoaded)
+                if (state.status == ProfileStatus.loaded)
                   IconButton(
                     icon: Icon(
                       state.isEditing ? LucideIcons.x : LucideIcons.pencil,
@@ -73,13 +72,13 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildBody(ProfileState state) {
-    if (state is ProfileLoading) {
+    if (state.status == ProfileStatus.loading) {
       return const Center(child: CircularProgressIndicator());
     }
-    if (state is ProfileLoaded) {
+    if (state.status == ProfileStatus.loaded) {
       return state.isEditing
           ? ProfileEditBody(state: state)
-          : ProfileViewBody(user: state.user);
+          : ProfileViewBody(user: state.user!);
     }
     return const Center(child: Text(AppStrings.profileNotFound));
   }

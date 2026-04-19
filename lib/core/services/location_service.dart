@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:shakr/core/models/location_result.dart';
+import 'package:shakr/common/models/location_result.dart';
 
 class LocationService {
   Future<LocationResult> getCurrentLocation() async {

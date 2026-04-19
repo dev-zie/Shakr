@@ -4,13 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/chat/presentation/widgets/chat_expired_body.dart';
-import 'package:shakr/features/match/domain/entities/match_entity.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_state.dart';
 import 'package:shakr/common/getit/injection.dart';
 
-class ChatExpiredScreen extends StatelessWidget {
-  const ChatExpiredScreen({super.key, required this.matchId});
+class ChatExpiredPage extends StatelessWidget {
+  const ChatExpiredPage({super.key, required this.matchId});
 
   final String matchId;
 
@@ -26,17 +25,17 @@ class ChatExpiredScreen extends StatelessWidget {
           final messenger = ScaffoldMessenger.of(context);
           final router = GoRouter.of(context);
 
-          if (state is MatchDeleted) {
+          if (state.status == MatchCubitStatus.deleted) {
             messenger.showSnackBar(
               const SnackBar(content: Text(AppStrings.matchClosed)),
             );
             router.go('/main/shake');
-          } else if (state is MatchBothKept) {
+          } else if (state.status == MatchCubitStatus.bothKept) {
             messenger.showSnackBar(
               const SnackBar(content: Text(AppStrings.connectionSaved)),
             );
             context.go('/main/chats');
-          } else if (state is MatchConnectionPending) {
+          } else if (state.status == MatchCubitStatus.connectionPending) {
             messenger.showSnackBar(
               const SnackBar(content: Text(AppStrings.waitingOtherDecide)),
             );
@@ -45,15 +44,11 @@ class ChatExpiredScreen extends StatelessWidget {
         child: BlocBuilder<MatchCubit, MatchState>(
           bloc: matchCubit,
           builder: (context, state) {
-            if (state is MatchLoading) {
+            if (state.status == MatchCubitStatus.loading) {
               return const Center(child: CircularProgressIndicator());
             }
 
-            MatchEntity? match;
-            if (state is MatchFound) match = state.match;
-            if (state is MatchExpired) match = state.match;
-            if (state is MatchConnectionPending) match = state.match;
-
+            final match = state.match;
             if (match != null) {
               return ChatExpiredBody(
                 match: match,
