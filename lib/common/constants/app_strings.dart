@@ -20,6 +20,7 @@ class AppStrings {
   static const shakeString = 'Salla ve Keşfet';
   static const shakeSubtitle = 'Eşleşmek için telefonunu salla!';
   static const searchingText = 'Sinyal aranıyor... \nLütfen bekle 😎';
+  static const cancelSearch = 'Aramayı İptal Et';
 
   // Eşleşme
   static const matchFound = 'Harika, Biriyle Eşleştin!';
@@ -93,6 +94,11 @@ class AppStrings {
   static const settings = 'Ayarlar';
   static const notifications = 'Bildirimler';
   static const notificationsDesc = 'Eşleşme ve mesaj bildirimlerini al';
+  static const shakeSensitivity = 'Sallama Hassasiyeti';
+  static const shakeSensitivityDesc = 'Telefonu ne kadar kuvvetle sallamalısın?';
+  static const sensitivityHassas = 'Hassas';
+  static const sensitivityNormal = 'Normal';
+  static const sensitivitySert = 'Sert';
   static const termsofservice = 'Kullanım Şartları';
   static const privacypolicy = 'Gizlilik Politikası';
   static const rateus = 'Bizi Değerlendir';
@@ -126,21 +132,13 @@ class AppStrings {
       'Shakr ile yeni insanlarla tanışmanın en eğlenceli yolunu keşfet!';
   static const introSlide2Title = 'Salla';
   static const introSlide2Desc =
-      'Bu sayfada telefonunu salla ve etrafındaki kişilerle anında eşleş.';
+      'Telefonunu salla ve etrafındaki kişilerle anında eşleş.';
   static const introSlide3Title = 'Profil';
   static const introSlide3Desc =
-      'Bu sayfada kendini ifade eden bir profil oluştur ve tarzını yansıt.';
+      'Kendini ifade eden bir profil oluştur ve tarzını yansıt.';
   static const introSlide4Title = 'Sohbet';
   static const introSlide4Desc =
-      'Bu sayfada eşleştiğin kişilerle güvenle ve keyifle sohbet et.';
-
-  // Konum & Cooldown
-  static const locationFallbackWarning =
-      'Eşleşme hassas olmayabilir.';
-
-
-  // Yaş
-  static const birthYearNotice = 'Doğum yılın otomatik hesaplanacaktır.';
+      'Eşleştiğin kişilerle güvenle ve keyifle sohbet et.';
 
   // Geliştirici
   static const emulatorSimulateShake = 'Emülatör: Sallanmayı Simüle Et';

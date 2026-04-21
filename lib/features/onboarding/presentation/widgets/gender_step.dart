@@ -4,9 +4,9 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/constants/app_enums.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
+import 'package:shakr/common/widgets/gender_button.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.dart';
-import 'package:shakr/features/onboarding/presentation/widgets/gender_button.dart';
 
 class GenderStep extends StatelessWidget {
   const GenderStep({super.key});

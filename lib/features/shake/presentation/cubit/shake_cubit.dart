@@ -7,6 +7,8 @@ import 'package:shakr/core/services/shake_service.dart';
 import 'package:shakr/core/services/vibration_service.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
+import 'package:shakr/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:shakr/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:shakr/features/shake/domain/entities/shake_entity.dart';
 import 'package:shakr/features/shake/domain/usecases/delete_shake_usecase.dart';
 import 'package:shakr/features/shake/domain/usecases/has_active_match_usecase.dart';
@@ -34,7 +36,8 @@ class ShakeCubit extends Cubit<ShakeState> {
     reset();
     sl<MatchCubit>().reset();
     final uid = sl<AuthCubit>().currentUid;
-    sl<ShakeService>().startListening(() async {
+    final threshold = sl<SettingsCubit>().state.shakeSensitivity.threshold;
+    sl<ShakeService>().startListening(threshold: threshold, () async {
       if (uid == null) return;
 
       // Sadece başlangıç durumundayken yeni sarsıntı işlemlerine izin ver
@@ -46,12 +49,14 @@ class ShakeCubit extends Cubit<ShakeState> {
 
       final locationResult = await sl<LocationService>().getCurrentLocation();
 
+      final vibes = sl<ProfileCubit>().state.user?.vibes ?? [];
       recordShake(
         ShakeEntity(
           uid: uid,
           location: locationResult.location,
           status: ShakeStatus.waiting,
           timestamp: DateTime.now(),
+          vibes: vibes,
         ),
       );
     });
@@ -105,6 +110,13 @@ class ShakeCubit extends Cubit<ShakeState> {
   }
 
   void cancelMatchTimer() => _matchTimer?.cancel();
+
+  Future<void> cancelSearch() async {
+    _matchTimer?.cancel();
+    final uid = sl<AuthCubit>().currentUid;
+    if (uid != null) await deleteShakeUsecase.call(uid);
+    init();
+  }
 
   @override
   Future<void> close() {

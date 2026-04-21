@@ -4,7 +4,7 @@ import 'package:shakr/common/constants/app_enums.dart';
 import 'package:shakr/common/constants/app_radius.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
-import 'package:shakr/features/onboarding/presentation/widgets/gender_button.dart';
+import 'package:shakr/common/widgets/gender_button.dart';
 import 'package:shakr/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:shakr/features/profile/presentation/cubit/profile_state.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -19,91 +19,106 @@ class ProfileEditBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(AppSpacing.l),
+    return Column(
       children: [
-        ProfilePhotoEditor(
-          photoUrl: state.user?.photoUrl,
-          isUploading: state.isUploadingPhoto,
-        ),
-        const SizedBox(height: AppSpacing.xl),
-
-        TextFormField(
-          initialValue: state.editName,
-          decoration: InputDecoration(
-            labelText: AppStrings.nameLabel,
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.all(AppSpacing.l),
+            children: [
+              ProfilePhotoEditor(
+                photoUrl: state.user?.photoUrl,
+                isUploading: state.isUploadingPhoto,
               ),
-              borderRadius: BorderRadius.circular(AppRadius.m),
-            ),
+              const SizedBox(height: AppSpacing.xl),
+
+              TextFormField(
+                initialValue: state.editName,
+                decoration: InputDecoration(
+                  labelText: AppStrings.nameLabel,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(
+                        context,
+                      ).primaryColor.withValues(alpha: 0.3),
+                    ),
+                    borderRadius: BorderRadius.circular(AppRadius.m),
+                  ),
+                ),
+                onChanged: (value) =>
+                    context.read<ProfileCubit>().updateName(value),
+              ),
+              const SizedBox(height: AppSpacing.l),
+
+              InkWell(
+                onTap: () async {
+                  final selectedAge = await showDialog<int>(
+                    context: context,
+                    builder: (context) =>
+                        AgeWheelPickerDialog(initialAge: state.editAge),
+                  );
+
+                  if (selectedAge != null && context.mounted) {
+                    context.read<ProfileCubit>().updateAge(selectedAge);
+                  }
+                },
+                child: InputDecorator(
+                  decoration: InputDecoration(
+                    labelText: AppStrings.ageLabel,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(
+                          context,
+                        ).primaryColor.withValues(alpha: 0.3),
+                      ),
+                      borderRadius: BorderRadius.circular(AppRadius.m),
+                    ),
+                  ),
+                  child: Text('${state.editAge} ${AppStrings.yearsOld}'),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.l),
+
+              Text(
+                AppStrings.gender,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              const SizedBox(height: AppSpacing.m),
+              Row(
+                children: [
+                  Expanded(
+                    child: GenderButton(
+                      label: AppStrings.male,
+                      icon: LucideIcons.mars,
+                      isSelected: state.editGender == Gender.male.name,
+                      onTap: () => context.read<ProfileCubit>().updateGender(
+                        Gender.male.name,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.m),
+                  Expanded(
+                    child: GenderButton(
+                      label: AppStrings.female,
+                      icon: LucideIcons.venus,
+                      isSelected: state.editGender == Gender.female.name,
+                      onTap: () => context.read<ProfileCubit>().updateGender(
+                        Gender.female.name,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.l),
+              ProfileVibesSelector(selectedVibes: state.editVibes),
+              const SizedBox(height: AppSpacing.l),
+            ],
           ),
-          onChanged: (value) => context.read<ProfileCubit>().updateName(value),
         ),
-        const SizedBox(height: AppSpacing.l),
-
-        InkWell(
-          onTap: () async {
-            final selectedAge = await showDialog<int>(
-              context: context,
-              builder: (context) =>
-                  AgeWheelPickerDialog(initialAge: state.editAge),
-            );
-
-            if (selectedAge != null && context.mounted) {
-              context.read<ProfileCubit>().updateAge(selectedAge);
-            }
-          },
-          child: InputDecorator(
-            decoration: InputDecoration(
-              labelText: AppStrings.ageLabel,
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
-                ),
-                borderRadius: BorderRadius.circular(AppRadius.m),
-              ),
-            ),
-            child: Text('${state.editAge} ${AppStrings.yearsOld}'),
-          ),
-        ),
-        const SizedBox(height: AppSpacing.l),
-
-        Text(AppStrings.gender, style: Theme.of(context).textTheme.titleSmall),
-        const SizedBox(height: AppSpacing.m),
-        Row(
-          children: [
-            Expanded(
-              child: GenderButton(
-                label: AppStrings.male,
-                icon: LucideIcons.mars,
-                isSelected: state.editGender == Gender.male.name,
-                onTap: () => context.read<ProfileCubit>().updateGender(
-                  Gender.male.name,
-                ),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.m),
-            Expanded(
-              child: GenderButton(
-                label: AppStrings.female,
-                icon: LucideIcons.venus,
-                isSelected: state.editGender == Gender.female.name,
-                onTap: () => context.read<ProfileCubit>().updateGender(
-                  Gender.female.name,
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: AppSpacing.l),
-
-        ProfileVibesSelector(selectedVibes: state.editVibes),
-        const SizedBox(height: AppSpacing.l),
-
         ElevatedButton(
-          onPressed: state.editVibes.length == 3 && state.hasChanges && state.editName.trim().isNotEmpty
+          onPressed:
+              state.editVibes.length == 3 &&
+                  state.hasChanges &&
+                  state.editName.trim().isNotEmpty
               ? () => context.read<ProfileCubit>().saveProfile()
               : null,
           child: Text(

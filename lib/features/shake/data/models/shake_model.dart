@@ -7,6 +7,7 @@ class ShakeModel extends ShakeEntity {
     required super.location,
     required super.status,
     required super.timestamp,
+    super.vibes = const [],
   });
 
   factory ShakeModel.fromMap(Map<String, dynamic> map, String id) {
@@ -15,6 +16,7 @@ class ShakeModel extends ShakeEntity {
       location: map['location'],
       status: ShakeStatusExt.fromString(map['status'] ?? ''),
       timestamp: (map['timestamp'] as Timestamp).toDate(),
+      vibes: List<String>.from(map['vibes'] ?? []),
     );
   }
 
@@ -23,6 +25,7 @@ class ShakeModel extends ShakeEntity {
       'location': location,
       'status': status.name,
       'timestamp': FieldValue.serverTimestamp(),
+      'vibes': vibes,
     };
   }
 }

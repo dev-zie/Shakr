@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/constants/app_dimensions.dart';
-import 'package:shakr/common/constants/app_radius.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/constants/app_strings.dart';
-import 'package:shakr/common/constants/app_text_sizes.dart';
 import 'package:shakr/common/constants/app_vibes.dart';
-import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/common/widgets/vibe_chip.dart';
 import 'package:shakr/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:shakr/features/profile/presentation/widgets/vibe_count_badge.dart';
 
 class ProfileVibesSelector extends StatelessWidget {
   const ProfileVibesSelector({super.key, required this.selectedVibes});
@@ -27,7 +25,7 @@ class ProfileVibesSelector extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const Spacer(),
-            _VibeCountBadge(count: selectedVibes.length),
+            VibeCountBadge(count: selectedVibes.length),
           ],
         ),
         const SizedBox(height: AppSpacing.s),
@@ -39,37 +37,6 @@ class ProfileVibesSelector extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _VibeCountBadge extends StatelessWidget {
-  const _VibeCountBadge({required this.count});
-
-  final int count;
-
-  @override
-  Widget build(BuildContext context) {
-    final isComplete = count == 3;
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.m,
-        vertical: AppSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: isComplete
-            ? AppColors.primary.withValues(alpha: .12)
-            : AppColors.warning.withValues(alpha: .12),
-        borderRadius: BorderRadius.circular(AppRadius.chip),
-      ),
-      child: Text(
-        '$count/3',
-        style: TextStyle(
-          fontSize: AppTextSizes.vibeChip,
-          fontWeight: FontWeight.w600,
-          color: isComplete ? AppColors.primary : AppColors.warning,
-        ),
-      ),
     );
   }
 }

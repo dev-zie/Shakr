@@ -3,9 +3,11 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shakr/common/getit/injection.dart';
+import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_state.dart';
 import 'package:shakr/features/onboarding/presentation/widgets/onboarding_body.dart';
+import 'package:shakr/features/profile/presentation/widgets/vibe_count_badge.dart';
 
 class OnboardingPage extends StatelessWidget {
   const OnboardingPage({super.key});
@@ -37,6 +39,14 @@ class OnboardingPage extends StatelessWidget {
                       icon: const Icon(LucideIcons.arrowLeft),
                       onPressed: () => context.read<OnboardingCubit>().goBack(),
                     )
+                  : null,
+              actions: state.step == 5
+                  ? [
+                      Padding(
+                        padding: const EdgeInsets.only(right: AppSpacing.m),
+                        child: VibeCountBadge(count: state.vibes.length),
+                      ),
+                    ]
                   : null,
             ),
             body: OnboardingBody(state: state),

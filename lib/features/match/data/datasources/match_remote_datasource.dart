@@ -16,15 +16,16 @@ class MatchRemoteDatasource {
     return '${sorted[0]}_${sorted[1]}';
   }
 
-  /// İki kullanıcı arasında 24 saatlik cooldown kaydeder.
-  Future<void> writeCooldown(String uid1, String uid2) async {
+  Future<void> writeCooldown(
+    String uid1,
+    String uid2, {
+    Duration duration = const Duration(hours: 24),
+  }) async {
     final key = _cooldownKey(uid1, uid2);
     await db.collection('matchCooldowns').doc(key).set({
       'user1': uid1,
       'user2': uid2,
-      'expiresAt': Timestamp.fromDate(
-        DateTime.now().add(const Duration(hours: 24)),
-      ),
+      'expiresAt': Timestamp.fromDate(DateTime.now().add(duration)),
     });
   }
 
@@ -122,13 +123,14 @@ class MatchRemoteDatasource {
     final matchDoc = await db.collection('matches').doc(matchId).get();
     if (matchDoc.exists) {
       final data = matchDoc.data()!;
-      // Her iki kullanıcı da sohbete girmiş → cooldown kaydet
-      if (data['chatStartedAt'] != null) {
-        final u1 = data['user1'] as String?;
-        final u2 = data['user2'] as String?;
-        if (u1 != null && u2 != null) {
-          await writeCooldown(u1, u2);
-        }
+      final u1 = data['user1'] as String?;
+      final u2 = data['user2'] as String?;
+      if (u1 != null && u2 != null) {
+        // Sohbet başladıysa 24 saat, hiç konuşmadılarsa 1 saat cooldown
+        final duration = data['chatStartedAt'] != null
+            ? const Duration(hours: 24)
+            : const Duration(hours: 1);
+        await writeCooldown(u1, u2, duration: duration);
       }
     }
     await _hardDeleteMatch(matchId);
@@ -171,8 +173,8 @@ class MatchRemoteDatasource {
         throw Exception('Kullanıcı ID\'leri bulunamadı: u1=$u1, u2=$u2');
       }
 
-      // Kalıcı hale gelen çift cooldown'a girer — birbirinden yeni eşleşme beklenmez.
-      await writeCooldown(u1 as String, u2 as String);
+      // Conversation silinene kadar eşleşmesinler — 100 yıllık cooldown.
+      await writeCooldown(u1 as String, u2 as String, duration: const Duration(days: 36500));
 
       final participants = [u1, u2];
 

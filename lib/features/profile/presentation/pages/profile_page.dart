@@ -32,7 +32,9 @@ class ProfilePage extends StatelessWidget {
           } else if (state.status == ProfileStatus.error) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('${AppStrings.errorPrefix}: ${state.errorMessage ?? ''}'),
+                content: Text(
+                  '${AppStrings.errorPrefix}: ${state.errorMessage ?? ''}',
+                ),
               ),
             );
           } else if (state.status == ProfileStatus.photoUploadError) {

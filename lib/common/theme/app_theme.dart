@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'app_colors.dart';
 
 class AppTheme {
@@ -16,6 +17,7 @@ class AppTheme {
       backgroundColor: AppColors.backgroundLight,
       elevation: 0,
       centerTitle: true,
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
       iconTheme: IconThemeData(color: AppColors.textPrimaryLight, size: 24),
       titleTextStyle: TextStyle(
         color: AppColors.textPrimaryLight,
@@ -139,6 +141,7 @@ class AppTheme {
       backgroundColor: AppColors.backgroundDark,
       elevation: 0,
       centerTitle: true,
+      systemOverlayStyle: SystemUiOverlayStyle.light,
       iconTheme: IconThemeData(color: AppColors.textPrimaryDark, size: 24),
       titleTextStyle: TextStyle(
         color: AppColors.textPrimaryDark,

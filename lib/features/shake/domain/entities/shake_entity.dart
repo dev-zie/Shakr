@@ -35,11 +35,13 @@ class ShakeEntity {
   final GeoPoint location;
   final ShakeStatus status;
   final DateTime timestamp;
+  final List<String> vibes;
 
   ShakeEntity({
     required this.uid,
     required this.location,
     required this.status,
     required this.timestamp,
+    this.vibes = const [],
   });
 }

@@ -18,7 +18,7 @@ class AppConstants {
   static const int maxVibesSelectable = 3;
 
   // Splash
-  static const int splashDelaySeconds = 3;
+  static const int splashDelaySeconds = 2;
 
   // Eşleşme
   static const int matchAcceptanceWindowSeconds = 15;

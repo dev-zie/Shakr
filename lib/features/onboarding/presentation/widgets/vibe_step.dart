@@ -58,6 +58,7 @@ class VibeStep extends StatelessWidget {
                             ),
                           ],
                         ),
+
                         const SizedBox(height: AppSpacing.m),
                         Wrap(
                           spacing: AppSpacing.xs,

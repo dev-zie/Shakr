@@ -60,12 +60,31 @@ class ChatRemoteDatasource {
   }
 
   Future<void> deleteConversation(String conversationId) async {
+    // Cooldown'ı kaldır — sohbet silindikten sonra tekrar eşleşebilirler.
+    final convDoc = await db.collection('conversations').doc(conversationId).get();
+    if (convDoc.exists) {
+      final data = convDoc.data()!;
+      final u1 = data['user1'] as String?;
+      final u2 = data['user2'] as String?;
+      if (u1 != null && u2 != null) {
+        final sorted = [u1, u2]..sort();
+        final cooldownKey = '${sorted[0]}_${sorted[1]}';
+        // Sohbet silinince 24 saat cooldown — hemen eşleşemesinler.
+        await db.collection('matchCooldowns').doc(cooldownKey).set({
+          'user1': u1,
+          'user2': u2,
+          'expiresAt': Timestamp.fromDate(
+            DateTime.now().add(const Duration(hours: 24)),
+          ),
+        });
+      }
+    }
+
     final messagesRef = db
         .collection('conversations')
         .doc(conversationId)
         .collection('messages');
 
-    // Delete messages in batches of 500
     QuerySnapshot snapshot;
     do {
       snapshot = await messagesRef.limit(500).get();

@@ -17,8 +17,8 @@ class SplashPage extends StatelessWidget {
       bloc: sl<AuthCubit>()..getCurrentUser(),
       listener: (context, state) async {
         if (state.status == AuthStatus.success) {
-          final isCompleted =
-              await sl<LocalStorageService>().isOnboardingCompleted();
+          final isCompleted = await sl<LocalStorageService>()
+              .isOnboardingCompleted();
           await Future.delayed(
             const Duration(seconds: AppConstants.splashDelaySeconds),
           );

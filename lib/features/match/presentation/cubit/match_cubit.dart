@@ -61,14 +61,23 @@ class MatchCubit extends Cubit<MatchState> {
       } else if (match.status == MatchStatus.expired) {
         _cancelAcceptTimer();
         final isUser1 = match.user1Id == uid;
-        final myKeep = isUser1 ? match.user1KeepConnection : match.user2KeepConnection;
-        final otherKeep = isUser1 ? match.user2KeepConnection : match.user1KeepConnection;
+        final myKeep = isUser1
+            ? match.user1KeepConnection
+            : match.user2KeepConnection;
+        final otherKeep = isUser1
+            ? match.user2KeepConnection
+            : match.user1KeepConnection;
 
         if (myKeep && otherKeep) {
           emit(state.copyWith(status: MatchCubitStatus.bothKept, match: match));
           moveToPermanentChat(match.matchId);
         } else if (myKeep) {
-          emit(state.copyWith(status: MatchCubitStatus.connectionPending, match: match));
+          emit(
+            state.copyWith(
+              status: MatchCubitStatus.connectionPending,
+              match: match,
+            ),
+          );
         } else {
           emit(state.copyWith(status: MatchCubitStatus.expired, match: match));
         }
@@ -80,7 +89,12 @@ class MatchCubit extends Cubit<MatchState> {
           _cancelAcceptTimer();
           emit(state.copyWith(status: MatchCubitStatus.accepted, match: match));
         } else if (myAccepted) {
-          emit(state.copyWith(status: MatchCubitStatus.acceptancePending, match: match));
+          emit(
+            state.copyWith(
+              status: MatchCubitStatus.acceptancePending,
+              match: match,
+            ),
+          );
         } else {
           _startAcceptTimer(match.matchId, match.createdAt);
           emit(state.copyWith(status: MatchCubitStatus.found, match: match));
@@ -117,7 +131,12 @@ class MatchCubit extends Cubit<MatchState> {
     emit(state.copyWith(status: MatchCubitStatus.loading));
     final result = await getMatchUsecase.call(matchId);
     result.fold(
-      (failure) => emit(state.copyWith(status: MatchCubitStatus.error, errorMessage: failure.message)),
+      (failure) => emit(
+        state.copyWith(
+          status: MatchCubitStatus.error,
+          errorMessage: failure.message,
+        ),
+      ),
       (match) => match != null
           ? emit(state.copyWith(status: MatchCubitStatus.found, match: match))
           : emit(state.copyWith(status: MatchCubitStatus.notFound)),
@@ -127,7 +146,9 @@ class MatchCubit extends Cubit<MatchState> {
   Future<void> expireMatch(String matchId) async {
     final result = await expireMatchUsecase.call(matchId);
     result.fold(
-      (l) => emit(state.copyWith(status: MatchCubitStatus.error, errorMessage: l.message)),
+      (l) => emit(
+        state.copyWith(status: MatchCubitStatus.error, errorMessage: l.message),
+      ),
       (_) => null,
     );
   }
@@ -135,7 +156,9 @@ class MatchCubit extends Cubit<MatchState> {
   Future<void> acceptMatch(String matchId, String uid) async {
     final result = await acceptMatchUsecase.call(matchId, uid);
     result.fold(
-      (l) => emit(state.copyWith(status: MatchCubitStatus.error, errorMessage: l.message)),
+      (l) => emit(
+        state.copyWith(status: MatchCubitStatus.error, errorMessage: l.message),
+      ),
       (_) => null,
     );
   }
@@ -143,7 +166,9 @@ class MatchCubit extends Cubit<MatchState> {
   Future<void> endMatch(String matchId) async {
     final result = await deleteMatchUsecase.call(matchId);
     result.fold(
-      (l) => emit(state.copyWith(status: MatchCubitStatus.error, errorMessage: l.message)),
+      (l) => emit(
+        state.copyWith(status: MatchCubitStatus.error, errorMessage: l.message),
+      ),
       (_) => emit(state.copyWith(status: MatchCubitStatus.deleted)),
     );
   }
@@ -151,7 +176,9 @@ class MatchCubit extends Cubit<MatchState> {
   Future<void> moveToPermanentChat(String matchId) async {
     final result = await moveToPermanentChatUsecase.call(matchId);
     result.fold(
-      (l) => emit(state.copyWith(status: MatchCubitStatus.error, errorMessage: l.message)),
+      (l) => emit(
+        state.copyWith(status: MatchCubitStatus.error, errorMessage: l.message),
+      ),
       (_) => null,
     );
   }
@@ -159,7 +186,9 @@ class MatchCubit extends Cubit<MatchState> {
   Future<void> deleteMatch(String matchId) async {
     final result = await deleteMatchUsecase.call(matchId);
     result.fold(
-      (l) => emit(state.copyWith(status: MatchCubitStatus.error, errorMessage: l.message)),
+      (l) => emit(
+        state.copyWith(status: MatchCubitStatus.error, errorMessage: l.message),
+      ),
       (_) => null,
     );
     emit(const MatchState());

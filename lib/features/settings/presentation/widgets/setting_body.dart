@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:shakr/common/constants/app_enums.dart'; // ShakeSensitivity
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/theme/app_colors.dart';
@@ -12,8 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 class SettingsBody extends StatelessWidget {
   const SettingsBody({super.key});
 
-  static const _appStoreUrl =
-      'https://apps.apple.com/'; // TODO: App Store ID
+  static const _appStoreUrl = 'https://apps.apple.com/'; // TODO: App Store ID
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +39,34 @@ class SettingsBody extends StatelessWidget {
                 onChanged: (val) {
                   context.read<SettingsCubit>().toggleNotifications(val);
                 },
+              ),
+              const Divider(),
+              ListTile(
+                title: const Text(AppStrings.shakeSensitivity),
+                subtitle: const Text(AppStrings.shakeSensitivityDesc),
+                trailing: DropdownButton<ShakeSensitivity>(
+                  value: state.shakeSensitivity,
+                  underline: const SizedBox.shrink(),
+                  items: const [
+                    DropdownMenuItem(
+                      value: ShakeSensitivity.hassas,
+                      child: Text(AppStrings.sensitivityHassas),
+                    ),
+                    DropdownMenuItem(
+                      value: ShakeSensitivity.normal,
+                      child: Text(AppStrings.sensitivityNormal),
+                    ),
+                    DropdownMenuItem(
+                      value: ShakeSensitivity.sert,
+                      child: Text(AppStrings.sensitivitySert),
+                    ),
+                  ],
+                  onChanged: (val) {
+                    if (val != null) {
+                      context.read<SettingsCubit>().setSensitivity(val);
+                    }
+                  },
+                ),
               ),
               const Divider(),
               ListTile(

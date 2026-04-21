@@ -10,6 +10,7 @@ import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/shake/domain/entities/shake_entity.dart';
 import 'package:shakr/features/shake/presentation/cubit/shake_cubit.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:shakr/features/shake/presentation/widgets/animated_pins_overlay.dart';
 
 class ShakeBody extends StatelessWidget {
   const ShakeBody({super.key});
@@ -21,11 +22,9 @@ class ShakeBody extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Positioned.fill(
-            child: Opacity(
-              opacity: .8,
-              child: Image.asset(AppAssets.mapBackground, fit: BoxFit.cover),
-            ),
+            child: Image.asset(AppAssets.mapBackgroundClean, fit: BoxFit.cover),
           ),
+          const AnimatedPinsOverlay(),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

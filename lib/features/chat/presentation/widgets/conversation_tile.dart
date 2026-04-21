@@ -8,7 +8,6 @@ import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/getit/injection.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 import 'package:shakr/common/widgets/confirm_dialog.dart';
-import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/features/chat/domain/entities/conversation_entity.dart';
 import 'package:shakr/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:shakr/features/chat/presentation/widgets/conversation_avatar.dart';
@@ -40,8 +39,6 @@ class ConversationTile extends StatelessWidget {
     }
 
     final isToday = msgDate == today;
-    final currentUid = sl<AuthCubit>().currentUid ?? '';
-    final isUnread = !conversation.readBy.contains(currentUid);
 
     return Dismissible(
       key: Key(conversation.id),
@@ -82,9 +79,7 @@ class ConversationTile extends StatelessWidget {
                 conversation.otherUserName.isEmpty
                     ? AppStrings.unknownUser
                     : conversation.otherUserName,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: isUnread ? FontWeight.w800 : FontWeight.w600,
-                ),
+                style: Theme.of(context).textTheme.titleMedium,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -104,18 +99,10 @@ class ConversationTile extends StatelessWidget {
             conversation.lastMessage,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: isUnread ? FontWeight.w600 : FontWeight.normal,
-              color: isUnread
-                  ? Theme.of(context).textTheme.bodyMedium?.color
-                  : null,
-            ),
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
         onTap: () {
-          if (currentUid.isNotEmpty) {
-            sl<ChatCubit>().markAsRead(conversation.id, currentUid);
-          }
           final encodedName = Uri.encodeComponent(conversation.otherUserName);
           final encodedPhoto = conversation.otherUserPhoto != null
               ? Uri.encodeComponent(conversation.otherUserPhoto!)

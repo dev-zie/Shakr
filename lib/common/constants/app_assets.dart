@@ -5,6 +5,8 @@ class AppAssets {
   static const String _lottieHost = 'https://lottie.host';
 
   static const String mapBackground = '$_imagesPath/bgmap.jpg';
+  static const String mapBackgroundClean = '$_imagesPath/map-temiz.jpg';
+  static const String locationPin = '$_imagesPath/konum.png';
   static const String shakeReview = '$_imagesPath/shake_review.png';
   static const String profileReview = '$_imagesPath/profile_review.png';
   static const String chatReview = '$_imagesPath/chat_review.png';

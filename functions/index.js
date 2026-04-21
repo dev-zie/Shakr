@@ -54,7 +54,16 @@ exports.findMatch = onDocumentCreated({
         return null;
     }
 
-    // İlk uyumlu adayla eşleş
+    // Ortak vibe sayısına göre sırala — en uyumlu aday önce gelir
+    const myVibes = newShake.vibes ?? [];
+    validCandidates.sort((a, b) => {
+        const aVibes = a.data().vibes ?? [];
+        const bVibes = b.data().vibes ?? [];
+        const aShared = aVibes.filter(v => myVibes.includes(v)).length;
+        const bShared = bVibes.filter(v => myVibes.includes(v)).length;
+        return bShared - aShared;
+    });
+
     const matchDoc = validCandidates[0];
     const matchUid = matchDoc.id;
 
