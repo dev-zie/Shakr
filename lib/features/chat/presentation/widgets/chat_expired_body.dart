@@ -36,7 +36,8 @@ class ChatExpiredBody extends StatelessWidget {
         child: BlocBuilder<MatchCubit, MatchState>(
           bloc: sl<MatchCubit>(),
           builder: (context, state) {
-            final isPending = state.status == MatchCubitStatus.connectionPending;
+            final isPending =
+                state.status == MatchCubitStatus.connectionPending;
 
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -48,9 +49,7 @@ class ChatExpiredBody extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    isPending
-                        ? LucideIcons.clock
-                        : LucideIcons.heartHandshake,
+                    isPending ? LucideIcons.clock : LucideIcons.heartHandshake,
                     size: AppDimensions.emptyChatIconSize,
                     color: AppColors.primary,
                   ),
@@ -82,18 +81,18 @@ class ChatExpiredBody extends StatelessWidget {
                     onPressed: currentUid == null
                         ? null
                         : () => sl<MatchCubit>().keepConnectionFlow(
-                              matchId,
-                              currentUid!,
-                            ),
+                            matchId,
+                            currentUid!,
+                          ),
                     icon: const Icon(LucideIcons.heart, size: 18),
                     label: const Text(AppStrings.saveConnect),
                   ),
                 ] else ...[
                   Text(
                     AppStrings.connectionRequestSent,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: AppColors.primary,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleSmall?.copyWith(color: AppColors.primary),
                   ),
                 ],
                 const SizedBox(height: AppSpacing.m),

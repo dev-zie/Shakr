@@ -8,9 +8,6 @@ class MatchRemoteDatasource {
 
   MatchRemoteDatasource({required this.db});
 
-  // ─── Cooldown helpers ────────────────────────────────────────────────────────
-
-  /// Sıralı UID'lerden deterministic bir anahtar üretir: "uid1_uid2"
   String _cooldownKey(String uid1, String uid2) {
     final sorted = [uid1, uid2]..sort();
     return '${sorted[0]}_${sorted[1]}';
@@ -29,7 +26,6 @@ class MatchRemoteDatasource {
     });
   }
 
-  /// Bu çift için aktif cooldown var mı?
   Future<bool> isCooldownActive(String uid1, String uid2) async {
     final key = _cooldownKey(uid1, uid2);
     final doc = await db.collection('matchCooldowns').doc(key).get();
@@ -38,7 +34,6 @@ class MatchRemoteDatasource {
     return DateTime.now().isBefore(expiresAt);
   }
 
-  // ─── Match stream ─────────────────────────────────────────────────────────────
 
   Stream<MatchEntity?> watchMatch(String uid) {
     return db
@@ -56,14 +51,12 @@ class MatchRemoteDatasource {
           final doc = activeDocs.first;
           final match = MatchModel.fromMap(doc.data(), doc.id);
 
-          // Cooldown kontrolü: henüz kimse kabul etmemişse çifti doğrula.
           if (match.status == MatchStatus.active &&
               !match.user1Accepted &&
               !match.user2Accepted) {
             final inCooldown =
                 await isCooldownActive(match.user1Id, match.user2Id);
             if (inCooldown) {
-              // Cooldown aktif — bu eşleşmeyi sessizce sil, null döndür.
               await _hardDeleteMatch(match.matchId);
               return null;
             }
@@ -73,7 +66,6 @@ class MatchRemoteDatasource {
         });
   }
 
-  // ─── CRUD ─────────────────────────────────────────────────────────────────────
 
   Future<MatchEntity?> getMatch(String matchId) async {
     final doc = await db.collection('matches').doc(matchId).get();
@@ -117,8 +109,7 @@ class MatchRemoteDatasource {
         .update({'status': MatchStatus.expired.name});
   }
 
-  /// Match + chats alt koleksiyonunu siler.
-  /// Sohbet gerçekleştiyse (chatStartedAt mevcut) cooldown yazar.
+
   Future<void> deleteMatch(String matchId) async {
     final matchDoc = await db.collection('matches').doc(matchId).get();
     if (matchDoc.exists) {
@@ -126,7 +117,6 @@ class MatchRemoteDatasource {
       final u1 = data['user1'] as String?;
       final u2 = data['user2'] as String?;
       if (u1 != null && u2 != null) {
-        // Sohbet başladıysa 24 saat, hiç konuşmadılarsa 1 saat cooldown
         final duration = data['chatStartedAt'] != null
             ? const Duration(hours: 24)
             : const Duration(hours: 1);
@@ -136,7 +126,6 @@ class MatchRemoteDatasource {
     await _hardDeleteMatch(matchId);
   }
 
-  /// Cooldown yazmadan salt silme (iç kullanım).
   Future<void> _hardDeleteMatch(String matchId) async {
     final messages = await db
         .collection('chats')
@@ -173,7 +162,6 @@ class MatchRemoteDatasource {
         throw Exception('Kullanıcı ID\'leri bulunamadı: u1=$u1, u2=$u2');
       }
 
-      // Conversation silinene kadar eşleşmesinler — 100 yıllık cooldown.
       await writeCooldown(u1 as String, u2 as String, duration: const Duration(days: 36500));
 
       final participants = [u1, u2];

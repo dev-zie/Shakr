@@ -30,8 +30,13 @@ class ProfileEditBody extends StatelessWidget {
                 isUploading: state.isUploadingPhoto,
               ),
               const SizedBox(height: AppSpacing.xl),
-
               TextFormField(
+                // validator: (value) {
+                //   if (value == null || value.isEmpty) {
+                //     return 'Lütfen isminizi giriniz';
+                //   }
+                //   return null;
+                // },
                 initialValue: state.editName,
                 decoration: InputDecoration(
                   labelText: AppStrings.nameLabel,
@@ -51,14 +56,16 @@ class ProfileEditBody extends StatelessWidget {
 
               InkWell(
                 onTap: () async {
+                  final cubit = context.read<ProfileCubit>()..openAgePicker();
                   final selectedAge = await showDialog<int>(
                     context: context,
-                    builder: (context) =>
-                        AgeWheelPickerDialog(initialAge: state.editAge),
+                    builder: (_) => BlocProvider.value(
+                      value: cubit,
+                      child: const AgeWheelPickerDialog(),
+                    ),
                   );
-
                   if (selectedAge != null && context.mounted) {
-                    context.read<ProfileCubit>().updateAge(selectedAge);
+                    cubit.updateAge(selectedAge);
                   }
                 },
                 child: InputDecorator(

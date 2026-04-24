@@ -4,13 +4,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shakr/common/router/app_router.dart';
 import 'package:shakr/common/theme/app_theme.dart';
+import 'package:shakr/common/theme/theme_cubit.dart';
 import 'package:shakr/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:shakr/firebase_options.dart';
 import 'package:shakr/common/getit/injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initDependencies();
   runApp(const MyApp());
@@ -20,14 +24,19 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<AuthCubit>(),
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        themeMode: ThemeMode.system,
-        routerConfig: router,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => sl<AuthCubit>()),
+        BlocProvider(create: (_) => sl<ThemeCubit>()),
+      ],
+      child: BlocBuilder<ThemeCubit, ThemeMode>(
+        builder: (context, themeMode) => MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          themeMode: themeMode,
+          routerConfig: router,
+        ),
       ),
     );
   }

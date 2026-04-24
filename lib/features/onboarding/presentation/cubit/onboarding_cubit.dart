@@ -17,6 +17,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   final UploadPhotoUsecase uploadPhotoUsecase;
 
   final nameController = TextEditingController();
+  final pageController = PageController();
 
   /// Yaş adımındaki CupertinoPicker için scroll controller (18 → 99, başlangıç: 20)
   final ageScrollController = FixedExtentScrollController(initialItem: 2);
@@ -30,6 +31,13 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   void updateAge(int age) => emit(state.copyWith(age: age));
 
   void updateGender(Gender gender) => emit(state.copyWith(gender: gender.name));
+
+  void onIntroPageChanged(int index, int slideCount) {
+    emit(state.copyWith(
+      introPage: index,
+      introLastPageSeen: state.introLastPageSeen || index == slideCount - 1,
+    ));
+  }
 
   void start() => emit(state.copyWith(status: OnboardingStatus.stepChanged, step: 0));
 
@@ -97,6 +105,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   @override
   Future<void> close() {
     nameController.dispose();
+    pageController.dispose();
     ageScrollController.dispose();
     return super.close();
   }

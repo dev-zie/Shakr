@@ -4,6 +4,7 @@ import 'package:shakr/common/constants/app_enums.dart';
 class LocalStorageService {
   static const _onboardingKey = 'onboarding_completed';
   static const _sensitivityKey = 'shake_sensitivity';
+  static const _darkModeKey = 'dark_mode';
 
   Future<bool> isOnboardingCompleted() async {
     final prefs = await SharedPreferences.getInstance();
@@ -32,5 +33,15 @@ class LocalStorageService {
   Future<void> setSensitivity(ShakeSensitivity sensitivity) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_sensitivityKey, sensitivity.name);
+  }
+
+  Future<bool> getDarkMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_darkModeKey) ?? false;
+  }
+
+  Future<void> setDarkMode(bool isDark) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_darkModeKey, isDark);
   }
 }

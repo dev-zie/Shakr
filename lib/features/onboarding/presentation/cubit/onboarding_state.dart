@@ -10,6 +10,8 @@ class OnboardingState extends Equatable {
   final String? gender;
   final String? photoUrl;
   final List<String> vibes;
+  final int introPage;
+  final bool introLastPageSeen;
   final String? errorMessage;
 
   const OnboardingState({
@@ -20,6 +22,8 @@ class OnboardingState extends Equatable {
     this.gender,
     this.photoUrl,
     this.vibes = const [],
+    this.introPage = 0,
+    this.introLastPageSeen = false,
     this.errorMessage,
   });
 
@@ -31,6 +35,8 @@ class OnboardingState extends Equatable {
     String? gender,
     String? photoUrl,
     List<String>? vibes,
+    int? introPage,
+    bool? introLastPageSeen,
     String? errorMessage,
   }) => OnboardingState(
     status: status ?? this.status,
@@ -40,9 +46,11 @@ class OnboardingState extends Equatable {
     gender: gender ?? this.gender,
     photoUrl: photoUrl ?? this.photoUrl,
     vibes: vibes ?? this.vibes,
+    introPage: introPage ?? this.introPage,
+    introLastPageSeen: introLastPageSeen ?? this.introLastPageSeen,
     errorMessage: errorMessage ?? this.errorMessage,
   );
 
   @override
-  List<Object?> get props => [status, step, name, age, gender, photoUrl, vibes, errorMessage];
+  List<Object?> get props => [status, step, name, age, gender, photoUrl, vibes, introPage, introLastPageSeen, errorMessage];
 }

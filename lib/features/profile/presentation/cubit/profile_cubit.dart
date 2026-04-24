@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shakr/common/constants/app_constants.dart';
 import 'package:shakr/core/services/local_storage_service.dart';
 import 'package:shakr/features/auth/domain/entities/user_entity.dart';
 import 'package:shakr/features/auth/domain/usecases/get_profile_usecase.dart';
@@ -15,6 +17,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   final LocalStorageService lsc;
 
   String? _uid;
+  FixedExtentScrollController? ageScrollController;
 
   ProfileCubit({
     required this.getProfileUsecase,
@@ -29,21 +32,38 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(state.copyWith(status: ProfileStatus.loading));
     final result = await getProfileUsecase.call(uid);
     result.fold(
-      (failure) => emit(state.copyWith(status: ProfileStatus.error, errorMessage: failure.message)),
-      (user) => emit(ProfileState(
-        status: ProfileStatus.loaded,
-        user: user,
-        editName: user.name,
-        editAge: user.age,
-        editGender: user.gender,
-        editVibes: List<String>.from(user.vibes),
-      )),
+      (failure) => emit(
+        state.copyWith(
+          status: ProfileStatus.error,
+          errorMessage: failure.message,
+        ),
+      ),
+      (user) => emit(
+        ProfileState(
+          status: ProfileStatus.loaded,
+          user: user,
+          editName: user.name,
+          editAge: user.age,
+          editGender: user.gender,
+          editVibes: List<String>.from(user.vibes),
+        ),
+      ),
     );
   }
 
   void updateName(String name) {
     emit(state.copyWith(editName: name));
   }
+
+  void openAgePicker() {
+    final initial = (state.editAge - AppConstants.minUserAge)
+        .clamp(0, AppConstants.maxUserAge - AppConstants.minUserAge);
+    ageScrollController?.dispose();
+    ageScrollController = FixedExtentScrollController(initialItem: initial);
+    emit(state.copyWith(pickerAge: state.editAge));
+  }
+
+  void updatePickerAge(int age) => emit(state.copyWith(pickerAge: age));
 
   void updateAge(int age) {
     emit(state.copyWith(editAge: age));
@@ -75,17 +95,21 @@ class ProfileCubit extends Cubit<ProfileState> {
     final result = await uploadPhotoUsecase.call(_uid ?? '', path);
     result.fold(
       (failure) {
-        emit(state.copyWith(
-          status: ProfileStatus.photoUploadError,
-          errorMessage: failure.message,
-          isUploadingPhoto: false,
-        ));
+        emit(
+          state.copyWith(
+            status: ProfileStatus.photoUploadError,
+            errorMessage: failure.message,
+            isUploadingPhoto: false,
+          ),
+        );
         emit(state.copyWith(status: ProfileStatus.loaded));
       },
-      (url) => emit(state.copyWith(
-        user: state.user!.copyWith(photoUrl: url),
-        isUploadingPhoto: false,
-      )),
+      (url) => emit(
+        state.copyWith(
+          user: state.user!.copyWith(photoUrl: url),
+          isUploadingPhoto: false,
+        ),
+      ),
     );
   }
 
@@ -108,20 +132,38 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     final result = await saveProfileUsecase.call(updatedUser);
     result.fold(
-      (failure) => emit(state.copyWith(status: ProfileStatus.error, errorMessage: failure.message)),
+      (failure) => emit(
+        state.copyWith(
+          status: ProfileStatus.error,
+          errorMessage: failure.message,
+        ),
+      ),
       (_) {
-        emit(state.copyWith(status: ProfileStatus.updatedSuccess, user: updatedUser));
-        emit(state.copyWith(
-          status: ProfileStatus.loaded,
-          user: updatedUser,
-          editName: updatedUser.name,
-          editAge: updatedUser.age,
-          editGender: updatedUser.gender,
-          editVibes: List<String>.from(updatedUser.vibes),
-          isEditing: false,
-        ));
+        emit(
+          state.copyWith(
+            status: ProfileStatus.updatedSuccess,
+            user: updatedUser,
+          ),
+        );
+        emit(
+          state.copyWith(
+            status: ProfileStatus.loaded,
+            user: updatedUser,
+            editName: updatedUser.name,
+            editAge: updatedUser.age,
+            editGender: updatedUser.gender,
+            editVibes: List<String>.from(updatedUser.vibes),
+            isEditing: false,
+          ),
+        );
       },
     );
+  }
+
+  @override
+  Future<void> close() {
+    ageScrollController?.dispose();
+    return super.close();
   }
 
   Future<void> deleteAccount() async {
@@ -131,7 +173,12 @@ class ProfileCubit extends Cubit<ProfileState> {
     final result = await deleteAccountUsecase.call();
     lsc.resetOnboarding();
     result.fold(
-      (failure) => emit(state.copyWith(status: ProfileStatus.error, errorMessage: failure.message)),
+      (failure) => emit(
+        state.copyWith(
+          status: ProfileStatus.error,
+          errorMessage: failure.message,
+        ),
+      ),
       (_) => emit(const ProfileState()),
     );
   }

@@ -13,6 +13,7 @@ class ProfileState extends Equatable {
   final List<String> editVibes;
   final bool isEditing;
   final bool isUploadingPhoto;
+  final int pickerAge;
   final String? errorMessage;
 
   const ProfileState({
@@ -24,6 +25,7 @@ class ProfileState extends Equatable {
     this.editVibes = const [],
     this.isEditing = false,
     this.isUploadingPhoto = false,
+    this.pickerAge = 0,
     this.errorMessage,
   });
 
@@ -46,6 +48,7 @@ class ProfileState extends Equatable {
     List<String>? editVibes,
     bool? isEditing,
     bool? isUploadingPhoto,
+    int? pickerAge,
     String? errorMessage,
   }) => ProfileState(
     status: status ?? this.status,
@@ -56,6 +59,7 @@ class ProfileState extends Equatable {
     editVibes: editVibes ?? this.editVibes,
     isEditing: isEditing ?? this.isEditing,
     isUploadingPhoto: isUploadingPhoto ?? this.isUploadingPhoto,
+    pickerAge: pickerAge ?? this.pickerAge,
     errorMessage: errorMessage ?? this.errorMessage,
   );
 
@@ -69,6 +73,7 @@ class ProfileState extends Equatable {
     editVibes,
     isEditing,
     isUploadingPhoto,
+    pickerAge,
     errorMessage,
   ];
 }

@@ -37,6 +37,7 @@ import 'package:shakr/features/match/domain/usecases/watch_match_usecase.dart';
 import 'package:shakr/features/match/presentation/cubit/match_cubit.dart';
 import 'package:shakr/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:shakr/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:shakr/common/theme/theme_cubit.dart';
 import 'package:shakr/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:shakr/features/shake/data/datasources/shake_remote_datasource.dart';
 import 'package:shakr/features/shake/data/repositories/shake_repository_impl.dart';
@@ -52,6 +53,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
   sl.registerLazySingleton(() => LocalStorageService());
+  sl.registerLazySingleton(() => ThemeCubit(localStorageService: sl()));
   sl.registerLazySingleton(() => VibrationService());
 
   //auth

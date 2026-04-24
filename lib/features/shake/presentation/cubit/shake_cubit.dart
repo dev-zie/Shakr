@@ -23,9 +23,6 @@ class ShakeCubit extends Cubit<ShakeState> {
 
   Timer? _matchTimer;
 
-  final ValueNotifier<double> radarProgress = ValueNotifier(0.0);
-  Timer? _radarTimer;
-
   ShakeCubit({
     required this.deleteShakeUsecase,
     required this.recordShakeUsecase,
@@ -40,10 +37,8 @@ class ShakeCubit extends Cubit<ShakeState> {
     sl<ShakeService>().startListening(threshold: threshold, () async {
       if (uid == null) return;
 
-      // Sadece başlangıç durumundayken yeni sarsıntı işlemlerine izin ver
       if (state.status != ShakeCubitStatus.initial) return;
 
-      // Aktif eşleşme varsa yeni shake kaydedilmez — aynı çift tekrar eşleşemez.
       final hasMatch = await hasActiveMatchUsecase.call(uid);
       if (hasMatch) return;
 
@@ -80,7 +75,9 @@ class ShakeCubit extends Cubit<ShakeState> {
     final result = await recordShakeUsecase.call(shake);
 
     result.fold(
-      (l) => emit(state.copyWith(status: ShakeCubitStatus.error, errorMessage: l.message)),
+      (l) => emit(
+        state.copyWith(status: ShakeCubitStatus.error, errorMessage: l.message),
+      ),
       (r) {
         emit(state.copyWith(status: ShakeCubitStatus.recorded));
         startMatchTimer();
@@ -92,7 +89,9 @@ class ShakeCubit extends Cubit<ShakeState> {
   Future<void> deleteShake(String uid) async {
     final result = await deleteShakeUsecase.call(uid);
     result.fold(
-      (l) => emit(state.copyWith(status: ShakeCubitStatus.error, errorMessage: l.message)),
+      (l) => emit(
+        state.copyWith(status: ShakeCubitStatus.error, errorMessage: l.message),
+      ),
       (r) => emit(const ShakeState()),
     );
   }
@@ -121,8 +120,6 @@ class ShakeCubit extends Cubit<ShakeState> {
   @override
   Future<void> close() {
     _matchTimer?.cancel();
-    _radarTimer?.cancel();
-    radarProgress.dispose();
     return super.close();
   }
 }

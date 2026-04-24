@@ -71,7 +71,6 @@ class ChatCubit extends Cubit<ChatState> {
           sl<MatchCubit>().expireMatch(matchId);
           if (!isClosed) emit(state.copyWith(status: ChatStatus.timeExpired));
         } else {
-          // chatStartedAt null olduğu sürece süre beklemede görünür
           final displayRemaining = isWaiting
               ? AppConstants.chatWaitingDisplaySeconds
               : remaining;

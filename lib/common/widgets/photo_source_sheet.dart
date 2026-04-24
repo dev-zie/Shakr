@@ -15,12 +15,12 @@ Future<String?> showPhotoSourceSheet(BuildContext context) {
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
     ),
-    builder: (_) => _PhotoSourceSheet(parentContext: context),
+    builder: (_) => PhotoSourceSheet(parentContext: context),
   );
 }
 
-class _PhotoSourceSheet extends StatelessWidget {
-  const _PhotoSourceSheet({required this.parentContext});
+class PhotoSourceSheet extends StatelessWidget {
+  const PhotoSourceSheet({super.key, required this.parentContext});
   final BuildContext parentContext;
 
   Future<void> _handleCamera(BuildContext sheetContext) async {
@@ -35,8 +35,9 @@ class _PhotoSourceSheet extends StatelessWidget {
         context: sheetContext,
         isScrollControlled: true,
         shape: const RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppRadius.xl),
+          ),
         ),
         builder: (_) => _CameraConfirmSheet(imagePath: path),
       );
@@ -71,8 +72,9 @@ class _PhotoSourceSheet extends StatelessWidget {
             ),
             Text(
               AppStrings.photoSourceTitle,
-              style: context.textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w600),
+              style: context.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
             ),
             const SizedBox(height: AppSpacing.s),
             ListTile(
@@ -134,16 +136,14 @@ class _CameraConfirmSheet extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () =>
-                    Navigator.pop(context, _CameraAction.use),
+                onPressed: () => Navigator.pop(context, _CameraAction.use),
                 child: const Text(AppStrings.useThisPhoto),
               ),
             ),
             SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: () =>
-                    Navigator.pop(context, _CameraAction.retake),
+                onPressed: () => Navigator.pop(context, _CameraAction.retake),
                 child: const Text(AppStrings.retakePhoto),
               ),
             ),

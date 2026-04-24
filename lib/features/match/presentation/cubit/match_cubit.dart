@@ -22,7 +22,6 @@ class MatchCubit extends Cubit<MatchState> {
 
   StreamSubscription? _subscription;
 
-  /// 15 saniyelik kabul penceresi için zamanlayıcı
   Timer? _acceptTimer;
 
   MatchCubit({
@@ -35,10 +34,8 @@ class MatchCubit extends Cubit<MatchState> {
     required this.moveToPermanentChatUsecase,
   }) : super(const MatchState());
 
-  /// Eşleşme verilerini bir kez çeker (stream olmadan).
   Future<void> init(String matchId) => getMatch(matchId);
 
-  /// Maç verisi henüz yüklü değilse çeker; tekrar çağrılması güvenlidir.
   void ensureLoaded(String matchId) {
     const loaded = {
       MatchCubitStatus.loading,
@@ -106,8 +103,6 @@ class MatchCubit extends Cubit<MatchState> {
     });
   }
 
-  /// Kabul penceresi için 15 saniyelik tek-atış zamanlayıcı başlatır.
-  /// Zaten çalışıyorsa yeniden başlatmaz (idempotent).
   void _startAcceptTimer(String matchId, DateTime createdAt) {
     if (_acceptTimer?.isActive == true) return;
     final elapsed = DateTime.now().difference(createdAt).inSeconds;
@@ -194,8 +189,6 @@ class MatchCubit extends Cubit<MatchState> {
     emit(const MatchState());
   }
 
-  /// Bağlantıyı koruma akışı: keepConnection kaydeder,
-  /// watchMatch stream üzerinden state otomatik güncellenir.
   Future<void> keepConnectionFlow(String matchId, String uid) async {
     await keepConnectionUsecase.call(matchId, uid);
   }

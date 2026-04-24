@@ -33,9 +33,12 @@ class NameStep extends StatelessWidget {
             onSubmitted: (_) => _submit(cubit),
           ),
           const SizedBox(height: AppSpacing.xl),
-          ElevatedButton(
-            onPressed: () => _submit(cubit),
-            child: const Text(AppStrings.continueButton),
+          ValueListenableBuilder(
+            valueListenable: cubit.nameController,
+            builder: (context, value, _) => ElevatedButton(
+              onPressed: value.text.trim().isEmpty ? null : () => _submit(cubit),
+              child: const Text(AppStrings.continueButton),
+            ),
           ),
         ],
       ),

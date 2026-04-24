@@ -92,6 +92,8 @@ class AppStrings {
 
   // Ayarlar
   static const settings = 'Ayarlar';
+  static const darkMode = 'Karanlık Mod';
+  static const darkModeDesc = 'Koyu renk temasını etkinleştir';
   static const notifications = 'Bildirimler';
   static const notificationsDesc = 'Eşleşme ve mesaj bildirimlerini al';
   static const shakeSensitivity = 'Sallama Hassasiyeti';
