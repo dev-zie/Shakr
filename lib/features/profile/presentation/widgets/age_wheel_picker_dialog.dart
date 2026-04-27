@@ -58,10 +58,7 @@ class AgeWheelPickerDialog extends StatelessWidget {
                                 : FontWeight.normal,
                             color: isSelected
                                 ? AppColors.primary
-                                : Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.color
+                                : Theme.of(context).textTheme.bodySmall?.color
                                       ?.withValues(alpha: 0.5),
                           ),
                         ),

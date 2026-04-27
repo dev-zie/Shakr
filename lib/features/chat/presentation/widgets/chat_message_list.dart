@@ -74,8 +74,12 @@ class ChatMessageList extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(AppRadius.chip),
                   topRight: const Radius.circular(AppRadius.chip),
-                  bottomLeft: Radius.circular(isMe ? AppRadius.chip : AppRadius.xs),
-                  bottomRight: Radius.circular(isMe ? AppRadius.xs : AppRadius.chip),
+                  bottomLeft: Radius.circular(
+                    isMe ? AppRadius.chip : AppRadius.xs,
+                  ),
+                  bottomRight: Radius.circular(
+                    isMe ? AppRadius.xs : AppRadius.chip,
+                  ),
                 ),
                 boxShadow: AppShadows.soft,
                 border: isMe
@@ -87,10 +91,10 @@ class ChatMessageList extends StatelessWidget {
               child: Text(
                 message.text,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: isMe ? Colors.white : null,
-                      fontSize: AppTextSizes.chatMessage,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  color: isMe ? Colors.white : null,
+                  fontSize: AppTextSizes.chatMessage,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),

@@ -31,12 +31,6 @@ class ProfileEditBody extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.xl),
               TextFormField(
-                // validator: (value) {
-                //   if (value == null || value.isEmpty) {
-                //     return 'Lütfen isminizi giriniz';
-                //   }
-                //   return null;
-                // },
                 initialValue: state.editName,
                 decoration: InputDecoration(
                   labelText: AppStrings.nameLabel,

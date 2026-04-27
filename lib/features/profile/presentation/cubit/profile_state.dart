@@ -2,7 +2,14 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shakr/features/auth/domain/entities/user_entity.dart';
 
-enum ProfileStatus { initial, loading, loaded, error, photoUploadError, updatedSuccess }
+enum ProfileStatus {
+  initial,
+  loading,
+  loaded,
+  error,
+  photoUploadError,
+  updatedSuccess,
+}
 
 class ProfileState extends Equatable {
   final ProfileStatus status;

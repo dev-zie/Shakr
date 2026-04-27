@@ -7,7 +7,7 @@ import 'package:shakr/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 mixin SettingsBodyActions {
-  static const _appStoreUrl = 'https://apps.apple.com/'; // TODO: App Store ID
+  static const _appStoreUrl = 'https://apps.apple.com/';
 
   void showTermsDialog(BuildContext context) {
     showDialog(

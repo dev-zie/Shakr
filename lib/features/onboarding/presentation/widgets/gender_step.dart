@@ -40,8 +40,8 @@ class GenderStep extends StatelessWidget {
                       icon: LucideIcons.mars,
                       isSelected: gender == Gender.male.name,
                       onTap: () => context.read<OnboardingCubit>().updateGender(
-                            Gender.male,
-                          ),
+                        Gender.male,
+                      ),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.m),
@@ -51,8 +51,8 @@ class GenderStep extends StatelessWidget {
                       icon: LucideIcons.venus,
                       isSelected: gender == Gender.female.name,
                       onTap: () => context.read<OnboardingCubit>().updateGender(
-                            Gender.female,
-                          ),
+                        Gender.female,
+                      ),
                     ),
                   ),
                 ],
@@ -61,8 +61,7 @@ class GenderStep extends StatelessWidget {
               ElevatedButton(
                 onPressed: gender == null
                     ? null
-                    : () =>
-                        context.read<OnboardingCubit>().setGender(gender),
+                    : () => context.read<OnboardingCubit>().setGender(gender),
                 child: const Text(AppStrings.continueButton),
               ),
               const SizedBox(height: AppSpacing.l),

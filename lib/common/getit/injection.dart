@@ -56,7 +56,6 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => ThemeCubit(localStorageService: sl()));
   sl.registerLazySingleton(() => VibrationService());
 
-  //auth
   sl.registerLazySingleton(
     () => AuthRemoteDatasource(firebaseAuth: sl(), firestore: sl()),
   );
@@ -88,7 +87,6 @@ Future<void> initDependencies() async {
     ),
   );
 
-  // Shake
   sl.registerLazySingleton(() => ShakeRemoteDatasource(db: sl()));
   sl.registerLazySingleton<ShakeRepository>(
     () => ShakeRepositoryImpl(remoteDatasource: sl()),
@@ -107,7 +105,6 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton(() => LocationService());
 
-  // Match
   sl.registerLazySingleton(() => MatchRemoteDatasource(db: sl()));
   sl.registerLazySingleton<MatchRepository>(
     () => MatchRepositoryImpl(remoteDatasource: sl()),
@@ -132,7 +129,6 @@ Future<void> initDependencies() async {
     ),
   );
 
-  // Chat
   sl.registerLazySingleton(() => ChatRemoteDatasource(db: sl()));
   sl.registerLazySingleton<ChatRepository>(
     () => ChatRepositoryImpl(remoteDatasource: sl()),
@@ -151,15 +147,10 @@ Future<void> initDependencies() async {
     ),
   );
 
-  //settings
   sl.registerFactory(
-    () => SettingsCubit(
-      deleteAccountUsecase: sl(),
-      localStorageService: sl(),
-    ),
+    () => SettingsCubit(deleteAccountUsecase: sl(), localStorageService: sl()),
   );
 
-  //profile
   sl.registerFactory(
     () => ProfileCubit(
       lsc: sl(),

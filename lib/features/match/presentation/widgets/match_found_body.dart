@@ -53,9 +53,9 @@ class MatchFoundBody extends StatelessWidget {
             const SizedBox(height: AppSpacing.l),
             Text(
               AppStrings.matchFound,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: AppColors.primary,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium?.copyWith(color: AppColors.primary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppSpacing.l),
@@ -68,7 +68,8 @@ class MatchFoundBody extends StatelessWidget {
             const SizedBox(height: AppSpacing.xxl),
             MatchTimerDisplay(
               remainingSeconds: remaining,
-              totalSeconds: AppConstants.matchAcceptanceWindowSeconds.toDouble(),
+              totalSeconds: AppConstants.matchAcceptanceWindowSeconds
+                  .toDouble(),
             ),
             const SizedBox(height: AppSpacing.xxl),
             if (isPending) ...[

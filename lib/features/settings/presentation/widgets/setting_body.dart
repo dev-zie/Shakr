@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:shakr/common/constants/app_enums.dart'; // ShakeSensitivity
+import 'package:shakr/common/constants/app_enums.dart';
 import 'package:shakr/common/constants/app_strings.dart';
 import 'package:shakr/common/constants/app_spacing.dart';
 import 'package:shakr/common/theme/app_colors.dart';

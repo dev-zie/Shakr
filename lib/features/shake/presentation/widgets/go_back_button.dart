@@ -7,6 +7,9 @@ class GoBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(icon: const Icon(LucideIcons.arrowLeft), onPressed: onPressed);
+    return IconButton(
+      icon: const Icon(LucideIcons.arrowLeft),
+      onPressed: onPressed,
+    );
   }
 }

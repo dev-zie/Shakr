@@ -1,7 +1,6 @@
 class GeoHashUtils {
   static const String _base32 = '0123456789bcdefghjkmnpqrstuvwxyz';
 
-  // Precision 7 ≈ 153m × 153m hücre büyüklüğü.
   static String encode(double lat, double lng, {int precision = 7}) {
     var minLat = -90.0, maxLat = 90.0;
     var minLng = -180.0, maxLng = 180.0;

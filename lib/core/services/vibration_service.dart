@@ -9,13 +9,13 @@ class VibrationService {
 
   Future<void> shakeRecordedFeedback() async {
     if (await Vibration.hasVibrator()) {
-      Vibration.vibrate(duration: 100); // Kısa tek titreşim
+      Vibration.vibrate(duration: 100);
     }
   }
 
   Future<void> matchFeedback() async {
     if (await Vibration.hasVibrator()) {
-      Vibration.vibrate(pattern: [0, 300, 200, 300]); // İki kez
+      Vibration.vibrate(pattern: [0, 300, 200, 300]);
     }
   }
 

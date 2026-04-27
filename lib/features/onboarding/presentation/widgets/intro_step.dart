@@ -55,11 +55,13 @@ class IntroStep extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final slide = _slides[index];
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.l,
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        if (index == 0) ... [
+                        if (index == 0) ...[
                           Text(
                             slide['title']!,
                             style: Theme.of(context).textTheme.headlineLarge
@@ -70,7 +72,7 @@ class IntroStep extends StatelessWidget {
                                 ),
                           ),
                           const SizedBox(height: AppSpacing.m),
-                      ],
+                        ],
                         Expanded(
                           flex: 10,
                           child: Container(
@@ -87,7 +89,10 @@ class IntroStep extends StatelessWidget {
                               ],
                             ),
                             clipBehavior: Clip.antiAlias,
-                            child: Image.asset(slide['image']!, fit: BoxFit.fill),
+                            child: Image.asset(
+                              slide['image']!,
+                              fit: BoxFit.fill,
+                            ),
                           ),
                         ),
                         const SizedBox(height: AppSpacing.xl),

@@ -7,7 +7,10 @@ class ChatRemoteDatasource {
 
   ChatRemoteDatasource({required this.db});
 
-  Stream<List<MessageModel>> watchMessage(String id, {bool isPermanent = false}) {
+  Stream<List<MessageModel>> watchMessage(
+    String id, {
+    bool isPermanent = false,
+  }) {
     final collection = isPermanent ? 'conversations' : 'chats';
     return db
         .collection(collection)
@@ -22,7 +25,11 @@ class ChatRemoteDatasource {
         );
   }
 
-  Future<void> sendMessage(String id, MessageEntity message, {bool isPermanent = false}) async {
+  Future<void> sendMessage(
+    String id,
+    MessageEntity message, {
+    bool isPermanent = false,
+  }) async {
     final collection = isPermanent ? 'conversations' : 'chats';
     final messageModel = MessageModel(
       id: message.id,
@@ -56,12 +63,18 @@ class ChatRemoteDatasource {
         .collection('conversations')
         .where('participants', arrayContains: uid)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => {...doc.data(), 'id': doc.id}).toList());
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => {...doc.data(), 'id': doc.id})
+              .toList(),
+        );
   }
 
   Future<void> deleteConversation(String conversationId) async {
-    // Cooldown'ı kaldır — sohbet silindikten sonra tekrar eşleşebilirler.
-    final convDoc = await db.collection('conversations').doc(conversationId).get();
+    final convDoc = await db
+        .collection('conversations')
+        .doc(conversationId)
+        .get();
     if (convDoc.exists) {
       final data = convDoc.data()!;
       final u1 = data['user1'] as String?;
@@ -69,7 +82,7 @@ class ChatRemoteDatasource {
       if (u1 != null && u2 != null) {
         final sorted = [u1, u2]..sort();
         final cooldownKey = '${sorted[0]}_${sorted[1]}';
-        // Sohbet silinince 24 saat cooldown — hemen eşleşemesinler.
+
         await db.collection('matchCooldowns').doc(cooldownKey).set({
           'user1': u1,
           'user2': u2,

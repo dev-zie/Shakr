@@ -1,5 +1,5 @@
 class AppSpacing {
-  AppSpacing._(); // private constructor
+  AppSpacing._();
 
   static const double xs = 4;
   static const double s = 8;

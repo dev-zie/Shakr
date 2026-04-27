@@ -76,10 +76,12 @@ class ChatCubit extends Cubit<ChatState> {
               : remaining;
 
           if (!isClosed) {
-            emit(state.copyWith(
-              status: ChatStatus.timerTick,
-              secondsLeft: displayRemaining,
-            ));
+            emit(
+              state.copyWith(
+                status: ChatStatus.timerTick,
+                secondsLeft: displayRemaining,
+              ),
+            );
           }
         }
       });
@@ -122,7 +124,9 @@ class ChatCubit extends Cubit<ChatState> {
       isPermanent: isPermanent,
     );
     result.fold(
-      (l) => emit(state.copyWith(status: ChatStatus.error, errorMessage: l.message)),
+      (l) => emit(
+        state.copyWith(status: ChatStatus.error, errorMessage: l.message),
+      ),
       (r) => null,
     );
   }
@@ -138,15 +142,23 @@ class ChatCubit extends Cubit<ChatState> {
                 : (isPermanent ? -1 : AppConstants.chatWaitingDisplaySeconds);
 
             if (!isClosed) {
-              emit(state.copyWith(
-                status: ChatStatus.timerTick,
-                secondsLeft: currentSeconds,
-                messages: messages,
-              ));
+              emit(
+                state.copyWith(
+                  status: ChatStatus.timerTick,
+                  secondsLeft: currentSeconds,
+                  messages: messages,
+                ),
+              );
             }
           },
           onError: (error) {
-            if (!isClosed) emit(state.copyWith(status: ChatStatus.error, errorMessage: error.toString()));
+            if (!isClosed)
+              emit(
+                state.copyWith(
+                  status: ChatStatus.error,
+                  errorMessage: error.toString(),
+                ),
+              );
           },
         );
   }
@@ -154,23 +166,31 @@ class ChatCubit extends Cubit<ChatState> {
   Stream<ChatState> watchConversations(String uid) {
     return watchConversationsUsecase.call(uid).map((result) {
       return result.fold(
-        (failure) => ChatState(status: ChatStatus.error, errorMessage: failure.message),
-        (conversations) => ChatState(status: ChatStatus.conversationsLoaded, conversations: conversations),
+        (failure) =>
+            ChatState(status: ChatStatus.error, errorMessage: failure.message),
+        (conversations) => ChatState(
+          status: ChatStatus.conversationsLoaded,
+          conversations: conversations,
+        ),
       );
     });
   }
 
   Future<void> markAsRead(String conversationId, String uid) async {
     try {
-      await watchConversationsUsecase.repo
-          .markConversationRead(conversationId, uid);
+      await watchConversationsUsecase.repo.markConversationRead(
+        conversationId,
+        uid,
+      );
     } catch (_) {}
   }
 
   Future<void> deleteConversation(String conversationId) async {
     final result = await deleteConversationUsecase.call(conversationId);
     result.fold(
-      (l) => emit(state.copyWith(status: ChatStatus.error, errorMessage: l.message)),
+      (l) => emit(
+        state.copyWith(status: ChatStatus.error, errorMessage: l.message),
+      ),
       (l) => emit(state.copyWith(status: ChatStatus.conversationDeleted)),
     );
   }

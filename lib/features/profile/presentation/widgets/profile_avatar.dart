@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shakr/common/theme/app_colors.dart';
 
-/// Hem view hem edit modunda kullanılan profil fotoğrafı widget'ı.
 class ProfileAvatar extends StatelessWidget {
   const ProfileAvatar({super.key, required this.photoUrl, this.radius = 60});
 
@@ -32,4 +31,3 @@ class ProfileAvatar extends StatelessWidget {
     );
   }
 }
-

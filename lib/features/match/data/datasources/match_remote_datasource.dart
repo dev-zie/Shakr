@@ -34,7 +34,6 @@ class MatchRemoteDatasource {
     return DateTime.now().isBefore(expiresAt);
   }
 
-
   Stream<MatchEntity?> watchMatch(String uid) {
     return db
         .collection('matches')
@@ -54,8 +53,10 @@ class MatchRemoteDatasource {
           if (match.status == MatchStatus.active &&
               !match.user1Accepted &&
               !match.user2Accepted) {
-            final inCooldown =
-                await isCooldownActive(match.user1Id, match.user2Id);
+            final inCooldown = await isCooldownActive(
+              match.user1Id,
+              match.user2Id,
+            );
             if (inCooldown) {
               await _hardDeleteMatch(match.matchId);
               return null;
@@ -65,7 +66,6 @@ class MatchRemoteDatasource {
           return match;
         });
   }
-
 
   Future<MatchEntity?> getMatch(String matchId) async {
     final doc = await db.collection('matches').doc(matchId).get();
@@ -103,12 +103,10 @@ class MatchRemoteDatasource {
   }
 
   Future<void> expireMatch(String matchId) async {
-    await db
-        .collection('matches')
-        .doc(matchId)
-        .update({'status': MatchStatus.expired.name});
+    await db.collection('matches').doc(matchId).update({
+      'status': MatchStatus.expired.name,
+    });
   }
-
 
   Future<void> deleteMatch(String matchId) async {
     final matchDoc = await db.collection('matches').doc(matchId).get();
@@ -162,7 +160,11 @@ class MatchRemoteDatasource {
         throw Exception('Kullanıcı ID\'leri bulunamadı: u1=$u1, u2=$u2');
       }
 
-      await writeCooldown(u1 as String, u2 as String, duration: const Duration(days: 36500));
+      await writeCooldown(
+        u1 as String,
+        u2 as String,
+        duration: const Duration(days: 36500),
+      );
 
       final participants = [u1, u2];
 

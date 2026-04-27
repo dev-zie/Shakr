@@ -26,7 +26,9 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(status: AuthStatus.loading));
     final result = await getCurrentUserUsecase.call();
     result.fold(
-      (failure) => emit(state.copyWith(status: AuthStatus.error, message: failure.message)),
+      (failure) => emit(
+        state.copyWith(status: AuthStatus.error, message: failure.message),
+      ),
       (user) => emit(state.copyWith(status: AuthStatus.success, user: user)),
     );
   }
@@ -35,7 +37,9 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(status: AuthStatus.loading));
     final result = await signInAnonymouslyUsecase.call();
     result.fold(
-      (failure) => emit(state.copyWith(status: AuthStatus.error, message: failure.message)),
+      (failure) => emit(
+        state.copyWith(status: AuthStatus.error, message: failure.message),
+      ),
       (user) => emit(state.copyWith(status: AuthStatus.success, user: user)),
     );
   }
@@ -44,7 +48,9 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(status: AuthStatus.loading));
     final result = await saveProfileUsecase.call(user);
     result.fold(
-      (failure) => emit(state.copyWith(status: AuthStatus.error, message: failure.message)),
+      (failure) => emit(
+        state.copyWith(status: AuthStatus.error, message: failure.message),
+      ),
       (r) => emit(state.copyWith(status: AuthStatus.profileSaved, user: user)),
     );
   }
@@ -53,10 +59,10 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(status: AuthStatus.loading));
     final result = await getProfileUsecase.call(uid);
     result.fold(
-      (failure) => emit(state.copyWith(status: AuthStatus.error, message: failure.message)),
+      (failure) => emit(
+        state.copyWith(status: AuthStatus.error, message: failure.message),
+      ),
       (user) => emit(state.copyWith(status: AuthStatus.success, user: user)),
     );
   }
-
-  
 }

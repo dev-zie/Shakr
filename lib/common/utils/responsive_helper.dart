@@ -18,9 +18,6 @@ extension ResponsiveHelper on BuildContext {
     return mobile;
   }
 
-  double get adaptiveWidth => responsiveValue(
-        mobile: screenWidth,
-        tablet: 600,
-        desktop: 800,
-      );
+  double get adaptiveWidth =>
+      responsiveValue(mobile: screenWidth, tablet: 600, desktop: 800);
 }

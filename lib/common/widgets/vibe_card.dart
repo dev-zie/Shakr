@@ -37,7 +37,9 @@ class VibeCard extends StatelessWidget {
     }
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: AppConstants.animationDurationFast),
+      duration: const Duration(
+        milliseconds: AppConstants.animationDurationFast,
+      ),
       decoration: BoxDecoration(
         color: isSelected
             ? vibeColor.withValues(alpha: 0.08)
@@ -54,15 +56,19 @@ class VibeCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(iconData, color: vibeColor, size: AppDimensions.vibeCardIconSize),
+          Icon(
+            iconData,
+            color: vibeColor,
+            size: AppDimensions.vibeCardIconSize,
+          ),
           const SizedBox(height: AppSpacing.xs),
           Text(
             vibe,
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: vibeColor,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.5,
-                ),
+              color: vibeColor,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+            ),
             textAlign: TextAlign.center,
           ),
         ],

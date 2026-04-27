@@ -93,8 +93,6 @@ class ChatPage extends StatelessWidget {
     );
   }
 
-  // bolunecek
-
   Widget _buildAppBarTitle(BuildContext context) {
     if (!isPermanent) {
       return const ChatTimerTitle();

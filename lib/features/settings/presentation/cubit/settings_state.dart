@@ -33,5 +33,11 @@ class SettingsState extends Equatable {
   );
 
   @override
-  List<Object?> get props => [status, selectedVibes, notificationsEnabled, shakeSensitivity, errorMessage];
+  List<Object?> get props => [
+    status,
+    selectedVibes,
+    notificationsEnabled,
+    shakeSensitivity,
+    errorMessage,
+  ];
 }

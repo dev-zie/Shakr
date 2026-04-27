@@ -56,8 +56,10 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   void openAgePicker() {
-    final initial = (state.editAge - AppConstants.minUserAge)
-        .clamp(0, AppConstants.maxUserAge - AppConstants.minUserAge);
+    final initial = (state.editAge - AppConstants.minUserAge).clamp(
+      0,
+      AppConstants.maxUserAge - AppConstants.minUserAge,
+    );
     ageScrollController?.dispose();
     ageScrollController = FixedExtentScrollController(initialItem: initial);
     emit(state.copyWith(pickerAge: state.editAge));

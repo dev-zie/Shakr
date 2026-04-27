@@ -42,8 +42,9 @@ class MatchModel extends MatchEntity {
       'user2': user2Id,
       'users': [user1Id, user2Id],
       'createdAt': Timestamp.fromDate(createdAt),
-      'chatStartedAt':
-          chatStartedAt != null ? Timestamp.fromDate(chatStartedAt!) : null,
+      'chatStartedAt': chatStartedAt != null
+          ? Timestamp.fromDate(chatStartedAt!)
+          : null,
       'status': status.name,
       'user1KeepConnection': user1KeepConnection,
       'user2KeepConnection': user2KeepConnection,

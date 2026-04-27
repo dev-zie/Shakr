@@ -29,8 +29,6 @@ class ShakeRemoteDatasource {
     await db.collection('shakes').doc(uid).delete();
   }
 
-  /// Kullanıcının aktif bir eşleşmesi olup olmadığını kontrol eder.
-  /// Sallama kaydedilmeden önce çağrılır; aktif eşleşme varsa yeni shake engellenir.
   Future<bool> hasActiveMatch(String uid) async {
     final snapshot = await db
         .collection('matches')

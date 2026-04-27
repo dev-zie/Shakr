@@ -11,8 +11,6 @@ class FloatingPinState {
   const FloatingPinState({required this.dx, required this.dy});
 }
 
-// AnimationController'ın ihtiyaç duyduğu TickerProvider'ı
-// State olmadan sağlar. Widget ağacından bağımsız çalışır.
 class _SingleTicker implements TickerProvider {
   @override
   Ticker createTicker(TickerCallback onTick) => Ticker(onTick);
@@ -25,7 +23,7 @@ class FloatingPinCubit extends Cubit<FloatingPinState> {
   final _rng = Random();
 
   FloatingPinCubit(Duration initialDelay)
-      : super(const FloatingPinState(dx: 0, dy: 0)) {
+    : super(const FloatingPinState(dx: 0, dy: 0)) {
     randomize();
 
     controller = AnimationController(
@@ -41,13 +39,17 @@ class FloatingPinCubit extends Cubit<FloatingPinState> {
 
     scale = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween(begin: 0.0, end: 1.2)
-            .chain(CurveTween(curve: Curves.easeOutBack)),
+        tween: Tween(
+          begin: 0.0,
+          end: 1.2,
+        ).chain(CurveTween(curve: Curves.easeOutBack)),
         weight: 15,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.2, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 1.2,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 10,
       ),
       TweenSequenceItem(tween: ConstantTween(1.0), weight: 45),
@@ -71,10 +73,12 @@ class FloatingPinCubit extends Cubit<FloatingPinState> {
   }
 
   void randomize() {
-    emit(FloatingPinState(
-      dx: (_rng.nextDouble() * 1.7) - 0.85,
-      dy: (_rng.nextDouble() * 1.7) - 0.85,
-    ));
+    emit(
+      FloatingPinState(
+        dx: (_rng.nextDouble() * 1.7) - 0.85,
+        dy: (_rng.nextDouble() * 1.7) - 0.85,
+      ),
+    );
   }
 
   @override

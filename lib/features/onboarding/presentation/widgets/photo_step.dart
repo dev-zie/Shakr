@@ -67,7 +67,8 @@ class PhotoStep extends StatelessWidget {
                       child: photoUrl == null
                           ? const Icon(
                               LucideIcons.user,
-                              size: AppDimensions.photoAvatarPlaceholderIconSize,
+                              size:
+                                  AppDimensions.photoAvatarPlaceholderIconSize,
                               color: AppColors.primary,
                             )
                           : null,

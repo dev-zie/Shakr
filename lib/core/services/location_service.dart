@@ -41,7 +41,9 @@ class LocationService {
 
       String ip = '';
       if (ipRes.statusCode == 200) {
-        ip = (jsonDecode(ipRes.body) as Map<String, dynamic>)['ip'] as String? ?? '';
+        ip =
+            (jsonDecode(ipRes.body) as Map<String, dynamic>)['ip'] as String? ??
+            '';
       }
 
       final url = ip.isNotEmpty

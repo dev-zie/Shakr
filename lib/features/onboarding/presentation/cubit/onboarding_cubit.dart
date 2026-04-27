@@ -19,7 +19,6 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   final nameController = TextEditingController();
   final pageController = PageController();
 
-  /// Yaş adımındaki CupertinoPicker için scroll controller (18 → 99, başlangıç: 20)
   final ageScrollController = FixedExtentScrollController(initialItem: 2);
 
   OnboardingCubit({
@@ -33,13 +32,16 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   void updateGender(Gender gender) => emit(state.copyWith(gender: gender.name));
 
   void onIntroPageChanged(int index, int slideCount) {
-    emit(state.copyWith(
-      introPage: index,
-      introLastPageSeen: state.introLastPageSeen || index == slideCount - 1,
-    ));
+    emit(
+      state.copyWith(
+        introPage: index,
+        introLastPageSeen: state.introLastPageSeen || index == slideCount - 1,
+      ),
+    );
   }
 
-  void start() => emit(state.copyWith(status: OnboardingStatus.stepChanged, step: 0));
+  void start() =>
+      emit(state.copyWith(status: OnboardingStatus.stepChanged, step: 0));
 
   void finishIntro() => emit(state.copyWith(step: 1));
 
@@ -54,14 +56,20 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     final uid = sl<AuthCubit>().currentUid ?? '';
     final result = await uploadPhotoUsecase.call(uid, state.photoUrl!);
     result.fold(
-      (failure) => emit(state.copyWith(status: OnboardingStatus.error, errorMessage: failure.message)),
+      (failure) => emit(
+        state.copyWith(
+          status: OnboardingStatus.error,
+          errorMessage: failure.message,
+        ),
+      ),
       (url) => emit(state.copyWith(photoUrl: url, step: 3)),
     );
   }
 
   void setAge(int age) => emit(state.copyWith(age: age, step: 4));
 
-  void setGender(String gender) => emit(state.copyWith(gender: gender, step: 5));
+  void setGender(String gender) =>
+      emit(state.copyWith(gender: gender, step: 5));
 
   void selectVibe(String vibe) {
     if (state.vibes.length >= 3) return;
@@ -94,7 +102,12 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
     final result = await saveProfileUsecase.call(user);
     result.fold(
-      (failure) => emit(state.copyWith(status: OnboardingStatus.error, errorMessage: failure.message)),
+      (failure) => emit(
+        state.copyWith(
+          status: OnboardingStatus.error,
+          errorMessage: failure.message,
+        ),
+      ),
       (r) async {
         await lsc.setOnboardingCompleted();
         emit(state.copyWith(status: OnboardingStatus.completed));

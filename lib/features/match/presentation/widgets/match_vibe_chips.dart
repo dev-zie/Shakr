@@ -7,10 +7,7 @@ import 'package:shakr/common/constants/app_vibes.dart';
 class MatchVibeChips extends StatelessWidget {
   final List<String> vibes;
 
-  const MatchVibeChips({
-    super.key,
-    required this.vibes,
-  });
+  const MatchVibeChips({super.key, required this.vibes});
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +26,7 @@ class MatchVibeChips extends StatelessWidget {
           decoration: BoxDecoration(
             color: vibeColor.withValues(alpha: isDark ? 0.15 : 0.08),
             borderRadius: BorderRadius.circular(AppRadius.chip),
-            border: Border.all(
-              color: vibeColor.withValues(alpha: 0.4),
-            ),
+            border: Border.all(color: vibeColor.withValues(alpha: 0.4)),
           ),
           child: Text(
             vibe,

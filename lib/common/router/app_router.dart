@@ -16,10 +16,7 @@ final GoRouter router = GoRouter(
       path: '/onboarding',
       builder: (context, state) => const OnboardingPage(),
     ),
-    GoRoute(
-      path: '/shaking',
-      builder: (context, state) => const ShakingPage(),
-    ),
+    GoRoute(path: '/shaking', builder: (context, state) => const ShakingPage()),
     GoRoute(
       path: '/match/:matchId',
       builder: (context, state) {

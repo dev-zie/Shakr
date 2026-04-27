@@ -35,21 +35,30 @@ class MainBottomNav extends StatelessWidget {
             items: [
               BottomNavigationBarItem(
                 icon: Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.s, bottom: AppSpacing.xs),
+                  padding: const EdgeInsets.only(
+                    top: AppSpacing.s,
+                    bottom: AppSpacing.xs,
+                  ),
                   child: Icon(LucideIcons.radar),
                 ),
                 label: AppStrings.tabShake,
               ),
               BottomNavigationBarItem(
                 icon: Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.s, bottom: AppSpacing.xs),
+                  padding: const EdgeInsets.only(
+                    top: AppSpacing.s,
+                    bottom: AppSpacing.xs,
+                  ),
                   child: Icon(LucideIcons.messageCircle),
                 ),
                 label: AppStrings.tabChats,
               ),
               BottomNavigationBarItem(
                 icon: Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.s, bottom: AppSpacing.xs),
+                  padding: const EdgeInsets.only(
+                    top: AppSpacing.s,
+                    bottom: AppSpacing.xs,
+                  ),
                   child: Icon(LucideIcons.user),
                 ),
                 label: AppStrings.tabProfile,

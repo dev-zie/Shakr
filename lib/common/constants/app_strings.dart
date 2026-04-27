@@ -1,14 +1,12 @@
 class AppStrings {
   AppStrings._();
 
-  // Genel
   static const appName = 'Shakr';
   static const continueButton = 'İlerle';
   static const save = 'Kaydet';
   static const okay = 'Tamam';
   static const cancel = 'İptal';
 
-  // Ana ekran navigasyon sekmeleri
   static const tabShake = 'Salla';
   static const tabChats = 'Mesajlar';
   static const tabProfile = 'Profil';
@@ -16,20 +14,17 @@ class AppStrings {
   static const unknownUser = 'Kullanıcı';
   static const yesterday = 'Dün';
 
-  // Shake / Ana sayfa
   static const shakeString = 'Salla ve Keşfet';
   static const shakeSubtitle = 'Eşleşmek için telefonunu salla!';
   static const searchingText = 'Sinyal aranıyor... \nLütfen bekle 😎';
   static const cancelSearch = 'Aramayı İptal Et';
 
-  // Eşleşme
   static const matchFound = 'Harika, Biriyle Eşleştin!';
   static const matchNotFound = 'Tüh, kimseyi bulamadık 🥺';
   static const noBodyFound = 'Etrafında kimse yok gibi görünüyor.';
   static const startChat = 'Hemen Sohbete Başla';
   static const matchClosed = 'Eşleşme Sona Erdi';
 
-  // Bağlantı / Chat expired
   static const timesUp = 'Sohbet Süresi Doldu ⌛';
   static const otherUsersVibes = 'Eşleştiğin kişinin enerjisi:';
   static const saveConnect = 'Bağlantıyı Koru 🤝';
@@ -44,7 +39,6 @@ class AppStrings {
   static const writeMessage = 'Bir şeyler yaz...';
   static const sendFirstMessage = 'İlk mesajı sen gönder!';
 
-  // Profil
   static const myProfile = 'Benim Profilim';
   static const profileNotFound = 'Profil bilgisi bulunamadı 🕵️‍♂️';
   static const profileUpdated = 'Profilin taptaze oldu! ✨';
@@ -53,7 +47,6 @@ class AppStrings {
   static const nameLabel = 'Adın';
   static const changeVibe = 'Modunu Değiştir';
 
-  // Vibe
   static const vibes = 'Vibe\'lar';
   static const selectThree = 'Tam 3 adet vibe seçmelisin';
   static const selectVibes = 'Seni yansıttığını düşündüğün "Vibe"ları seç?';
@@ -61,19 +54,16 @@ class AppStrings {
   static const maxThreeVibes = 'Sadece 3 tane seçebilirsin.';
   static const mustSelectThreeVibes = 'Lütfen 3 vibe seç 😇';
 
-  // Fotoğraf seçimi
   static const photoSourceTitle = 'Fotoğraf Ekle';
   static const chooseFromGallery = 'Galeriden Seç';
   static const openCamera = 'Kamerayı Aç';
   static const useThisPhoto = 'Bu Fotoğrafı Kullan';
   static const retakePhoto = 'Yeniden Çek';
 
-  // Hata mesajları
   static const errorPrefix = 'Hay aksi!';
   static const photoUploadError = 'Fotoğraf yüklenirken bir pürüz çıktı';
   static const generalError = 'Upps, bir şeyler ters gitti!';
 
-  // Onboarding
   static const onboardingTitle = 'Senin Vibe\'ın hangisi?';
   static const onboardingSubtitle = 'Seni en iyi yansıtan 3 kelimeye dokun';
   static const hello = 'Selam!';
@@ -90,14 +80,14 @@ class AppStrings {
   static const female = 'Kadın';
   static const genderStepSubtitle = 'Seni en iyi tanımlayan seçeneği seç.';
 
-  // Ayarlar
   static const settings = 'Ayarlar';
   static const darkMode = 'Karanlık Mod';
   static const darkModeDesc = 'Koyu renk temasını etkinleştir';
   static const notifications = 'Bildirimler';
   static const notificationsDesc = 'Eşleşme ve mesaj bildirimlerini al';
   static const shakeSensitivity = 'Sallama Hassasiyeti';
-  static const shakeSensitivityDesc = 'Telefonu ne kadar kuvvetle sallamalısın?';
+  static const shakeSensitivityDesc =
+      'Telefonu ne kadar kuvvetle sallamalısın?';
   static const sensitivityHassas = 'Hassas';
   static const sensitivityNormal = 'Normal';
   static const sensitivitySert = 'Sert';
@@ -110,7 +100,6 @@ class AppStrings {
       'Hesabını ve tüm geçmişini silmek istediğinden emin misin? Bu işlem geri alınamaz.';
   static const deleteAccountAction = 'Hesabımı Sil';
 
-  // Sohbet
   static const chatDefaultTitle = 'Sohbet';
   static const deleteConversation = 'Sohbeti Sil';
   static const deleteConversationConfirm =
@@ -118,16 +107,13 @@ class AppStrings {
   static const endMatchConfirm =
       'Eşleşmeyi sonlandırmak istediğinize emin misiniz?';
 
-  // Auth
   static const loginRequired = 'Giriş yapmanız gerekiyor.';
 
-  // Yeni Akış
   static const endMatch = 'Eşleşmeyi Bitir';
   static const waitDecision = 'Onay bekleniyor...';
   static const matchCanceled = 'Eşleşme iptal edildi.';
   static const connectionSaved = 'Bağlantı kalıcı hale getirildi! 🎉';
 
-  // Giriş / Intro
   static const introLetCreateAccount = 'Hadi hesap oluşturalım';
   static const introSlide1Title = 'Shakr';
   static const introSlide1Desc =
@@ -142,6 +128,5 @@ class AppStrings {
   static const introSlide4Desc =
       'Eşleştiğin kişilerle güvenle ve keyifle sohbet et.';
 
-  // Geliştirici
   static const emulatorSimulateShake = 'Emülatör: Sallanmayı Simüle Et';
 }

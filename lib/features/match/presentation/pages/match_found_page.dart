@@ -14,8 +14,6 @@ class MatchFoundPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    //consumer
     return Scaffold(
       body: BlocListener<MatchCubit, MatchState>(
         bloc: sl<MatchCubit>(),

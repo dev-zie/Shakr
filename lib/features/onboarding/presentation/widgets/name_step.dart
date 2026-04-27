@@ -36,7 +36,9 @@ class NameStep extends StatelessWidget {
           ValueListenableBuilder(
             valueListenable: cubit.nameController,
             builder: (context, value, _) => ElevatedButton(
-              onPressed: value.text.trim().isEmpty ? null : () => _submit(cubit),
+              onPressed: value.text.trim().isEmpty
+                  ? null
+                  : () => _submit(cubit),
               child: const Text(AppStrings.continueButton),
             ),
           ),

@@ -46,7 +46,12 @@ class SettingsCubit extends Cubit<SettingsState> {
     final result = await deleteAccountUsecase.call();
     localStorageService.resetOnboarding();
     result.fold(
-      (failure) => emit(state.copyWith(status: SettingsStatus.error, errorMessage: failure.message)),
+      (failure) => emit(
+        state.copyWith(
+          status: SettingsStatus.error,
+          errorMessage: failure.message,
+        ),
+      ),
       (_) => emit(state.copyWith(status: SettingsStatus.accountDeleted)),
     );
   }

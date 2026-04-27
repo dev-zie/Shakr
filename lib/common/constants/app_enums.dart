@@ -1,4 +1,3 @@
-// common/constants/app_enums.dart
 enum Gender { male, female, other }
 
 enum ShakeSensitivity {

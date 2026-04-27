@@ -52,5 +52,16 @@ class OnboardingState extends Equatable {
   );
 
   @override
-  List<Object?> get props => [status, step, name, age, gender, photoUrl, vibes, introPage, introLastPageSeen, errorMessage];
+  List<Object?> get props => [
+    status,
+    step,
+    name,
+    age,
+    gender,
+    photoUrl,
+    vibes,
+    introPage,
+    introLastPageSeen,
+    errorMessage,
+  ];
 }

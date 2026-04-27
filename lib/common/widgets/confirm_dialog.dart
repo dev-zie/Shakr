@@ -5,11 +5,7 @@ class ConfirmDialog extends StatelessWidget {
   final String title;
   final String content;
 
-  const ConfirmDialog({
-    super.key,
-    required this.title,
-    required this.content,
-  });
+  const ConfirmDialog({super.key, required this.title, required this.content});
 
   static Future<bool> show(
     BuildContext context, {

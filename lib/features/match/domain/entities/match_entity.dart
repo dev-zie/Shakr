@@ -53,4 +53,3 @@ class MatchEntity {
     this.user2Accepted = false,
   });
 }
-

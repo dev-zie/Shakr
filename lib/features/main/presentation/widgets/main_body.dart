@@ -14,11 +14,7 @@ class MainBody extends StatelessWidget {
       builder: (context, index) {
         return IndexedStack(
           index: index,
-          children: const [
-            ShakingPage(),
-            MyChatsPage(),
-            ProfilePage(),
-          ],
+          children: const [ShakingPage(), MyChatsPage(), ProfilePage()],
         );
       },
     );
