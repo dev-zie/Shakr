@@ -11,12 +11,12 @@ Built as a portfolio project with **Flutter + Firebase**, following **Clean Arch
 
 ## 📑 Table of Contents
 
-- [English](#-overview-en)
-- [Türkçe](#-genel-bakış-tr)
+- [English](#overview-)
+- [Türkçe](#genel-bakış-)
 
 ---
 
-## 🇬🇧 Overview (EN)
+## Overview 🇬🇧
 
 ### ✨ Key Features
 
@@ -94,8 +94,6 @@ This project is under active development. Currently working on:
 - Report/block functionality
 - Pre-release polish (store links, privacy/security rules hardening)
 
-See [`ROADMAP.md`](ROADMAP.md) and [`PROJE_DURUMU.md`](PROJE_DURUMU.md) for the detailed plan (in Turkish).
-
 ### 🚀 Getting Started
 
 ```bash
@@ -107,7 +105,7 @@ flutter run
 
 ---
 
-## 🇹🇷 Genel Bakış (TR)
+## Genel Bakış 🇹🇷
 
 Shakr, kullanıcıların **telefonlarını sallayarak** "tanışmaya açığım" sinyali verdiği bir sosyal keşif uygulamasıdır. Uygulama, aynı anda (yaklaşık) sallayan ve yakınlardaki başka bir kullanıcıyla gerçek zamanlı eşleşme sağlar; eşleşen kişiler kısa süreli bir sohbet üzerinden tanışıp tanışmaya devam etmek isteyip istemediklerine karar verir.
 
@@ -160,8 +158,6 @@ Proje aktif geliştirme aşamasındadır. Şu anda üzerinde çalışılanlar:
 - Eşleşme ve mesaj için push bildirimleri (Firebase Cloud Messaging)
 - Şikayet/engelleme özelliği
 - Yayın öncesi son rötuşlar (mağaza linkleri, güvenlik kurallarının sıkılaştırılması)
-
-Detaylı plan için [`ROADMAP.md`](ROADMAP.md) ve [`PROJE_DURUMU.md`](PROJE_DURUMU.md) dosyalarına bakın.
 
 ### 🚀 Başlangıç
 
