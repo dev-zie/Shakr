@@ -44,3 +44,12 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 **/firebase_options.dart
+
+# Firebase platform config (contains project-specific identifiers)
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+
+# Internal/private notes - not for public repo
+NOTIFICATIONS_CONTEXT.md
+PROJE_DURUMU.md
+ROADMAP.md
